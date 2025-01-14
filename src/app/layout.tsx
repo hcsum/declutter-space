@@ -28,6 +28,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
+        <footer className="bg-gray-800 py-6 text-white text-center">
+          <div className="max-w-6xl mx-auto">
+            <p className="text-sm">
+              &copy; {new Date().getFullYear()} Declutter.zen. All rights
+              reserved.
+            </p>
+            <p className="text-sm mt-2">
+              Built with love to help you simplify your life.
+            </p>
+          </div>
+        </footer>
       </body>
     </html>
   );

@@ -1,29 +1,36 @@
 import LandingPageHeader from "@/components/LandingPageHeader";
 import React from "react";
+import Image from "next/image";
+import Link from "next/link";
 
 const LandingPage = () => {
   return (
     <div className="min-h-screen bg-gray-50 text-gray-800 font-sans">
-      {/* Header */}
       <LandingPageHeader />
-      {/* Hero Section */}
       <section className="bg-white py-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6">
-            Simplify Your Life
+            Clear the Clutter, Clear Your Mind
           </h1>
           <p className="text-lg md:text-xl text-gray-600 mb-8">
-            Upload photos of your spaces, identify what you own, and take steps
-            toward a minimalist lifestyle with ease.
+            Organize your life by sorting through your belongings, reducing the
+            physical and mental burden of clutter, and creating a more peaceful
+            space.
           </p>
-          <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
-            Get Started
-          </button>
+          <Link href="/product">
+            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
+              Get Started
+            </button>
+          </Link>
         </div>
         <div className="mt-10">
-          <div className="h-64 bg-gray-300 w-full max-w-4xl mx-auto rounded-lg">
-            {/* Placeholder for Hero Image */}
-          </div>
+          <Image
+            width={400}
+            height={600}
+            className="h-auto w-full max-w-xl mx-auto rounded-lg"
+            src="/hero.webp"
+            alt="A minimalist illustration representing decluttering and peace"
+          />
         </div>
       </section>
 
