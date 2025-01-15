@@ -4,6 +4,7 @@ import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { UserCircleIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import Logo from "./Logo";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -72,8 +73,8 @@ const Header: React.FC = () => {
   return (
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
-        <Link href="/" className="text-2xl font-bold text-blue-500">
-          Declutter.zen
+        <Link href="/">
+          <Logo />
         </Link>
         <div className="flex items-center space-x-6">
           {navContent}

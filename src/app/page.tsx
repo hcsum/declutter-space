@@ -36,23 +36,57 @@ const LandingPage = () => {
       {/* Features Section */}
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900" id="features">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">Features</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+            Features
+          </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
             Discover how our tool helps you organize, declutter, and reclaim
             your space.
           </p>
         </div>
-        <div className="space-y-12 max-w-3xl mx-auto">
-          <div className="text-center">
-            <div className="h-48 bg-gray-300 dark:bg-gray-700 w-full rounded-lg mb-6"></div>
-            <h3 className="text-2xl font-semibold mb-4">Identify Your Items</h3>
+
+        <div className="space-y-8 max-w-3xl mx-auto">
+          {/* Feature 1 */}
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div className="h-16 w-16 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center mb-4">
+              <span className="text-white text-xl font-bold">1</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+              Identify Your Items
+            </h3>
             <p className="text-gray-600 dark:text-gray-400">
               Our AI-powered tool analyzes your photos to identify and count all
               your items, giving you a clear overview of your possessions.
             </p>
           </div>
-          {/* Additional Features */}
-          {/* ... */}
+
+          {/* Feature 2 */}
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div className="h-16 w-16 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center mb-4">
+              <span className="text-white text-xl font-bold">2</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+              Set Deadlines
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Mark items with deadlines to decide their future—keep, donate, or
+              discard. Get notified when deadlines are reached.
+            </p>
+          </div>
+
+          {/* Feature 3 */}
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+            <div className="h-16 w-16 bg-blue-500 dark:bg-blue-600 rounded-full flex items-center justify-center mb-4">
+              <span className="text-white text-xl font-bold">3</span>
+            </div>
+            <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+              Stay Organized
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400">
+              Track your progress and see how your decluttering journey unfolds
+              over time.
+            </p>
+          </div>
         </div>
       </section>
 
