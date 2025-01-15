@@ -1,8 +1,13 @@
 "use client";
 
-import React, { useState } from "react";
+import getUserById from "@/actions/user";
+import React, { useEffect, useState } from "react";
 
 const ItemList = () => {
+  useEffect(() => {
+    getUserById().then(console.log);
+  }, []);
+  // formAction();
   const [items, setItems] = useState([
     { id: 1, name: "Laptop", pieces: 1, deadline: "3 days", plan: "Donate" },
     { id: 2, name: "Books", pieces: 5, deadline: "7 days", plan: "Sell" },
