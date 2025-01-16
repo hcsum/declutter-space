@@ -1,45 +1,34 @@
 "use client";
 
-import getUserById from "@/actions/user";
-import React, { useEffect, useState } from "react";
+import { createItem, getItems } from "@/actions/items";
+import React, { useState } from "react";
+import useSWR from "swr";
 
 const ItemList = () => {
-  useEffect(() => {
-    getUserById().then(console.log);
-  }, []);
-  // formAction();
-  const [items, setItems] = useState([
-    { id: 1, name: "Laptop", pieces: 1, deadline: "3 days", plan: "Donate" },
-    { id: 2, name: "Books", pieces: 5, deadline: "7 days", plan: "Sell" },
-    {
-      id: 3,
-      name: "Clothes",
-      pieces: 10,
-      deadline: "15 days",
-      plan: "Discard",
-    },
-  ]);
+  const { data: items, error, mutate } = useSWR("items", getItems);
+
+  console.log("data", items);
+  console.log("error", error);
 
   const [search, setSearch] = useState("");
   const [newItem, setNewItem] = useState("");
   const [newPieces, setNewPieces] = useState(1);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
 
-  const addItem = () => {
-    if (newItem.trim()) {
-      setItems([
-        ...items,
-        {
-          id: items.length + 1,
-          name: newItem,
-          pieces: newPieces,
-          deadline: "30 days",
-          plan: "Undecided",
-        },
-      ]);
-      setNewItem("");
-      setNewPieces(1);
-    }
+  const addItem = async () => {
+    await createItem({
+      name: newItem,
+      pieces: newPieces,
+      deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
+      plan: "UNDECIDED",
+    });
+
+    // Refresh the items list after adding new item
+    await mutate();
+
+    // Clear the form
+    setNewItem("");
+    setNewPieces(1);
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -55,9 +44,10 @@ const ItemList = () => {
     }
   };
 
-  const filteredItems = items.filter((item) =>
-    item.name.toLowerCase().includes(search.toLowerCase()),
-  );
+  const filteredItems =
+    items?.filter((item) =>
+      item.name.toLowerCase().includes(search.toLowerCase()),
+    ) ?? [];
 
   return (
     <div className="flex justify-center items-center p-6 w-full h-[90vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -159,7 +149,7 @@ const ItemList = () => {
                   {item.pieces}
                 </td>
                 <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  {item.deadline}
+                  {item.deadline.toLocaleDateString()}
                 </td>
                 <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
                   {item.plan}

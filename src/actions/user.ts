@@ -1,10 +1,15 @@
 "use server";
+import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 
-export default async function getUserById() {
+export async function getUserById() {
+  const { userId } = await verifySession();
   const result = await prisma.user.findUnique({
     where: {
-      id: "20a01eeb-534a-4909-b118-f008cf05ce0f",
+      id: userId as string,
+    },
+    select: {
+      id: true,
     },
   });
   return result;

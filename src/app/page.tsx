@@ -16,7 +16,7 @@ const LandingPage = () => {
             physical and mental burden of clutter, and creating a more peaceful
             space.
           </p>
-          <Link href="/main">
+          <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
               Get Started
             </button>

@@ -15,8 +15,21 @@ model User {
   items    Item[]
 }
 
+enum ItemPlan {
+  GIVE_AWAY
+  DISCARD
+  SELL
+  KEEP
+  UNDECIDED
+}
+
 model Item {
-  id     String @id @default(uuid())
-  userId String
-  user   User   @relation(fields: [userId], references: [id])
+  id       String   @id @default(uuid())
+  userId   String
+  user     User     @relation(fields: [userId], references: [id])
+  name     String
+  pieces   Int
+  deadline DateTime
+  plan     ItemPlan
+  image    String?
 }

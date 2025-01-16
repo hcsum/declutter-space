@@ -53,7 +53,7 @@ export async function signup(state: FormState, formData: FormData) {
   await createSession(user.id);
 
   // Redirect user to main page
-  redirect("/main");
+  redirect("/dashboard");
 }
 
 export async function login(state: FormState, formData: FormData) {
@@ -90,8 +90,6 @@ export async function login(state: FormState, formData: FormData) {
   // Redirect user to main page
   redirect("/main");
 }
-
-// ... existing code ...
 
 export async function logout() {
   deleteSession();
