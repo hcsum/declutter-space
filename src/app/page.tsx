@@ -32,13 +32,18 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/ */}
+      {/* Quote Section */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
+            Every item you own occupies not just physical space, but mental
+            space as well. It quietly absorbs your attention and energy, leaving
+            you feeling more overwhelmed.
+          </h2>
+        </div>
+      </section>
+
       {/* Get You Thinking Section */}
-      <h2 className="max-w-xl mx-auto text-xl md:text-2xl font-semibold my-8 text-gray-800 dark:text-gray-200">
-        Every item you own occupies not just physical space, but mental space as
-        well. It quietly absorbs your attention and energy, leaving you feeling
-        more overwhelmed.
-      </h2>
       <div className="flex flex-col items-center text-center p-8 max-w-4xl mx-auto my-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <p className="text-lg md:text-xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
           &quot;It&apos;s not useful now, but I might need it in the
@@ -75,7 +80,7 @@ const LandingPage = () => {
             </p>
           </div>
 
-          <div className="border-t border-gray-200 dark:border-gray-700 pt-8">
+          <div className="dark:border-gray-700 pt-8">
             <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200">
               &quot;Give yourself a Declutter Deadline: Use It or Lose It!&quot;
             </p>
@@ -114,13 +119,13 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg block mt-2">
+        <p className="text-gray-600 dark:text-gray-400 text-lg mt-8 italic border-t border-gray-200 dark:border-gray-700 pt-6">
           - PracticalFamily.org
         </p>
       </div>
 
       {/* Features Section */}
-      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900" id="features">
+      <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900" id="features">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
             How It Works
