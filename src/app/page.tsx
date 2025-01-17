@@ -137,7 +137,7 @@ const LandingPage = () => {
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
           {/* Feature 1 */}
-          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
               Identify Your Possessions
             </h3>
@@ -149,7 +149,7 @@ const LandingPage = () => {
           </div>
 
           {/* Feature 2 */}
-          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
               Set Timeframes for Decision Making
             </h3>
@@ -161,7 +161,7 @@ const LandingPage = () => {
           </div>
 
           {/* Feature 3 */}
-          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+          <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
               Track Your Progress Over Time
             </h3>

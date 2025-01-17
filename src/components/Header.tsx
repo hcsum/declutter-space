@@ -3,12 +3,19 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import { UserCircleIcon, MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import {
+  UserCircleIcon,
+  MoonIcon,
+  SunIcon,
+  Bars3Icon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Logo from "./Logo";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -35,27 +42,35 @@ const Header: React.FC = () => {
 
   if (pathname === "/") {
     navContent = (
-      <ul className="flex space-x-6 text-gray-700 dark:text-gray-300">
+      <ul
+        className={`md:flex md:space-x-6 text-gray-700 dark:text-gray-300 ${
+          isMobileMenuOpen
+            ? "absolute top-16 left-0 right-0 bg-white dark:bg-gray-800 p-4 space-y-4 shadow-lg md:space-y-0 md:shadow-none"
+            : "hidden md:flex"
+        }`}
+      >
         <li>
           <button
-            onClick={() =>
+            onClick={() => {
               document
                 .getElementById("features")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="hover:text-blue-500 dark:hover:text-blue-400 transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+              setIsMobileMenuOpen(false);
+            }}
+            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
           >
             Features
           </button>
         </li>
         <li>
           <button
-            onClick={() =>
+            onClick={() => {
               document
                 .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" })
-            }
-            className="hover:text-blue-500 dark:hover:text-blue-400 transition"
+                ?.scrollIntoView({ behavior: "smooth" });
+              setIsMobileMenuOpen(false);
+            }}
+            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
           >
             Contact
           </button>
@@ -71,12 +86,24 @@ const Header: React.FC = () => {
   }
 
   return (
-    <header className="bg-white shadow py-4 px-6 dark:bg-gray-800">
+    <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
       <div className="max-w-6xl mx-auto flex justify-between items-center">
         <Link href="/">
           <Logo />
         </Link>
         <div className="flex items-center space-x-6">
+          {pathname === "/" && (
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            >
+              {isMobileMenuOpen ? (
+                <XMarkIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              ) : (
+                <Bars3Icon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+              )}
+            </button>
+          )}
           {navContent}
           <button
             onClick={toggleDarkMode}

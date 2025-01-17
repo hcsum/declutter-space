@@ -50,13 +50,13 @@ const ItemList = () => {
     ) ?? [];
 
   return (
-    <div className="flex justify-center items-center p-6 w-full h-[90vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
-      <div className="w-full md:w-full lg:max-w-[70%]">
-        <div className="flex flex-col md:flex-row md:space-x-4">
+    <div className="flex justify-center p-6 w-full min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="w-full md:w-full lg:max-w-[70%] mt-4 md:mt-8">
+        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
           <input
             type="text"
             placeholder="New item name"
-            className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md flex-1 md:max-w-sm mb-4 md:mb-0"
+            className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md flex-1 md:max-w-sm"
             value={newItem}
             onChange={(e) => setNewItem(e.target.value)}
           />
@@ -116,53 +116,55 @@ const ItemList = () => {
         </div>
 
         {/* Table */}
-        <table className="w-full border-collapse border border-gray-200 dark:border-gray-700 text-left">
-          <thead>
-            <tr className="bg-gray-100 dark:bg-gray-800">
-              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                Name
-              </th>
-              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                Pieces
-              </th>
-              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                Deadline
-              </th>
-              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                Future Plan
-              </th>
-              <th className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredItems.map((item) => (
-              <tr
-                key={item.id}
-                className="hover:bg-gray-50 dark:hover:bg-gray-800"
-              >
-                <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  {item.name}
-                </td>
-                <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  {item.pieces}
-                </td>
-                <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  {item.deadline.toLocaleDateString()}
-                </td>
-                <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  {item.plan}
-                </td>
-                <td className="border border-gray-200 dark:border-gray-700 px-4 py-2">
-                  <button className="text-blue-500 dark:text-blue-400 hover:underline">
-                    Edit
-                  </button>
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full border-collapse border border-gray-200 dark:border-gray-700 text-left text-sm">
+            <thead>
+              <tr className="bg-gray-100 dark:bg-gray-800">
+                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                  Name
+                </th>
+                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
+                  Pieces
+                </th>
+                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
+                  Deadline
+                </th>
+                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
+                  Future Plan
+                </th>
+                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                  Actions
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredItems.map((item) => (
+                <tr
+                  key={item.id}
+                  className="hover:bg-gray-50 dark:hover:bg-gray-800"
+                >
+                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                    {item.name}
+                  </td>
+                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                    {item.pieces}
+                  </td>
+                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                    {item.deadline.toLocaleDateString()}
+                  </td>
+                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                    {item.plan}
+                  </td>
+                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                    <button className="text-blue-500 dark:text-blue-400 hover:underline">
+                      Edit
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
         {/* Pagination */}
         <div className="mt-4 flex justify-center items-center">

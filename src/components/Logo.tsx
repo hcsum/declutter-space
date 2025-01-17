@@ -9,7 +9,7 @@ export default function Logo() {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 200 50"
-      className={`w-full max-w-xs font-bold ${signika.style}`}
+      className={`w-full max-w-[180px] sm:max-w-xs font-bold ${signika.style}`}
     >
       <text
         x="50%"
