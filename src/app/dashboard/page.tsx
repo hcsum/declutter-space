@@ -1,43 +1,88 @@
 "use client";
 
-import { createItem, getItems } from "@/actions/items";
+import {
+  getItems,
+  createManyItems,
+  bulkAddItemsByImage,
+  ItemCreateInput,
+} from "@/actions/items";
+import AddingItemDialog from "@/components/AddingItemDialog";
+import { DetectedItem } from "@/lib/upload-helper";
 import React, { useState } from "react";
 import useSWR from "swr";
 
-const ItemList = () => {
+const Dashboard = () => {
   const { data: items, error, mutate } = useSWR("items", getItems);
 
   console.log("data", items);
   console.log("error", error);
 
   const [search, setSearch] = useState("");
-  const [newItem, setNewItem] = useState("");
-  const [newPieces, setNewPieces] = useState(1);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([]);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const addItem = async () => {
-    await createItem({
-      name: newItem,
-      pieces: newPieces,
-      deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
-      plan: "UNDECIDED",
-    });
-
-    // Refresh the items list after adding new item
-    await mutate();
-
-    // Clear the form
-    setNewItem("");
-    setNewPieces(1);
-  };
-
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
+      reader.onload = async () => {
         if (typeof reader.result === "string") {
           setUploadedImage(reader.result);
+          try {
+            const items = await bulkAddItemsByImage(reader.result);
+            setDetectedItems(items);
+            setShowConfirmDialog(true);
+          } catch (error) {
+            console.error("Failed to process image:", error);
+          }
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleConfirmItems = async (confirmedItems: ItemCreateInput[]) => {
+    if (confirmedItems) {
+      // Here you would add logic to create the items in your database
+      console.log("Items confirmed:", confirmedItems);
+      await createManyItems(confirmedItems);
+      await mutate(); // Refresh the items list
+    }
+    setShowConfirmDialog(false);
+    setDetectedItems([]);
+    setUploadedImage(null);
+  };
+
+  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = async () => {
+        if (typeof reader.result === "string") {
+          setUploadedImage(reader.result);
+          try {
+            await bulkAddItemsByImage(reader.result);
+            // Refresh the items list after processing
+            await mutate();
+          } catch (error) {
+            console.error("Failed to process image:", error);
+            // You might want to add error handling UI here
+          }
         }
       };
       reader.readAsDataURL(file);
@@ -51,30 +96,13 @@ const ItemList = () => {
 
   return (
     <div className="flex justify-center p-6 w-full min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <AddingItemDialog
+        isOpen={showConfirmDialog}
+        detectedItems={detectedItems}
+        onConfirm={handleConfirmItems}
+        onCancel={() => setShowConfirmDialog(false)}
+      />
       <div className="w-full md:w-full lg:max-w-[70%] mt-4 md:mt-8">
-        <div className="flex flex-col space-y-4 md:space-y-0 md:flex-row md:space-x-4">
-          <input
-            type="text"
-            placeholder="New item name"
-            className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md flex-1 md:max-w-sm"
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-          />
-          <input
-            type="number"
-            min="1"
-            className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md w-20"
-            value={newPieces}
-            onChange={(e) => setNewPieces(Number(e.target.value))}
-          />
-          <button
-            onClick={addItem}
-            className="bg-blue-500 dark:bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-600 dark:hover:bg-blue-700"
-          >
-            Add Item
-          </button>
-        </div>
-
         <div className="flex items-center my-6">
           <div className="flex-grow border-t border-gray-300"></div>
           <span className="mx-4 text-gray-500">OR</span>
@@ -83,15 +111,39 @@ const ItemList = () => {
 
         {/* Image Upload */}
         <div className="mb-6">
-          <label className="block text-gray-700 dark:text-gray-200 mb-2">
-            Upload an Image
+          <label className="text-lg font-medium text-gray-900 dark:text-white">
+            Upload file
           </label>
-          <input
-            type="file"
-            accept="image/*"
-            className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border file:border-gray-300 file:text-sm file:font-semibold file:bg-gray-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:border-gray-600 dark:file:bg-gray-800 dark:file:text-blue-300"
-            onChange={handleImageUpload}
-          />
+          <div className="mt-2 flex items-center justify-center w-full">
+            <label
+              htmlFor="file_input"
+              className={`flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 
+                ${
+                  isDragging
+                    ? "border-blue-500 dark:border-blue-400"
+                    : "border-gray-300 dark:border-gray-600 dark:hover:border-gray-500"
+                }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
+              <div className="flex flex-col items-center justify-center pt-5 pb-6">
+                <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+                  <span className="font-semibold">Choose File</span> or drag and
+                  drop
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  SVG, PNG, JPG or GIF (MAX. 800x400px)
+                </p>
+              </div>
+              <input
+                id="file_input"
+                type="file"
+                className="hidden"
+                onChange={handleImageUpload}
+              />
+            </label>
+          </div>
           {uploadedImage && (
             <img
               src={uploadedImage}
@@ -192,4 +244,4 @@ const ItemList = () => {
   );
 };
 
-export default ItemList;
+export default Dashboard;

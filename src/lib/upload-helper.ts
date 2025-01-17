@@ -4,7 +4,13 @@ import { HttpsProxyAgent } from "https-proxy-agent";
 
 const worker_api_key = process.env.WORKER_API_KEY!;
 
-export async function uploadImage(filePath: string) {
+export type DetectedItem = {
+  score: number;
+  label: string;
+  // box: any; // You can type this more specifically if needed
+};
+
+export async function uploadImageToWorker(filePath: string) {
   try {
     // Read the image file from disk
     const fileBuffer = fs.readFileSync(filePath);
@@ -20,12 +26,8 @@ export async function uploadImage(filePath: string) {
 
     console.log("Prepared pixel array:", pixelArray.slice(0, 100)); // Log the first 100 values for debugging
 
-    // Set up the proxy agent
-    const proxyUrl = "http://127.0.0.1:7890"; // Replace with your proxy URL
-    const proxyAgent = new HttpsProxyAgent(proxyUrl);
-
     // Send the POST request to the worker with the proxy agent
-    const response = await fetch("https://calm-sun-4f2f.sumtsui.workers.dev/", {
+    const response = await fetch(process.env.WORKER_API_URL!, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -34,7 +36,10 @@ export async function uploadImage(filePath: string) {
       body: JSON.stringify({
         image: pixelArray,
       }),
-      agent: proxyAgent, // Use the proxy
+      agent:
+        process.env.NODE_ENV === "development"
+          ? new HttpsProxyAgent("http://127.0.0.1:7890")
+          : undefined, // Use the proxy
     });
 
     if (!response.ok) {
@@ -44,9 +49,10 @@ export async function uploadImage(filePath: string) {
       );
     }
 
-    const result = await response.json();
-    console.log("Server response:", result);
+    const result = (await response.json()) as { response: DetectedItem[] };
+    return result.response;
   } catch (error) {
     console.error("Error uploading image:", error);
+    throw error;
   }
 }
