@@ -9,20 +9,38 @@ import { revalidatePath } from "next/cache";
 
 export type ItemCreateInput = Omit<Prisma.ItemCreateInput, "userId" | "user">;
 
-export async function getItems(page: number = 1, limit: number = 10) {
+export async function getItems(
+  page: number = 1,
+  limit: number = 10,
+  search?: string,
+) {
   const { userId } = await verifySession();
+
+  const whereClause = {
+    userId: userId,
+    ...(search
+      ? {
+          name: {
+            contains: search,
+            mode: "insensitive" as const,
+          },
+        }
+      : {}),
+  };
 
   // Get total count for pagination
   const total = await prisma.item.count({
-    where: { userId: userId },
+    where: whereClause,
   });
 
   const items = await prisma.item.findMany({
-    where: { userId: userId },
-    orderBy: { deadline: "asc" },
+    where: whereClause,
+    orderBy: { createdAt: "desc" },
     take: limit,
     skip: (page - 1) * limit,
   });
+
+  console.log("items", items);
 
   return {
     items,

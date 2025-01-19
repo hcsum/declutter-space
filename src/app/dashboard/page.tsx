@@ -6,15 +6,11 @@ import ItemTable from "@/components/ItemTable";
 const Dashboard = async ({
   searchParams,
 }: {
-  searchParams: { page?: string };
+  searchParams: { page?: string; search?: string };
 }) => {
-  const currentPage = Number((await searchParams).page) || 1;
-  const { items, totalPages } = await getItems(currentPage);
-
-  // const filteredItems =
-  //   items?.filter((item) =>
-  //     item.name.toLowerCase().includes(search.toLowerCase()),
-  //   ) ?? [];
+  const { page = "1", search = "" } = await searchParams;
+  const currentPage = Number(page);
+  const { items, totalPages } = await getItems(currentPage, 10, search);
 
   return (
     <div className="flex justify-center p-6 w-full min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">

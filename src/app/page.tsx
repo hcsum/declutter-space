@@ -25,8 +25,8 @@ const LandingPage = () => {
           <Image
             width={400}
             height={600}
-            className="h-auto w-full max-w-xl mx-auto rounded-lg"
-            src="/hero.webp"
+            className="h-auto w-full max-w-xl mx-auto rounded-lg dark:bg-white"
+            src="/hero.PNG"
             alt="A minimalist illustration symbolizing decluttering and tranquility"
           />
         </div>
@@ -167,8 +167,8 @@ const LandingPage = () => {
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
               Visualize your decluttering progress and stay motivated as you
-              transform your space. With each step, you’ll feel lighter and more
-              at peace.
+              transform your space. With each step, you&apos;ll feel lighter and
+              more at peace.
             </p>
           </div>
         </div>
@@ -200,8 +200,8 @@ const LandingPage = () => {
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6">Contact Us</h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-8">
-            Have questions or feedback? We’d love to hear from you. Reach out to
-            us anytime.
+            Have questions or feedback? We&apos;d love to hear from you. Reach
+            out to us anytime.
           </p>
           <form className="space-y-6">
             <input

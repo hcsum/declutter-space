@@ -8,11 +8,13 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(uuid())
-  name     String
-  email    String @unique
-  password String
-  items    Item[]
+  id        String   @id @default(uuid())
+  name      String
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     Item[]
 }
 
 enum ItemPlan {
@@ -24,12 +26,14 @@ enum ItemPlan {
 }
 
 model Item {
-  id       String   @id @default(uuid())
-  userId   String
-  user     User     @relation(fields: [userId], references: [id])
-  name     String
-  pieces   Int
-  deadline DateTime
-  plan     ItemPlan
-  image    String?
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  name      String
+  pieces    Int
+  deadline  DateTime
+  plan      ItemPlan
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  image     String?
 }
