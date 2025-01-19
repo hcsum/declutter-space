@@ -1,9 +1,32 @@
 import { getItems } from "@/actions/items";
 import AddItemForm from "@/components/AddItemForm";
 import ImageUploadBox from "@/components/ImageUploadBox";
+import Pagination from "@/components/Pagination";
 
-const Dashboard = async () => {
-  const items = await getItems();
+const getRelativeTimeString = (deadline: Date) => {
+  const now = new Date();
+  const diffTime = deadline.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+  if (diffDays < 0) return "Past due";
+  if (diffDays === 0) return "Today";
+  if (diffDays === 1) return "Tomorrow";
+  if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? "day" : "days"}`;
+  const weeks = Math.floor(diffDays / 7);
+  if (diffDays < 30) return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
+  const months = Math.floor(diffDays / 30);
+  if (diffDays < 365) return `${months} ${months === 1 ? "month" : "months"}`;
+  const years = Math.floor(diffDays / 365);
+  return `${years} ${years === 1 ? "year" : "years"}`;
+};
+
+const Dashboard = async ({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) => {
+  const currentPage = Number(searchParams.page) || 1;
+  const { items, totalPages, currentPage: page } = await getItems(currentPage);
 
   // const filteredItems =
   //   items?.filter((item) =>
@@ -49,9 +72,9 @@ const Dashboard = async () => {
                 <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
                   Deadline
                 </th>
-                <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
+                {/* <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4 whitespace-nowrap">
                   Future Plan
-                </th>
+                </th> */}
                 <th className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
                   Actions
                 </th>
@@ -70,11 +93,11 @@ const Dashboard = async () => {
                     {item.pieces}
                   </td>
                   <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
-                    {item.deadline.toLocaleDateString()}
+                    {`in ${getRelativeTimeString(item.deadline)}`}
                   </td>
-                  <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
+                  {/* <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
                     {item.plan}
-                  </td>
+                  </td> */}
                   <td className="border border-gray-200 dark:border-gray-700 px-2 py-2 md:px-4">
                     <button className="text-blue-500 dark:text-blue-400 hover:underline">
                       Edit
@@ -86,27 +109,7 @@ const Dashboard = async () => {
           </table>
         </div>
 
-        {/* Pagination */}
-        <div className="mt-4 flex justify-center items-center">
-          <a
-            href="#"
-            className="flex items-center px-4 py-2 mx-1 text-gray-500 bg-white rounded-md cursor-not-allowed dark:bg-gray-800 dark:text-gray-600"
-          >
-            Previous
-          </a>
-          <a
-            href="#"
-            className="items-center hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200"
-          >
-            1
-          </a>
-          <a
-            href="#"
-            className="items-center hidden px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 hover:bg-blue-600 dark:hover:bg-blue-500 hover:text-white dark:hover:text-gray-200"
-          >
-            Next
-          </a>
-        </div>
+        <Pagination currentPage={page} totalPages={totalPages} />
       </div>
     </div>
   );
