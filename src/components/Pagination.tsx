@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const Pagination = ({
   currentPage,
   totalPages,
@@ -5,10 +7,12 @@ const Pagination = ({
   currentPage: number;
   totalPages: number;
 }) => {
+  console.log(currentPage, totalPages);
   return (
     <div className="mt-4 flex justify-center items-center">
-      <a
+      <Link
         href={currentPage > 1 ? `?page=${currentPage - 1}` : "#"}
+        scroll={false}
         className={`flex items-center px-4 py-2 mx-1 text-gray-500 bg-white rounded-md ${
           currentPage <= 1
             ? "cursor-not-allowed opacity-50"
@@ -16,24 +20,26 @@ const Pagination = ({
         } dark:bg-gray-800 dark:text-gray-600`}
       >
         Previous
-      </a>
+      </Link>
 
       {[...Array(totalPages)].map((_, i) => (
-        <a
+        <Link
           key={i + 1}
           href={`?page=${i + 1}`}
-          className={`items-center hidden px-4 py-2 mx-1 transition-colors duration-300 transform bg-white rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 ${
+          scroll={false}
+          className={`items-center hidden px-4 py-2 mx-1 transition-colors duration-300 transform rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 ${
             currentPage === i + 1
               ? "bg-blue-600 text-white"
-              : "hover:bg-blue-600 hover:text-white"
+              : "bg-white hover:bg-blue-600 hover:text-white"
           }`}
         >
           {i + 1}
-        </a>
+        </Link>
       ))}
 
-      <a
+      <Link
         href={currentPage < totalPages ? `?page=${currentPage + 1}` : "#"}
+        scroll={false}
         className={`items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 ${
           currentPage >= totalPages
             ? "cursor-not-allowed opacity-50"
@@ -41,7 +47,7 @@ const Pagination = ({
         }`}
       >
         Next
-      </a>
+      </Link>
     </div>
   );
 };
