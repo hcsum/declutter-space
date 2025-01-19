@@ -3,40 +3,50 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
 import { uploadImageToWorker } from "@/lib/upload-helper";
-import { Prisma } from "@prisma/client";
+import { ItemPlan, Prisma } from "@prisma/client";
 import fs from "fs";
+import { revalidatePath } from "next/cache";
 
 export type ItemCreateInput = Omit<Prisma.ItemCreateInput, "userId" | "user">;
 
 export async function getItems() {
   const { userId } = await verifySession();
-  console.log("userId", userId);
   const items = await prisma.item.findMany({
     where: { userId: userId },
   });
   return items;
 }
 
-export async function createItem(item: ItemCreateInput) {
+export async function createItem(formData: FormData) {
   const { userId } = await verifySession();
-  const newItem = await prisma.item.create({
+
+  const name = formData.get("name") as string;
+  const pieces = parseInt(formData.get("pieces") as string);
+  const deadlineMonths = parseInt(formData.get("deadline") as string);
+  const deadline = new Date();
+  deadline.setMonth(deadline.getMonth() + deadlineMonths);
+
+  await prisma.item.create({
     data: {
-      ...item,
+      name,
+      pieces,
+      deadline,
+      plan: ItemPlan.UNDECIDED,
       user: { connect: { id: userId } },
     },
   });
-  return newItem;
+  revalidatePath("/dashboard");
 }
 
 export async function createManyItems(items: ItemCreateInput[]) {
   const { userId } = await verifySession();
-  const newItems = await prisma.item.createMany({
+  await prisma.item.createMany({
     data: items.map((item) => ({
       ...item,
       userId: userId,
     })),
   });
-  return newItems;
+  revalidatePath("/dashboard");
 }
 
 export async function deleteItem(id: string) {
@@ -47,7 +57,7 @@ export async function deleteItem(id: string) {
 }
 
 export async function bulkAddItemsByImage(imageData: string) {
-  // const { userId } = await verifySession();
+  await verifySession();
 
   // Convert base64 to buffer and save to temp file
   const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
