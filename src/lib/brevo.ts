@@ -1,11 +1,15 @@
-import brevo, { TransactionalEmailsApiApiKeys } from "@getbrevo/brevo";
+import {
+  TransactionalEmailsApi,
+  TransactionalEmailsApiApiKeys,
+  SendSmtpEmail,
+} from "@getbrevo/brevo";
 
 export class BrevoAdapter {
-  private apiInstance: brevo.TransactionalEmailsApi;
+  private apiInstance: TransactionalEmailsApi;
   private static instance: BrevoAdapter;
 
   private constructor() {
-    this.apiInstance = new brevo.TransactionalEmailsApi();
+    this.apiInstance = new TransactionalEmailsApi();
     this.apiInstance.setApiKey(
       TransactionalEmailsApiApiKeys.apiKey,
       process.env.BREVO_API_KEY!,
@@ -24,7 +28,7 @@ export class BrevoAdapter {
     const guestEmail = formData.get("email");
     const guestMessage = formData.get("message");
 
-    const sendSmtpEmail = new brevo.SendSmtpEmail();
+    const sendSmtpEmail = new SendSmtpEmail();
 
     const sender = {
       name: "Declutter Space",

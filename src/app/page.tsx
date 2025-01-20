@@ -188,7 +188,7 @@ const LandingPage = () => {
             Start your decluttering journey today and experience the freedom of
             minimalism.
           </p>
-          <Link href="/main">
+          <Link href="/dashboard">
             <button className="bg-white text-blue-500 px-6 py-3 rounded-lg text-lg hover:bg-gray-100 transition">
               Get Started Now
             </button>

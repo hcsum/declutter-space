@@ -77,7 +77,7 @@ const Header: React.FC = () => {
         </li>
       </ul>
     );
-  } else if (pathname === "/main") {
+  } else if (pathname === "/dashboard") {
     navContent = (
       <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
         <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
