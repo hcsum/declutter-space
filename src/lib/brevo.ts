@@ -38,7 +38,7 @@ export class BrevoAdapter {
 
     const htmlContent = `<p>Name: ${guestName}</p><p>Email: ${guestEmail}</p><p>Message: ${guestMessage}</p>`;
 
-    sendSmtpEmail.subject = "New Contact Form Submission";
+    sendSmtpEmail.subject = `New Contact Form Submission from ${guestEmail}`;
     sendSmtpEmail.htmlContent = htmlContent;
     sendSmtpEmail.sender = sender;
     sendSmtpEmail.to = [to];

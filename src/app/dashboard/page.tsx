@@ -6,7 +6,7 @@ import ItemTable from "@/components/ItemTable";
 const Dashboard = async ({
   searchParams,
 }: {
-  searchParams: { page?: string; search?: string };
+  searchParams: Promise<{ page?: string; search?: string }>;
 }) => {
   const { page = "1", search = "" } = await searchParams;
   const currentPage = Number(page);

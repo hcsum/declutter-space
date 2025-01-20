@@ -2,6 +2,7 @@ import { Signika } from "next/font/google";
 
 const signika = Signika({
   weight: "400",
+  subsets: ["latin"],
 });
 
 export default function Logo() {
