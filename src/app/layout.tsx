@@ -14,7 +14,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "declutter.zen",
+  title: "declutterspace.net",
   description: "Sort out your stuff, sort out your mind",
 };
 
@@ -35,7 +35,7 @@ export default function RootLayout({
         <footer className="bg-gray-800 py-6 text-white text-center">
           <div className="max-w-6xl mx-auto">
             <p className="text-sm">
-              &copy; {new Date().getFullYear()} Declutter.zen. All rights
+              &copy; {new Date().getFullYear()} declutterspace.net. All rights
               reserved.
             </p>
             <p className="text-sm mt-2">

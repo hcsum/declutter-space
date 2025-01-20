@@ -9,7 +9,7 @@ const PrivacyPolicy = () => {
         <h1 className="text-4xl font-bold text-center mb-8">Privacy Policy</h1>
 
         <p className="text-lg mb-4">
-          At <span className="font-bold">Declutter.zen</span>, we are committed
+          At <span className="font-bold">DeclutterSpace</span>, we are committed
           to protecting your privacy and ensuring the security of your personal
           information. This Privacy Policy outlines how we collect, use, and
           safeguard your data when you use our web app and services.
@@ -97,11 +97,11 @@ const PrivacyPolicy = () => {
           and comply with legal obligations. You can request deletion of your
           data by contacting us at:
           <a
-            href="mailto:hi@declutter.zen"
+            href="mailto:hi@declutterspace.net"
             className="text-blue-500 hover:underline"
           >
             {" "}
-            hi@declutter.zen
+            hi@declutterspace.net
           </a>
           .
         </p>
@@ -115,11 +115,11 @@ const PrivacyPolicy = () => {
         <p className="mb-6">
           To exercise these rights, contact us at:
           <a
-            href="mailto:hi@declutter.zen"
+            href="mailto:hi@declutterspace.net"
             className="text-blue-500 hover:underline"
           >
             {" "}
-            hi@declutter.zen
+            hi@declutterspace.net
           </a>
           .
         </p>
@@ -145,11 +145,11 @@ const PrivacyPolicy = () => {
           For questions or concerns about this Privacy Policy, please contact us
           at:
           <a
-            href="mailto:hi@declutter.zen"
+            href="mailto:hi@declutterspace.net"
             className="text-blue-500 hover:underline"
           >
             {" "}
-            hi@declutter.zen
+            hi@declutterspace.net
           </a>
           .
         </p>

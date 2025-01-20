@@ -22,7 +22,7 @@ export default function Logo() {
         fill="currentColor"
         className="text-black dark:text-white"
       >
-        declutter.zen
+        declutterspace.net
       </text>
     </svg>
   );

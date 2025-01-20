@@ -9,7 +9,7 @@ const RefundPolicy = () => {
         </h1>
 
         <p className="text-lg mb-4">
-          At <span className="font-bold">Declutter.zen</span>, we value your
+          At <span className="font-bold">DeclutterSpace</span>, we value your
           satisfaction and strive to provide a seamless and enjoyable
           experience. This Refund and Dispute Policy outlines the process for
           refunds and resolving disputes related to our services.
@@ -46,10 +46,10 @@ const RefundPolicy = () => {
           <li>
             Submit your refund request by emailing us at{" "}
             <a
-              href="mailto:hi@declutter.zen"
+              href="mailto:hi@declutterspace.net"
               className="text-blue-500 hover:underline"
             >
-              hi@declutter.zen
+              hi@declutterspace.net
             </a>{" "}
             with the subject line “Refund Request.”
           </li>
@@ -73,10 +73,10 @@ const RefundPolicy = () => {
           <li>
             Contact our support team at{" "}
             <a
-              href="mailto:hi@declutter.zen"
+              href="mailto:hi@declutterspace.net"
               className="text-blue-500 hover:underline"
             >
-              hi@declutter.zen
+              hi@declutterspace.net
             </a>{" "}
             and provide details of the issue.
           </li>
@@ -91,10 +91,10 @@ const RefundPolicy = () => {
           For any questions or concerns regarding this Refund and Dispute
           Policy, please email us at{" "}
           <a
-            href="mailto:hi@declutter.zen"
+            href="mailto:hi@declutterspace.net"
             className="text-blue-500 hover:underline"
           >
-            hi@declutter.zen
+            hi@declutterspace.net
           </a>
           . We’re here to help!
         </p>
