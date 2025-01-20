@@ -27,16 +27,6 @@ const Dashboard = async ({
           <h2 className="text-2xl font-bold">Your Items</h2>
         </div>
 
-        {/* <div className="flex flex-col md:flex-row md:space-x-4 mb-6">
-          <input
-            type="text"
-            placeholder="Search items"
-            className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md flex-1 md:max-w-lg mb-4 md:mb-0"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div> */}
-
         <ItemTable
           items={items}
           totalPages={totalPages}

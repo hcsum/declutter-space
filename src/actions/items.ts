@@ -35,7 +35,11 @@ export async function getItems(
 
   const items = await prisma.item.findMany({
     where: whereClause,
-    orderBy: { createdAt: "desc" },
+    orderBy: [
+      { updatedAt: "desc" },
+      { createdAt: "desc" },
+      { deadline: "asc" },
+    ],
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -112,4 +116,29 @@ export async function bulkAddItemsByImage(imageData: string) {
     console.error("Error processing image:", error);
     throw new Error("Failed to process image");
   }
+}
+
+export async function updateItem(
+  id: string,
+  data: {
+    name: string;
+    pieces: number;
+    deadline: Date;
+  },
+) {
+  const { userId } = await verifySession();
+
+  await prisma.item.update({
+    where: {
+      id,
+      userId, // Ensure user can only update their own items
+    },
+    data: {
+      name: data.name,
+      pieces: data.pieces,
+      deadline: data.deadline,
+    },
+  });
+
+  revalidatePath("/dashboard");
 }
