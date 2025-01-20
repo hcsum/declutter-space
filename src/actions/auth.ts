@@ -19,8 +19,6 @@ export async function signup(state: FormState, formData: FormData) {
     password: formData.get("password"),
   });
 
-  console.log("server", validatedFields);
-
   // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {

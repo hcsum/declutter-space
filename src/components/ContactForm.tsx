@@ -2,6 +2,7 @@
 
 import { sendContactEmail } from "@/actions/contact";
 import { useActionState, useEffect } from "react";
+
 const ContactForm = () => {
   const [state, formAction, pending] = useActionState(sendContactEmail, {
     status: "",
@@ -27,24 +28,45 @@ const ContactForm = () => {
           to us anytime.
         </p>
         <form className="space-y-6" action={formAction}>
-          <input
-            name="name"
-            type="text"
-            placeholder="Your Name"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-          />
-          <input
-            name="email"
-            type="email"
-            placeholder="Your Email"
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-          />
-          <textarea
-            name="message"
-            placeholder="Your Message"
-            rows={4}
-            className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
-          ></textarea>
+          <div>
+            <input
+              name="name"
+              type="text"
+              placeholder="Your Name"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            />
+            {state.errors?.name?._errors && (
+              <p className="text-amber-600 dark:text-amber-400 text-sm mt-1 text-left">
+                {state.errors.name._errors.join(", ")}
+              </p>
+            )}
+          </div>
+          <div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Your Email"
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            />
+            {state.errors?.email?._errors && (
+              <p className="text-amber-600 dark:text-amber-400 text-sm mt-1 text-left">
+                {state.errors.email._errors.join(", ")}
+              </p>
+            )}
+          </div>
+          <div>
+            <textarea
+              name="message"
+              placeholder="Your Message"
+              rows={4}
+              className="w-full px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400"
+            ></textarea>
+            {state.errors?.message?._errors && (
+              <p className="text-amber-600 dark:text-amber-400 text-sm mt-1 text-left">
+                {state.errors.message._errors.join(", ")}
+              </p>
+            )}
+          </div>
           <button
             type="submit"
             disabled={pending}
