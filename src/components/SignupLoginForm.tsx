@@ -40,7 +40,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
                 id="name"
                 name="name"
                 placeholder="Name"
-                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
               {state?.errors?.name && (
                 <p className="text-sm text-red-500 mt-1">{state.errors.name}</p>
@@ -59,7 +59,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
               id="email"
               name="email"
               placeholder="Email"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             />
             {state?.errors?.email && (
               <p className="text-sm text-red-500 mt-1">{state.errors.email}</p>
@@ -78,7 +78,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
               name="password"
               type="password"
               placeholder="Password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             />
             {state?.errors?.password && (
               <div className="mt-2">

@@ -27,7 +27,7 @@ const LandingPage = () => {
             width={400}
             height={600}
             className="h-auto w-full max-w-xl mx-auto rounded-lg dark:bg-white"
-            src="/hero.PNG"
+            src="/hero.png"
             alt="A minimalist illustration symbolizing decluttering and tranquility"
           />
         </div>
