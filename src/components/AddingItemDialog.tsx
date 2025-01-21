@@ -37,11 +37,12 @@ const AddingItemDialog = ({
   }, [detectedItems]);
 
   const [, action, pending] = useActionState(
-    (prevState: void, items: ItemCreateInput[]) => createManyItems(items),
+    (prevState: { errors?: string } | undefined, items: ItemCreateInput[]) =>
+      createManyItems(items),
     undefined,
   );
 
-  const handleConfirm = async () => {
+  const handleConfirm = () => {
     const confirmedItems = editableItems
       .filter((item) => item.checked)
       .map((item) => ({
@@ -50,7 +51,7 @@ const AddingItemDialog = ({
         deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
         plan: ItemPlan.UNDECIDED,
       }));
-    await action(confirmedItems);
+    action(confirmedItems);
     onConfirm(confirmedItems.length);
   };
 

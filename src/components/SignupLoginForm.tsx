@@ -1,11 +1,11 @@
 "use client";
 
-import { FormState } from "@/lib/definitions";
+import { AuthFormState } from "@/lib/definitions";
 import { useActionState } from "react";
 
 interface AuthFormProps {
   formType: "login" | "signup";
-  action: (state: FormState, formData: FormData) => Promise<FormState>;
+  action: (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
 }
 
 export default function AuthForm({ formType, action }: AuthFormProps) {

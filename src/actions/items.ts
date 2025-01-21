@@ -1,11 +1,13 @@
 "use server";
 
+import { ItemFormSchema, ItemFormState } from "@/lib/definitions";
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
 import { uploadImageToWorker } from "@/lib/upload-helper";
 import { ItemPlan, Prisma } from "@prisma/client";
 import fs from "fs";
 import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export type ItemCreateInput = Omit<Prisma.ItemCreateInput, "userId" | "user">;
 
@@ -52,20 +54,32 @@ export async function getItems(
   };
 }
 
-export async function createItem(formData: FormData) {
+export async function createItem(
+  state: ItemFormState | undefined,
+  formData: FormData,
+): Promise<ItemFormState | undefined> {
   const { userId } = await verifySession();
 
-  const name = formData.get("name") as string;
-  const pieces = parseInt(formData.get("pieces") as string);
-  const deadlineMonths = parseInt(formData.get("deadline") as string);
-  const deadline = new Date();
-  deadline.setMonth(deadline.getMonth() + deadlineMonths);
+  const validationResult = ItemFormSchema.safeParse(
+    Object.fromEntries(formData),
+  );
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  const { name, pieces, deadline } = validationResult.data;
+
+  const deadlineDate = new Date();
+  deadlineDate.setMonth(deadlineDate.getMonth() + deadline);
 
   await prisma.item.create({
     data: {
       name,
       pieces,
-      deadline,
+      deadline: deadlineDate,
       plan: ItemPlan.UNDECIDED,
       user: { connect: { id: userId } },
     },
@@ -73,8 +87,19 @@ export async function createItem(formData: FormData) {
   revalidatePath("/dashboard");
 }
 
-export async function createManyItems(items: ItemCreateInput[]) {
+export async function createManyItems(
+  items: ItemCreateInput[],
+): Promise<{ errors?: string } | undefined> {
   const { userId } = await verifySession();
+
+  const validationResult = z.array(ItemFormSchema).safeParse(items);
+
+  if (!validationResult.success) {
+    return {
+      errors: "invalid items",
+    };
+  }
+
   await prisma.item.createMany({
     data: items.map((item) => ({
       ...item,
@@ -126,10 +151,18 @@ export async function updateItem(
 ) {
   const { userId } = await verifySession();
 
+  const validationResult = ItemFormSchema.safeParse(data);
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
   await prisma.item.update({
     where: {
       id,
-      userId, // Ensure user can only update their own items
+      userId,
     },
     data: {
       name: data.name,
@@ -139,4 +172,5 @@ export async function updateItem(
   });
 
   revalidatePath("/dashboard");
+  return { success: true };
 }

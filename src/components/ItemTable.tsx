@@ -35,10 +35,13 @@ const ItemTable = ({
 }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editedValues, setEditedValues] = useState<{
-    [key: string]: { name: string; pieces: number; deadline: Date };
+  const [editingItem, setEditingItem] =
+    useState<Prisma.ItemGetPayload<null> | null>(null);
+  const [validationErrors, setValidationErrors] = useState<{
+    [field: string]: string[];
   }>({});
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -56,46 +59,56 @@ const ItemTable = ({
   };
 
   const handleEditClick = (item: Prisma.ItemGetPayload<null>) => {
-    setEditingId(item.id);
-    setEditedValues({
-      [item.id]: {
-        name: item.name,
-        pieces: item.pieces,
-        deadline: item.deadline,
-      },
-    });
+    setEditingItem(item);
   };
 
   const handleInputChange = (
-    itemId: string,
     field: "name" | "pieces" | "deadline",
     value: string | number | Date,
   ) => {
-    setEditedValues((prev) => ({
-      ...prev,
-      [itemId]: {
-        ...prev[itemId],
-        [field]: value,
-      },
+    setEditingItem((prev) => ({
+      ...prev!,
+      [field]: value,
     }));
   };
 
   const handleSaveClick = async (itemId: string) => {
     try {
-      const editedItem = editedValues[itemId];
-      if (!editedItem) return;
+      if (!editingItem) return;
+      setIsUpdating(itemId);
 
-      await updateItem(itemId, {
-        name: editedItem.name,
-        pieces: editedItem.pieces,
-        deadline: editedItem.deadline,
+      // Check if any values have changed
+      const originalItem = items.find((item) => item.id === itemId);
+      if (!originalItem) return;
+
+      const hasChanges =
+        originalItem.name !== editingItem.name ||
+        originalItem.pieces !== editingItem.pieces ||
+        originalItem.deadline.getTime() !== editingItem.deadline.getTime();
+
+      if (!hasChanges) {
+        setEditingItem(null);
+        setValidationErrors({});
+        return;
+      }
+
+      const result = await updateItem(itemId, {
+        name: editingItem.name,
+        pieces: editingItem.pieces,
+        deadline: editingItem.deadline,
       });
 
-      setEditingId(null);
-      setEditedValues({});
+      if (result?.errors) {
+        setValidationErrors(result.errors);
+        return;
+      }
+
+      setEditingItem(null);
+      setValidationErrors({});
     } catch (error) {
       console.error("Error updating item:", error);
-      // Optionally add error handling UI here
+    } finally {
+      setIsUpdating(null);
     }
   };
 
@@ -106,12 +119,13 @@ const ItemTable = ({
 
     if (isConfirmed) {
       try {
+        setIsDeleting(itemId);
         await deleteItem(itemId);
-        setEditingId(null);
         router.refresh();
       } catch (error) {
         console.error("Error deleting item:", error);
-        // Optionally add error handling UI here
+      } finally {
+        setIsDeleting(null);
       }
     }
   };
@@ -154,15 +168,24 @@ const ItemTable = ({
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Item:
                 </div>
-                {editingId === item.id ? (
-                  <input
-                    type="text"
-                    value={editedValues[item.id]?.name || item.name}
-                    onChange={(e) =>
-                      handleInputChange(item.id, "name", e.target.value)
-                    }
-                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
-                  />
+                {editingItem?.id === item.id ? (
+                  <div>
+                    <input
+                      type="text"
+                      value={editingItem?.name}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      className={`border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full ${
+                        validationErrors.name ? "border-red-500" : ""
+                      }`}
+                    />
+                    {validationErrors.name && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {validationErrors.name.join(", ")}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100 font-medium">
                     {item.name}
@@ -174,19 +197,24 @@ const ItemTable = ({
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Pieces:
                 </div>
-                {editingId === item.id ? (
-                  <input
-                    type="number"
-                    value={editedValues[item.id]?.pieces || item.pieces}
-                    onChange={(e) =>
-                      handleInputChange(
-                        item.id,
-                        "pieces",
-                        parseInt(e.target.value),
-                      )
-                    }
-                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
-                  />
+                {editingItem?.id === item.id ? (
+                  <div>
+                    <input
+                      type="number"
+                      value={editingItem?.pieces}
+                      onChange={(e) =>
+                        handleInputChange("pieces", parseInt(e.target.value))
+                      }
+                      className={`border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full ${
+                        validationErrors.pieces ? "border-red-500" : ""
+                      }`}
+                    />
+                    {validationErrors.pieces && (
+                      <div className="text-red-500 text-sm mt-1">
+                        {validationErrors.pieces.join(", ")}
+                      </div>
+                    )}
+                  </div>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
                     {item.pieces}
@@ -198,11 +226,11 @@ const ItemTable = ({
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Deadline:
                 </div>
-                {editingId === item.id ? (
+                {editingItem?.id === item.id ? (
                   <select
                     value={
                       Math.round(
-                        (editedValues[item.id]?.deadline?.getTime() -
+                        (editingItem!.deadline?.getTime() -
                           new Date().getTime()) /
                           (1000 * 60 * 60 * 24 * 30),
                       ) || 1
@@ -210,7 +238,7 @@ const ItemTable = ({
                     onChange={(e) => {
                       const months = parseInt(e.target.value);
                       const newDeadline = calculateNewDeadline(months);
-                      handleInputChange(item.id, "deadline", newDeadline);
+                      handleInputChange("deadline", newDeadline);
                     }}
                     className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
                   >
@@ -239,19 +267,33 @@ const ItemTable = ({
               </div>
 
               <div className="flex gap-3">
-                {editingId === item.id ? (
+                {editingItem?.id === item.id ? (
                   <>
                     <button
                       onClick={() => handleSaveClick(item.id)}
-                      className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900"
+                      disabled={
+                        isUpdating === item.id || isDeleting === item.id
+                      }
+                      className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <FaSave />
+                      {isUpdating === item.id ? (
+                        <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <FaSave />
+                      )}
                     </button>
                     <button
                       onClick={() => handleDelete(item.id)}
-                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900"
+                      disabled={
+                        isUpdating === item.id || isDeleting === item.id
+                      }
+                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <FaTrash />
+                      {isDeleting === item.id ? (
+                        <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                      ) : (
+                        <FaTrash />
+                      )}
                     </button>
                   </>
                 ) : (

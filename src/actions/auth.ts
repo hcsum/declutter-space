@@ -4,14 +4,14 @@
 import { createSession, deleteSession } from "@/lib/session";
 import {
   SignupFormSchema,
-  FormState,
+  AuthFormState,
   LoginFormSchema,
 } from "@/lib/definitions";
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs"; // Use bcryptjs instead
 import { redirect } from "next/navigation";
 
-export async function signup(state: FormState, formData: FormData) {
+export async function signup(state: AuthFormState, formData: FormData) {
   // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
@@ -64,7 +64,7 @@ export async function signup(state: FormState, formData: FormData) {
   redirect("/dashboard");
 }
 
-export async function login(state: FormState, formData: FormData) {
+export async function login(state: AuthFormState, formData: FormData) {
   // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get("email"),
