@@ -11,6 +11,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Signika } from "next/font/google";
+import { useColorScheme } from "@mui/material";
 
 const signika = Signika({
   weight: "400",
@@ -21,16 +22,19 @@ const Header: React.FC = () => {
   const pathname = usePathname();
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { setMode } = useColorScheme();
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
     if (savedTheme === "dark") {
       setIsDarkMode(true);
+      setMode("dark");
       document.documentElement.classList.add("dark");
     } else {
+      setMode("light");
       document.documentElement.classList.remove("dark");
     }
-  }, []);
+  }, [setMode]);
 
   const toggleDarkMode = () => {
     const newTheme = isDarkMode ? "light" : "dark";

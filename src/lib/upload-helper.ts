@@ -10,7 +10,7 @@ const worker_api_key = process.env.WORKER_API_KEY!;
 export type DetectedItem = {
   score: number;
   label: string;
-  // box: any; // You can type this more specifically if needed
+  box: { xmin: number; ymin: number; xmax: number; ymax: number };
 };
 
 export async function uploadImageToWorker(filePath: string) {

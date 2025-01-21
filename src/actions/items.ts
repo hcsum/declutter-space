@@ -117,7 +117,6 @@ export async function deleteItem(id: string) {
 }
 
 export async function bulkAddItemsByImage(imageData: string) {
-  console.log("bulkAddItemsByImage");
   await verifySession();
 
   // Convert base64 to buffer and save to temp file

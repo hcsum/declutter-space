@@ -12,13 +12,25 @@ export default function ImageUploadBox() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [imageSize, setImageSize] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
   const { trigger: processImage, isMutating } = useSWRMutation(
     "bulkAddItemsByImage",
     async (url: string, { arg }: { arg: File }) => {
       try {
         const resizedImage = await resizeImageFile(arg);
-        setUploadedImage(resizedImage);
         if (!resizedImage) return;
+        setUploadedImage(resizedImage);
+
+        // Get image dimensions when it's loaded
+        const img = new Image();
+        img.onload = () => {
+          setImageSize({ width: img.width, height: img.height });
+        };
+        img.src = resizedImage;
+
         const items = await bulkAddItemsByImage(resizedImage);
         if (items) {
           setDetectedItems(items);
@@ -77,6 +89,7 @@ export default function ImageUploadBox() {
         uploadedImage={uploadedImage}
         onConfirm={onItemsAdded}
         onCancel={handleCancel}
+        imageSize={imageSize}
       />
 
       <div className="mb-6">
