@@ -35,6 +35,7 @@ export default function ImageUploadBox() {
     setShowConfirmDialog(false);
     setDetectedItems([]);
     setUploadedImage(null);
+    console.log(`${itemTotal} items added`);
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {

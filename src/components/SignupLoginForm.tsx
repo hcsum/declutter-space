@@ -14,8 +14,8 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
   const isSignup = formType === "signup";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 pb-16">
-      <div className="w-full max-w-md bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+    <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
+      <div className="w-full md:max-w-md bg-white dark:bg-gray-800 md:rounded-lg md:shadow-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-6">
           {isSignup ? "Create Your Account" : "Login to Your Account"}
         </h1>

@@ -77,11 +77,13 @@ const Header: React.FC = () => {
         </li>
       </ul>
     );
-  } else if (pathname === "/dashboard") {
+  } else if (pathname.startsWith("/dashboard")) {
     navContent = (
-      <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-        <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-      </button>
+      <Link href="/dashboard/user">
+        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
+          <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+        </button>
+      </Link>
     );
   }
 

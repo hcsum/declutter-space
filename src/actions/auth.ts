@@ -33,6 +33,16 @@ export async function signup(state: FormState, formData: FormData) {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   // Insert the user into the database
+  const existingUser = await prisma.user.findUnique({
+    where: { email },
+  });
+
+  if (existingUser) {
+    return {
+      message: "An error occurred while creating your account.",
+    };
+  }
+
   const user = await prisma.user.create({
     data: {
       email,
@@ -90,6 +100,6 @@ export async function login(state: FormState, formData: FormData) {
 }
 
 export async function logout() {
-  deleteSession();
+  await deleteSession();
   redirect("/login");
 }
