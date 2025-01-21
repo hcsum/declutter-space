@@ -1,19 +1,11 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@heroui/table";
+import { FaSearch, FaEdit, FaTrash, FaSave } from "react-icons/fa";
+import { deleteItem, updateItem } from "@/actions/items";
 import Pagination from "./Pagination";
 import { Prisma } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaSearch, FaEdit, FaTrash, FaSave } from "react-icons/fa";
-import { deleteItem, updateItem } from "@/actions/items";
 
 const getRelativeTimeString = (deadline: Date) => {
   const now = new Date();
@@ -149,111 +141,131 @@ const ItemTable = ({
           <FaSearch />
         </button>
       </div>
-      <div className="overflow-x-auto">
-        <Table aria-label="Items table">
-          <TableHeader>
-            <TableColumn>Name</TableColumn>
-            <TableColumn>Pieces</TableColumn>
-            <TableColumn>Deadline</TableColumn>
-            <TableColumn>Date Added</TableColumn>
-            <TableColumn>Actions</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {items.map((item) => (
-              <TableRow key={item.id}>
-                <TableCell>
-                  {editingId === item.id ? (
-                    <input
-                      type="text"
-                      value={editedValues[item.id]?.name || item.name}
-                      onChange={(e) =>
-                        handleInputChange(item.id, "name", e.target.value)
-                      }
-                      className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md w-full"
-                    />
-                  ) : (
-                    item.name
-                  )}
-                </TableCell>
-                <TableCell>
-                  {editingId === item.id ? (
-                    <input
-                      type="number"
-                      value={editedValues[item.id]?.pieces || item.pieces}
-                      onChange={(e) =>
-                        handleInputChange(
-                          item.id,
-                          "pieces",
-                          parseInt(e.target.value),
-                        )
-                      }
-                      className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md w-full"
-                    />
-                  ) : (
-                    item.pieces
-                  )}
-                </TableCell>
-                <TableCell>
-                  {editingId === item.id ? (
-                    <select
-                      value={
-                        Math.round(
-                          (editedValues[item.id]?.deadline?.getTime() -
-                            new Date().getTime()) /
-                            (1000 * 60 * 60 * 24 * 30),
-                        ) || 1
-                      }
-                      onChange={(e) => {
-                        const months = parseInt(e.target.value);
-                        const newDeadline = calculateNewDeadline(months);
-                        handleInputChange(item.id, "deadline", newDeadline);
-                      }}
-                      className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-2 py-1 rounded-md w-full"
-                    >
-                      <option value="1">1 month</option>
-                      <option value="3">3 months</option>
-                      <option value="6">6 months</option>
-                      <option value="9">9 months</option>
-                      <option value="12">1 year</option>
-                      <option value="18">1 and a half year</option>
-                      <option value="24">2 years</option>
-                    </select>
-                  ) : (
-                    `in ${getRelativeTimeString(item.deadline)}`
-                  )}
-                </TableCell>
-                <TableCell>{item.createdAt.toLocaleDateString()}</TableCell>
-                <TableCell>
-                  <div className="flex gap-2">
-                    {editingId === item.id ? (
-                      <>
-                        <button
-                          onClick={() => handleSaveClick(item.id)}
-                          className="p-1.5 text-green-500 hover:bg-green-100 rounded-full dark:hover:bg-green-900"
-                        >
-                          <FaSave />
-                        </button>
-                        <button
-                          onClick={() => handleDelete(item.id)}
-                          className="p-1.5 text-red-500 hover:bg-red-100 rounded-full dark:hover:bg-red-900"
-                        >
-                          <FaTrash />
-                        </button>
-                      </>
-                    ) : (
-                      <button
-                        onClick={() => handleEditClick(item)}
-                        className="p-1.5 text-blue-500 hover:bg-blue-100 rounded-full dark:hover:bg-blue-900"
-                      >
-                        <FaEdit />
-                      </button>
-                    )}
+
+      <div className="space-y-4">
+        {/* List container with gap */}
+        {items.map((item) => (
+          <div
+            key={item.id}
+            className="p-4 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+          >
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="flex-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Item:
+                </div>
+                {editingId === item.id ? (
+                  <input
+                    type="text"
+                    value={editedValues[item.id]?.name || item.name}
+                    onChange={(e) =>
+                      handleInputChange(item.id, "name", e.target.value)
+                    }
+                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
+                  />
+                ) : (
+                  <div className="text-gray-900 dark:text-gray-100 font-medium">
+                    {item.name}
                   </div>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Pieces:
+                </div>
+                {editingId === item.id ? (
+                  <input
+                    type="number"
+                    value={editedValues[item.id]?.pieces || item.pieces}
+                    onChange={(e) =>
+                      handleInputChange(
+                        item.id,
+                        "pieces",
+                        parseInt(e.target.value),
+                      )
+                    }
+                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
+                  />
+                ) : (
+                  <div className="text-gray-900 dark:text-gray-100">
+                    {item.pieces}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Deadline:
+                </div>
+                {editingId === item.id ? (
+                  <select
+                    value={
+                      Math.round(
+                        (editedValues[item.id]?.deadline?.getTime() -
+                          new Date().getTime()) /
+                          (1000 * 60 * 60 * 24 * 30),
+                      ) || 1
+                    }
+                    onChange={(e) => {
+                      const months = parseInt(e.target.value);
+                      const newDeadline = calculateNewDeadline(months);
+                      handleInputChange(item.id, "deadline", newDeadline);
+                    }}
+                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
+                  >
+                    <option value="1">1 month</option>
+                    <option value="3">3 months</option>
+                    <option value="6">6 months</option>
+                    <option value="9">9 months</option>
+                    <option value="12">1 year</option>
+                    <option value="18">1 and a half year</option>
+                    <option value="24">2 years</option>
+                  </select>
+                ) : (
+                  <div className="text-gray-900 dark:text-gray-100">
+                    {`in ${getRelativeTimeString(item.deadline)}`}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-1">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Date Added:
+                </div>
+                <div className="text-gray-900 dark:text-gray-100">
+                  {item.createdAt.toLocaleDateString()}
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                {editingId === item.id ? (
+                  <>
+                    <button
+                      onClick={() => handleSaveClick(item.id)}
+                      className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900"
+                    >
+                      <FaSave />
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900"
+                    >
+                      <FaTrash />
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    onClick={() => handleEditClick(item)}
+                    className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
+                  >
+                    <FaEdit />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        ))}
       </div>
 
       <Pagination currentPage={currentPage} totalPages={totalPages} />

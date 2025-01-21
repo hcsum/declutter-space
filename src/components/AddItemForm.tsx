@@ -23,8 +23,8 @@ function SubmitButton() {
 const AddItemForm = () => {
   return (
     <form action={createItem} className="mb-6 space-y-4">
-      <div className="flex flex-col md:flex-row gap-4">
-        <div className="flex-1">
+      <div className="space-y-4">
+        <div>
           <label htmlFor="name" className="block text-sm font-medium mb-1">
             Item Name
           </label>
@@ -36,7 +36,7 @@ const AddItemForm = () => {
             className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md"
           />
         </div>
-        <div className="w-32">
+        <div>
           <label htmlFor="pieces" className="block text-sm font-medium mb-1">
             Pieces
           </label>
@@ -49,7 +49,7 @@ const AddItemForm = () => {
             className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md"
           />
         </div>
-        <div className="w-48">
+        <div>
           <label htmlFor="deadline" className="block text-sm font-medium mb-1">
             Deadline
           </label>
@@ -57,7 +57,7 @@ const AddItemForm = () => {
             id="deadline"
             name="deadline"
             required
-            className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md"
+            className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 p-2 rounded-md"
           >
             <option value="1">1 month</option>
             <option value="3">3 months</option>
@@ -68,7 +68,7 @@ const AddItemForm = () => {
             <option value="24">2 years</option>
           </select>
         </div>
-        <div className="flex items-end">
+        <div>
           <SubmitButton />
         </div>
       </div>
