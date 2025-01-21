@@ -6,6 +6,10 @@ import Pagination from "./Pagination";
 import { Prisma } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import TextField from "@mui/material/TextField";
+import Select from "@mui/material/Select";
+import { MenuItem } from "@mui/material";
+import FormControl from "@mui/material/FormControl";
 
 const getRelativeTimeString = (deadline: Date) => {
   const now = new Date();
@@ -140,13 +144,14 @@ const ItemTable = ({
     <>
       {/* Search Box */}
       <div className="flex items-center mb-4 md:w-[50%]">
-        <input
-          type="text"
+        <TextField
+          fullWidth
           placeholder="Search items"
           value={searchQuery}
           onChange={handleSearchChange}
           onKeyPress={handleKeyPress}
-          className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md flex-1"
+          size="small"
+          variant="outlined"
         />
         <button
           onClick={handleSearchSubmit}
@@ -161,7 +166,7 @@ const ItemTable = ({
         {items.map((item) => (
           <div
             key={item.id}
-            className="p-4 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            className="p-4 md:p-8 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
           >
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div className="flex-1">
@@ -170,21 +175,17 @@ const ItemTable = ({
                 </div>
                 {editingItem?.id === item.id ? (
                   <div>
-                    <input
-                      type="text"
+                    <TextField
+                      fullWidth
                       value={editingItem?.name}
                       onChange={(e) =>
                         handleInputChange("name", e.target.value)
                       }
-                      className={`border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full ${
-                        validationErrors.name ? "border-red-500" : ""
-                      }`}
+                      error={!!validationErrors.name}
+                      helperText={validationErrors.name?.join(", ")}
+                      size="small"
+                      variant="outlined"
                     />
-                    {validationErrors.name && (
-                      <div className="text-red-500 text-sm mt-1">
-                        {validationErrors.name.join(", ")}
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100 font-medium">
@@ -199,21 +200,18 @@ const ItemTable = ({
                 </div>
                 {editingItem?.id === item.id ? (
                   <div>
-                    <input
+                    <TextField
+                      fullWidth
                       type="number"
                       value={editingItem?.pieces}
                       onChange={(e) =>
                         handleInputChange("pieces", parseInt(e.target.value))
                       }
-                      className={`border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full ${
-                        validationErrors.pieces ? "border-red-500" : ""
-                      }`}
+                      error={!!validationErrors.pieces}
+                      helperText={validationErrors.pieces?.join(", ")}
+                      size="small"
+                      variant="outlined"
                     />
-                    {validationErrors.pieces && (
-                      <div className="text-red-500 text-sm mt-1">
-                        {validationErrors.pieces.join(", ")}
-                      </div>
-                    )}
                   </div>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
@@ -227,29 +225,30 @@ const ItemTable = ({
                   Deadline:
                 </div>
                 {editingItem?.id === item.id ? (
-                  <select
-                    value={
-                      Math.round(
-                        (editingItem!.deadline?.getTime() -
-                          new Date().getTime()) /
-                          (1000 * 60 * 60 * 24 * 30),
-                      ) || 1
-                    }
-                    onChange={(e) => {
-                      const months = parseInt(e.target.value);
-                      const newDeadline = calculateNewDeadline(months);
-                      handleInputChange("deadline", newDeadline);
-                    }}
-                    className="border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-3 py-2 rounded-lg w-full"
-                  >
-                    <option value="1">1 month</option>
-                    <option value="3">3 months</option>
-                    <option value="6">6 months</option>
-                    <option value="9">9 months</option>
-                    <option value="12">1 year</option>
-                    <option value="18">1 and a half year</option>
-                    <option value="24">2 years</option>
-                  </select>
+                  <FormControl fullWidth size="small">
+                    <Select
+                      value={
+                        Math.round(
+                          (editingItem!.deadline?.getTime() -
+                            new Date().getTime()) /
+                            (1000 * 60 * 60 * 24 * 30),
+                        ) || 1
+                      }
+                      onChange={(e) => {
+                        const months = Number(e.target.value);
+                        const newDeadline = calculateNewDeadline(months);
+                        handleInputChange("deadline", newDeadline);
+                      }}
+                    >
+                      <MenuItem value={1}>1 month</MenuItem>
+                      <MenuItem value={3}>3 months</MenuItem>
+                      <MenuItem value={6}>6 months</MenuItem>
+                      <MenuItem value={9}>9 months</MenuItem>
+                      <MenuItem value={12}>1 year</MenuItem>
+                      <MenuItem value={18}>1 and a half year</MenuItem>
+                      <MenuItem value={24}>2 years</MenuItem>
+                    </Select>
+                  </FormControl>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
                     {`in ${getRelativeTimeString(item.deadline)}`}

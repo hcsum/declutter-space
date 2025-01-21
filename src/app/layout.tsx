@@ -28,7 +28,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <div className="min-h-[90vh]">
+        <div className="min-h-[80vh]">
           <LandingPageHeader />
           {children}
         </div>

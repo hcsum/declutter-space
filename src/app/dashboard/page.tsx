@@ -1,7 +1,6 @@
 import { getItems } from "@/actions/items";
-import AddItemForm from "@/components/AddItemForm";
-import ImageUploadBox from "@/components/ImageUploadBox";
 import ItemTable from "@/components/ItemTable";
+import AddItemPanel from "@/components/AddItemPanel";
 
 const Dashboard = async ({
   searchParams,
@@ -30,35 +29,7 @@ const Dashboard = async ({
 
           {/* Right column - Forms */}
           <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-0">
-            <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
-              <details open className="group">
-                <summary className="flex justify-between items-center p-4 cursor-pointer list-none">
-                  <span className="font-semibold">Add New</span>
-                  <svg
-                    className="w-5 h-5 transition-transform group-open:rotate-180"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                </summary>
-                <div className="p-4">
-                  <AddItemForm />
-                  <div className="flex items-center my-6">
-                    <div className="flex-grow border-t border-gray-300"></div>
-                    <span className="mx-4 text-gray-500">OR</span>
-                    <div className="flex-grow border-t border-gray-300"></div>
-                  </div>
-                  <ImageUploadBox />
-                </div>
-              </details>
-            </div>
+            <AddItemPanel />
           </div>
         </div>
       </div>
