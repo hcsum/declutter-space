@@ -34,9 +34,6 @@ const AddingItemDialog = ({
     }
   }, [detectedItems]);
 
-  console.log("detectedItems:", detectedItems);
-  console.log("editableItems:", editableItems);
-
   const [, action, pending] = useActionState(
     (prevState: void, items: ItemCreateInput[]) => createManyItems(items),
     undefined,

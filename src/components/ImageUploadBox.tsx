@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { bulkAddItemsByImage } from "@/actions/items";
 import { DetectedItem } from "@/lib/upload-helper";
 import AddingItemDialog from "@/components/AddingItemDialog";
+import { resizeImageFile } from "@/client-lib/resize-image";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
@@ -17,24 +18,24 @@ export default function ImageUploadBox() {
     setUploadedImage(null);
   };
 
+  const processImageFile = async (file: File) => {
+    try {
+      const resizedImage = await resizeImageFile(file);
+      if (!resizedImage) return;
+      setUploadedImage(resizedImage);
+      const items = await bulkAddItemsByImage(resizedImage);
+      setDetectedItems(items);
+      setShowConfirmDialog(true);
+    } catch (error) {
+      console.error("Failed to process image:", error);
+      alert("Failed to process image");
+    }
+  };
+
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        if (typeof reader.result === "string") {
-          setUploadedImage(reader.result);
-          try {
-            const items = await bulkAddItemsByImage(reader.result);
-            setDetectedItems(items);
-            setShowConfirmDialog(true);
-          } catch (error) {
-            console.error("Failed to process image:", error);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    await processImageFile(file);
   };
 
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
@@ -52,22 +53,8 @@ export default function ImageUploadBox() {
     setIsDragging(false);
 
     const file = e.dataTransfer.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        if (typeof reader.result === "string") {
-          setUploadedImage(reader.result);
-          try {
-            const items = await bulkAddItemsByImage(reader.result);
-            setDetectedItems(items);
-            setShowConfirmDialog(true);
-          } catch (error) {
-            console.error("Failed to process image:", error);
-          }
-        }
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    await processImageFile(file);
   };
 
   const handleCancel = () => {

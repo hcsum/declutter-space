@@ -1,6 +1,9 @@
+"use server";
+
 import fs from "fs";
 import fetch from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
+// import sharp from "sharp";
 
 const worker_api_key = process.env.WORKER_API_KEY!;
 
@@ -15,7 +18,7 @@ export async function uploadImageToWorker(filePath: string) {
     // Read the image file from disk
     const fileBuffer = fs.readFileSync(filePath);
 
-    // Convert the file buffer to an ArrayBuffer
+    // Convert the resized buffer to an ArrayBuffer
     const arrayBuffer = fileBuffer.buffer.slice(
       fileBuffer.byteOffset,
       fileBuffer.byteOffset + fileBuffer.byteLength,
@@ -24,7 +27,7 @@ export async function uploadImageToWorker(filePath: string) {
     // Convert the ArrayBuffer to a Uint8Array
     const pixelArray = [...new Uint8Array(arrayBuffer)];
 
-    console.log("Prepared pixel array:", pixelArray.slice(0, 100)); // Log the first 100 values for debugging
+    // console.log("Prepared pixel array:", pixelArray.slice(0, 100)); // Log the first 100 values for debugging
 
     // Send the POST request to the worker with the proxy agent
     const response = await fetch(process.env.WORKER_API_URL!, {

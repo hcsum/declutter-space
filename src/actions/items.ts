@@ -44,8 +44,6 @@ export async function getItems(
     skip: (page - 1) * limit,
   });
 
-  console.log("items", items);
-
   return {
     items,
     total,
@@ -94,6 +92,7 @@ export async function deleteItem(id: string) {
 }
 
 export async function bulkAddItemsByImage(imageData: string) {
+  console.log("bulkAddItemsByImage");
   await verifySession();
 
   // Convert base64 to buffer and save to temp file
@@ -106,7 +105,6 @@ export async function bulkAddItemsByImage(imageData: string) {
   try {
     // Upload image and process it
     const items = await uploadImageToWorker(tempFilePath);
-    console.log("items", items);
 
     // Clean up temp file
     fs.unlinkSync(tempFilePath);
