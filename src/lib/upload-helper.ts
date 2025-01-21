@@ -3,7 +3,7 @@
 import fs from "fs";
 import fetch from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
-// import sharp from "sharp";
+import { MAX_FILE_SIZE_FOR_UPLOAD_MB } from "./definitions";
 
 const worker_api_key = process.env.WORKER_API_KEY!;
 
@@ -17,6 +17,12 @@ export async function uploadImageToWorker(filePath: string) {
   try {
     // Read the image file from disk
     const fileBuffer = fs.readFileSync(filePath);
+
+    if (fileBuffer.length > MAX_FILE_SIZE_FOR_UPLOAD_MB * 1024 * 1024) {
+      throw new Error(
+        `Image size exceeds ${MAX_FILE_SIZE_FOR_UPLOAD_MB}MB limit`,
+      );
+    }
 
     // Convert the resized buffer to an ArrayBuffer
     const arrayBuffer = fileBuffer.buffer.slice(

@@ -1,7 +1,6 @@
+import { MAX_FILE_SIZE_FOR_UPLOAD_MB } from "@/lib/definitions";
+import { MAX_FILE_SIZE_ALLOWED_MB } from "@/lib/definitions";
 import imageCompression from "browser-image-compression";
-
-const MAX_FILE_SIZE_ALLOWED_MB = 10;
-const MAX_FILE_SIZE_FOR_UPLOAD_MB = 2;
 
 export async function resizeImageFile(file: File): Promise<string | null> {
   if (file.size > MAX_FILE_SIZE_ALLOWED_MB * 1024 * 1024) {

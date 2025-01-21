@@ -45,3 +45,6 @@ export type FormState =
 export interface SessionPayload extends JWTPayload {
   userId: string;
 }
+
+export const MAX_FILE_SIZE_ALLOWED_MB = 10;
+export const MAX_FILE_SIZE_FOR_UPLOAD_MB = 2;
