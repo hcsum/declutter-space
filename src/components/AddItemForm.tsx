@@ -45,8 +45,10 @@ const AddItemForm = () => {
             id="pieces"
             name="pieces"
             min="1"
+            defaultValue="1"
+            step="1"
             required
-            className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md"
+            className="w-full border dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-2 rounded-md [&::-webkit-inner-spin-button]:opacity-100 [&::-webkit-outer-spin-button]:opacity-100"
           />
         </div>
         <div>

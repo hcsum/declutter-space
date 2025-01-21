@@ -7,7 +7,8 @@ import { useState, useEffect } from "react";
 interface AddingItemDialogProps {
   isOpen: boolean;
   detectedItems: DetectedItem[];
-  onConfirm: () => void;
+  uploadedImage: string | null;
+  onConfirm: (itemTotal: number) => void;
   onCancel: () => void;
 }
 
@@ -19,6 +20,7 @@ interface DetectedItemWithChecked extends DetectedItem {
 const AddingItemDialog = ({
   isOpen,
   detectedItems,
+  uploadedImage,
   onConfirm,
   onCancel,
 }: AddingItemDialogProps) => {
@@ -39,7 +41,7 @@ const AddingItemDialog = ({
     undefined,
   );
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const confirmedItems = editableItems
       .filter((item) => item.checked)
       .map((item) => ({
@@ -48,8 +50,8 @@ const AddingItemDialog = ({
         deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
         plan: ItemPlan.UNDECIDED,
       }));
-    action(confirmedItems);
-    onConfirm();
+    await action(confirmedItems);
+    onConfirm(confirmedItems.length);
   };
 
   const handleLabelChange = (index: number, newLabel: string) => {
@@ -90,6 +92,13 @@ const AddingItemDialog = ({
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 md:p-4 z-10">
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full h-full md:h-auto md:max-w-md md:w-full flex flex-col md:rounded-lg">
+        {uploadedImage && (
+          <img
+            src={uploadedImage}
+            alt="Uploaded Preview"
+            className="mt-4 w-32 h-32 object-cover rounded"
+          />
+        )}
         <h3 className="text-lg font-semibold mb-4">Detected Items</h3>
         <form action={handleConfirm} className="flex flex-col h-full">
           <div className="space-y-2 mb-6 overflow-y-auto flex-grow max-h-[60vh] md:max-h-80 overflow-y-scroll">
