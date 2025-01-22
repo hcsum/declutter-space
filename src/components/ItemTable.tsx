@@ -10,6 +10,7 @@ import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
 import { MenuItem } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
+import "./scrollbar.css";
 
 const getRelativeTimeString = (deadline: Date) => {
   const now = new Date();
@@ -161,7 +162,7 @@ const ItemTable = ({
         </button>
       </div>
 
-      <div className="space-y-4">
+      <div className="space-y-4 overflow-y-scroll scrollbar-always h-[60vh]">
         {/* List container with gap */}
         {items.map((item) => (
           <div
@@ -174,19 +175,15 @@ const ItemTable = ({
                   Item:
                 </div>
                 {editingItem?.id === item.id ? (
-                  <div>
-                    <TextField
-                      fullWidth
-                      value={editingItem?.name}
-                      onChange={(e) =>
-                        handleInputChange("name", e.target.value)
-                      }
-                      error={!!validationErrors.name}
-                      helperText={validationErrors.name?.join(", ")}
-                      size="small"
-                      variant="outlined"
-                    />
-                  </div>
+                  <TextField
+                    fullWidth
+                    value={editingItem?.name}
+                    onChange={(e) => handleInputChange("name", e.target.value)}
+                    error={!!validationErrors.name}
+                    helperText={validationErrors.name?.join(", ")}
+                    size="small"
+                    variant="outlined"
+                  />
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100 font-medium">
                     {item.name}
@@ -199,20 +196,18 @@ const ItemTable = ({
                   Pieces:
                 </div>
                 {editingItem?.id === item.id ? (
-                  <div>
-                    <TextField
-                      fullWidth
-                      type="number"
-                      value={editingItem?.pieces}
-                      onChange={(e) =>
-                        handleInputChange("pieces", parseInt(e.target.value))
-                      }
-                      error={!!validationErrors.pieces}
-                      helperText={validationErrors.pieces?.join(", ")}
-                      size="small"
-                      variant="outlined"
-                    />
-                  </div>
+                  <TextField
+                    fullWidth
+                    type="number"
+                    value={editingItem?.pieces}
+                    onChange={(e) =>
+                      handleInputChange("pieces", parseInt(e.target.value))
+                    }
+                    error={!!validationErrors.pieces}
+                    helperText={validationErrors.pieces?.join(", ")}
+                    size="small"
+                    variant="outlined"
+                  />
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
                     {item.pieces}

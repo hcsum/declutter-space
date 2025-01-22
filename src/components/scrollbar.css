@@ -1,0 +1,18 @@
+.scrollbar-always {
+  overflow-y: scroll !important;
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: rgba(156, 163, 175, 0.5) transparent; /* For Firefox */
+}
+
+.scrollbar-always::-webkit-scrollbar {
+  width: 8px; /* Width of the scrollbar */
+}
+
+.scrollbar-always::-webkit-scrollbar-track {
+  background: transparent; /* Track color */
+}
+
+.scrollbar-always::-webkit-scrollbar-thumb {
+  background-color: rgba(156, 163, 175, 0.5); /* Thumb color */
+  border-radius: 4px;
+}
