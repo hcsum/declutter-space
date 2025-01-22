@@ -49,10 +49,10 @@ export default function RootLayout({
             </p>
             <div className="mt-4 flex flex-col sm:flex-row justify-center sm:space-x-4">
               <a
-                href="/refund-policy"
+                href="/customer-service-policy"
                 className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
               >
-                Refund Policy
+                Customer Service Policy
               </a>
               <a
                 href="/privacy-policy"

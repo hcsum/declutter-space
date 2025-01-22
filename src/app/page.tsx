@@ -175,26 +175,40 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Call-to-Action Section */}
-      <section
-        className="bg-blue-500 py-16 px-6 text-center text-white"
-        id="cta"
-      >
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6">
-            Ready to Simplify?
+      {/* Pricing Section */}
+      <section className="py-20 px-6 bg-white dark:bg-gray-800">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+            Pricing
           </h2>
-          <p className="text-lg md:text-xl mb-8">
-            Start your decluttering journey today and experience the freedom of
-            minimalism.
-          </p>
-          <Link href="/dashboard">
-            <button className="bg-white text-blue-500 px-6 py-3 rounded-lg text-lg hover:bg-gray-100 transition">
-              Get Started Now
-            </button>
-          </Link>
+          <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
+            <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+              Pre-Launch Access
+            </h3>
+            <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+              FREE
+              <span className="text-lg text-gray-600 dark:text-gray-400">
+                (Limited Time)
+              </span>
+              <div className="text-lg text-gray-600 dark:text-gray-400 mt-2">
+                $3/month after launch
+              </div>
+            </div>
+            <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
+              <li>Up to 10,000 items</li>
+              <li>10 AI image object detections per month</li>
+              <li>Progress tracking</li>
+              <li>Declutter deadline management</li>
+            </ul>
+            <Link href="/signup">
+              <button className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 transition w-full">
+                Join Beta
+              </button>
+            </Link>
+          </div>
         </div>
       </section>
+
       <ContactForm />
     </div>
   );

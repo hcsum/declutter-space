@@ -6,6 +6,8 @@ import { DetectedItem } from "@/lib/upload-helper";
 import AddingItemDialog from "@/components/AddingItemDialog";
 import { resizeImageFile } from "@/client-lib/resize-image";
 import useSWRMutation from "swr/mutation";
+import { Tooltip } from "@mui/material";
+import InfoIcon from "@mui/icons-material/Info";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
@@ -93,8 +95,16 @@ export default function ImageUploadBox() {
       />
 
       <div className="mb-6">
-        <label className="text-lg font-medium text-gray-900 dark:text-white">
-          Upload file
+        <label className="text-lg font-medium text-gray-900 dark:text-white group relative flex items-center gap-2">
+          Upload image
+          <Tooltip
+            title="Upload an image to automatically detect items in it"
+            arrow
+            enterTouchDelay={0}
+            leaveTouchDelay={1500}
+          >
+            <InfoIcon className="w-5 h-5 ml-1 cursor-help text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" />
+          </Tooltip>
         </label>
         <div className="mt-2 flex items-center justify-center w-full">
           <label

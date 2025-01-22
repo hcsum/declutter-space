@@ -5,7 +5,7 @@ const RefundPolicy = () => {
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 p-6">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-8">
-          Refund and Dispute Policy
+          Customer Service Policy
         </h1>
 
         <p className="text-lg mb-4">
