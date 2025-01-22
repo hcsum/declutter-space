@@ -7,7 +7,7 @@ import AddItemForm from "./AddItemForm";
 import ImageUploadBox from "./ImageUploadBox";
 
 const AddItemPanel = () => {
-  const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">

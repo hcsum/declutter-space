@@ -11,7 +11,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { Signika } from "next/font/google";
-import { useColorScheme } from "@mui/material";
+import { useLightDarkMode } from "./LightDarkModeContext";
 
 const signika = Signika({
   weight: "400",
@@ -20,32 +20,16 @@ const signika = Signika({
 
 const Header: React.FC = () => {
   const pathname = usePathname();
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { mode, toggleMode } = useLightDarkMode();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const { setMode } = useColorScheme();
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-      setIsDarkMode(true);
-      setMode("dark");
-      document.documentElement.classList.add("dark");
-    } else {
-      setMode("light");
-      document.documentElement.classList.remove("dark");
-    }
-  }, [setMode]);
-
-  const toggleDarkMode = () => {
-    const newTheme = isDarkMode ? "light" : "dark";
-    setIsDarkMode(!isDarkMode);
-    localStorage.setItem("theme", newTheme);
-    if (newTheme === "dark") {
+    if (mode === "dark") {
       document.documentElement.classList.add("dark");
     } else {
       document.documentElement.classList.remove("dark");
     }
-  };
+  }, [mode]);
 
   let navContent = null;
 
@@ -101,7 +85,7 @@ const Header: React.FC = () => {
       <div className="mx-auto flex justify-between items-center">
         <Link href="/">
           <h1
-            className={`text-2xl font-bold text-black dark:text-white ${signika.style}`}
+            className={`text-2xl font-bold text-black dark:text-white ${signika.className}`}
           >
             DeclutterSpace
           </h1>
@@ -121,10 +105,10 @@ const Header: React.FC = () => {
           )}
           {navContent}
           <button
-            onClick={toggleDarkMode}
+            onClick={toggleMode}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
           >
-            {isDarkMode ? (
+            {mode === "dark" ? (
               <SunIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
             ) : (
               <MoonIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />

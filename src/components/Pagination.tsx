@@ -20,7 +20,6 @@ const Pagination = ({
     <div className="mt-10 flex justify-center items-center">
       <Link
         href={currentPage > 1 ? getPageUrl(currentPage - 1) : "#"}
-        scroll={false}
         className={`flex items-center px-4 py-2 mx-1 transition-colors duration-300 transform rounded-md ${
           currentPage <= 1
             ? "cursor-not-allowed opacity-50 text-gray-500 bg-white dark:bg-gray-800 dark:text-gray-600"
@@ -34,7 +33,6 @@ const Pagination = ({
         <Link
           key={i + 1}
           href={getPageUrl(i + 1)}
-          scroll={false}
           className={`items-center hidden px-4 py-2 mx-1 transition-colors duration-300 transform rounded-md sm:flex ${
             currentPage === i + 1
               ? "bg-blue-600 text-white dark:bg-blue-600 dark:text-white"
@@ -47,7 +45,6 @@ const Pagination = ({
 
       <Link
         href={currentPage < totalPages ? getPageUrl(currentPage + 1) : "#"}
-        scroll={false}
         className={`items-center px-4 py-2 mx-1 text-gray-700 transition-colors duration-300 transform bg-white rounded-md sm:flex dark:bg-gray-800 dark:text-gray-200 ${
           currentPage >= totalPages
             ? "cursor-not-allowed opacity-50"
