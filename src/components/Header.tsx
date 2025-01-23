@@ -59,6 +59,19 @@ const Header: React.FC = () => {
           <button
             onClick={() => {
               document
+                .getElementById("pricing")
+                ?.scrollIntoView({ behavior: "smooth" });
+              setIsMobileMenuOpen(false);
+            }}
+            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
+          >
+            Pricing
+          </button>
+        </li>
+        <li>
+          <button
+            onClick={() => {
+              document
                 .getElementById("contact")
                 ?.scrollIntoView({ behavior: "smooth" });
               setIsMobileMenuOpen(false);
