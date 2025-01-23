@@ -98,7 +98,19 @@ export default function ImageUploadBox() {
         <label className="text-lg font-medium text-gray-900 dark:text-white group relative flex items-center gap-2">
           Upload image
           <Tooltip
-            title="Upload an image to automatically detect items in it"
+            title={
+              <div className="p-2">
+                <p className="text-sm font-medium mb-3">
+                  For better results, lay your items flat on a surface and take
+                  a photo of them.
+                </p>
+                <img
+                  src="/example-image-stuff.jpg"
+                  alt="Example of automatic item detection"
+                  className="mt-2 w-full rounded-lg border-2 border-gray-200 shadow-sm"
+                />
+              </div>
+            }
             arrow
             enterTouchDelay={0}
             leaveTouchDelay={1500}

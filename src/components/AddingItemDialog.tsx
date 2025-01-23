@@ -51,7 +51,7 @@ const AddingItemDialog = ({
       .map((item) => ({
         name: item.label,
         pieces: item.pieces,
-        deadline: new Date(new Date().setDate(new Date().getDate() + 30)),
+        deadline: new Date(new Date().setDate(new Date().getDate() + 180)),
         plan: ItemPlan.UNDECIDED,
       }));
     action(confirmedItems);

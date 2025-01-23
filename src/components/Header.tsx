@@ -93,10 +93,12 @@ const Header: React.FC = () => {
     );
   }
 
+  const logoLink = pathname.startsWith("/dashboard") ? "/dashboard" : "/";
+
   return (
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
       <div className="mx-auto flex justify-between items-center">
-        <Link href={`${pathname === "/" ? "/" : "/dashboard"}`}>
+        <Link href={logoLink}>
           <h1
             className={`text-2xl font-bold text-black dark:text-white ${signika.className}`}
           >
