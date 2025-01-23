@@ -6,13 +6,13 @@ import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddItemForm from "./AddItemForm";
 import ImageUploadBox from "./ImageUploadBox";
 
-const AddItemPanel = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const AddItemPanel = ({ itemCount }: { itemCount: number }) => {
+  const [isExpanded, setIsExpanded] = useState(itemCount < 1);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
       <div
-        className="flex justify-between items-center p-4 cursor-pointer"
+        className="flex justify-between items-center px-4 py-2 cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
         <span className="font-semibold">Add New</span>

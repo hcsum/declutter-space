@@ -2,13 +2,12 @@
 
 import { FaSearch, FaEdit, FaTrash, FaSave } from "react-icons/fa";
 import { deleteItem, updateItem } from "@/actions/items";
-import Pagination from "./Pagination";
 import { Prisma } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Select from "@mui/material/Select";
-import { MenuItem } from "@mui/material";
+import { MenuItem, Pagination } from "@mui/material";
 import FormControl from "@mui/material/FormControl";
 import "./scrollbar.css";
 
@@ -141,8 +140,15 @@ const ItemTable = ({
     return date;
   };
 
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number,
+  ) => {
+    router.push(`/dashboard?page=${page}&search=${searchQuery}`);
+  };
+
   return (
-    <>
+    <div className="mb-6">
       {/* Search Box */}
       <div className="flex items-center mb-4 md:w-[50%]">
         <TextField
@@ -161,8 +167,14 @@ const ItemTable = ({
           <FaSearch />
         </button>
       </div>
-
-      <div className="space-y-4 overflow-y-scroll scrollbar-always h-[60vh]">
+      <Pagination
+        className="my-4"
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
+      />
+      {/* <div className="space-y-4 overflow-y-scroll scrollbar-always h-[60vh]"> */}
+      <div className="space-y-4 mb-6">
         {/* List container with gap */}
         {items.map((item) => (
           <div
@@ -303,9 +315,7 @@ const ItemTable = ({
           </div>
         ))}
       </div>
-
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
-    </>
+    </div>
   );
 };
 
