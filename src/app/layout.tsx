@@ -17,8 +17,16 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "declutterspace.net",
+  title: "Declutter Space",
   description: "Sort out your stuff, sort out your mind",
+  keywords: [
+    "declutter",
+    "space",
+    "minimalism",
+    "simple living",
+    "life simplification",
+    "minimalist lifestyle",
+  ],
 };
 
 export default function RootLayout({
@@ -29,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased font-geist`}
       >
         <div className="min-h-[80vh]">
           <LightDarkModeProvider>

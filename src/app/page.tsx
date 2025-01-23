@@ -10,7 +10,7 @@ const LandingPage = () => {
       <section className="bg-white dark:bg-gray-800 py-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-            Simplify Your Life, Clear Your Mind
+            Sort out your stuff, sort out your mind
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8">
             Experience the power of minimalism by decluttering your space. Let
@@ -18,7 +18,7 @@ const LandingPage = () => {
           </p>
           <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
-              Start Now
+              Join Beta
             </button>
           </Link>
         </div>

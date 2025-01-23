@@ -20,6 +20,11 @@ export default {
           "100%": { transform: "translateX(-100%)" },
         },
       },
+      fontFamily: {
+        geist: ["var(--font-geist-sans)"],
+        "geist-mono": ["var(--font-geist-mono)"],
+        signika: ["Signika", "sans-serif"],
+      },
     },
   },
 } satisfies Config;

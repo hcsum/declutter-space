@@ -10,13 +10,7 @@ import {
   Bars3Icon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Signika } from "next/font/google";
 import { useLightDarkMode } from "./LightDarkModeContext";
-
-const signika = Signika({
-  weight: "400",
-  subsets: ["latin"],
-});
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -99,9 +93,7 @@ const Header: React.FC = () => {
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
       <div className="mx-auto flex justify-between items-center">
         <Link href={logoLink}>
-          <h1
-            className={`text-2xl font-bold text-black dark:text-white ${signika.className}`}
-          >
+          <h1 className="text-2xl font-bold text-black dark:text-white font-signika">
             DeclutterSpace
           </h1>
         </Link>
