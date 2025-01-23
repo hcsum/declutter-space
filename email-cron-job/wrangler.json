@@ -1,0 +1,12 @@
+{
+	"$schema": "node_modules/wrangler/config-schema.json",
+	"name": "email-cron-job",
+	"main": "src/index.ts",
+	"compatibility_date": "2025-01-21",
+	"observability": {
+		"enabled": true
+	},
+	"triggers": {
+		"crons": ["0 8 * * *"]
+	}
+}

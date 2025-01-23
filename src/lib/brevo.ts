@@ -3,6 +3,8 @@ import {
   TransactionalEmailsApiApiKeys,
   SendSmtpEmail,
 } from "@getbrevo/brevo";
+import { Item, Prisma } from "@prisma/client";
+import { formatDistanceToNow } from "date-fns";
 
 export class BrevoAdapter {
   private apiInstance: TransactionalEmailsApi;
@@ -55,5 +57,54 @@ export class BrevoAdapter {
           "API called successfully. Returned data: " + JSON.stringify(data),
         );
       });
+  }
+
+  async sendItemDeadlineReachedEmail({
+    items,
+    user,
+  }: {
+    items: Item[];
+    user: Prisma.UserGetPayload<{ select: { email: true; name: true } }>;
+  }) {
+    if (items.length === 0) {
+      return;
+    }
+
+    const item = items[0];
+
+    const sendSmtpEmail = new SendSmtpEmail();
+
+    const sender = {
+      name: "Declutter Space",
+      email: process.env.BREVO_SENDER_EMAIL!,
+    };
+
+    const to = {
+      email: user.email,
+      // email: "sumtsui@outlook.com",
+      name: user.name,
+    };
+
+    const relativeTime = formatDistanceToNow(item.deadline, {
+      // addSuffix: true,
+    });
+
+    console.log("relativeTime", relativeTime);
+
+    sendSmtpEmail.subject = `Hi ${user.name}, have you used ${item.name} in the pass ${relativeTime}?`;
+    sendSmtpEmail.htmlContent = `<p>This email is to remind you that, ${relativeTime} ago, you set a deadline for ${item.name}</p>`;
+    if (items.length > 1) {
+      sendSmtpEmail.htmlContent += `<p>Along with other items, </p>`;
+      for (const item of items.slice(1)) {
+        sendSmtpEmail.htmlContent += `<p>${item.name},</p>`;
+      }
+    }
+    sendSmtpEmail.htmlContent += `<p>If you haven't used them, maybe it is time to let go, reclaim your space and have a peace of mind.</p>`;
+    sendSmtpEmail.htmlContent += `<p>Please take a moment to review your items and decide what to do with them.</p>`;
+    sendSmtpEmail.sender = sender;
+    sendSmtpEmail.to = [to];
+    sendSmtpEmail.replyTo = sender;
+
+    return this.apiInstance.sendTransacEmail(sendSmtpEmail);
   }
 }
