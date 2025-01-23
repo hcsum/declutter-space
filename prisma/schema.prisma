@@ -26,17 +26,19 @@ enum ItemPlan {
 }
 
 model Item {
-  id        String         @id @default(uuid())
-  userId    String
-  user      User           @relation(fields: [userId], references: [id])
-  name      String
-  pieces    Int
-  deadline  DateTime
-  plan      ItemPlan
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  image     String?
-  reminders ItemReminder[]
+  id             String         @id @default(uuid())
+  userId         String
+  user           User           @relation(fields: [userId], references: [id])
+  name           String
+  pieces         Int
+  deadline       DateTime
+  durationInDays Int
+  since          DateTime
+  plan           ItemPlan
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  image          String?
+  reminders      ItemReminder[]
 }
 
 enum ItemReminderType {
