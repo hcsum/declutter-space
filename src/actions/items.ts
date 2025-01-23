@@ -133,7 +133,7 @@ export async function bulkAddItemsByImage(imageData: string) {
     // Clean up temp file
     fs.unlinkSync(tempFilePath);
 
-    return items.filter((item) => item.score > 0.5);
+    return items.filter((item) => item.score > 0.2);
   } catch (error) {
     console.error("Error processing image:", error);
     throw new Error("Failed to process image");
