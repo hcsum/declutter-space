@@ -8,16 +8,15 @@ const UserPage = () => {
           User Profile
         </h1>
 
-        <div className="mb-8">
+        {/* <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
             Account Information
           </h2>
-          {/* Add user information from your session/auth system */}
           <p className="text-gray-600 dark:text-gray-400">Username: John Doe</p>
           <p className="text-gray-600 dark:text-gray-400">
             Email: johndoe@example.com
           </p>
-        </div>
+        </div> */}
 
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
