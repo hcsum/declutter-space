@@ -103,7 +103,9 @@ export default function ImageUploadBox() {
               <div className="p-2">
                 <p className="text-sm font-medium mb-3">
                   For better results, lay your items flat on a surface and take
-                  a photo of them.
+                  a photo of them. In beta, the object detection is not perfect,
+                  we are fine toning it and will roll out asap with the paid
+                  version. Stay tuned!
                 </p>
                 <NextImage
                   src="/example-image-stuff.jpg"
