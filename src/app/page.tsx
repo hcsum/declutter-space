@@ -10,11 +10,12 @@ const LandingPage = () => {
       <section className="bg-white dark:bg-gray-800 py-16 px-6 text-center">
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-            Sort out your stuff, sort out your mind
+            Simplify Your Space, Simplify Your Life
           </h1>
           <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8">
-            Experience the power of minimalism by decluttering your space. Let
-            go of the unnecessary and make room for peace and clarity.
+            Discover the power of decluttering. Upload photos of your drawers,
+            closets, or basements, and let our tool help you identify and manage
+            your belongings effortlessly.
           </p>
           <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
@@ -28,7 +29,7 @@ const LandingPage = () => {
             height={600}
             className="h-auto w-full max-w-xl mx-auto rounded-lg dark:bg-white"
             src="/hero.png"
-            alt="A minimalist illustration symbolizing decluttering and tranquility"
+            alt="Illustration of a minimalist space representing organization and clarity"
           />
         </div>
       </section>
@@ -37,9 +38,8 @@ const LandingPage = () => {
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            Every item you own occupies not just physical space, but mental
-            space as well. It quietly absorbs your attention and energy, leaving
-            you feeling more overwhelmed.
+            &quot;Every item in your space affects your mind. Free your
+            environment to free yourself.&quot;
           </h2>
         </div>
       </section>
@@ -47,81 +47,66 @@ const LandingPage = () => {
       {/* Get You Thinking Section */}
       <div className="flex flex-col items-center text-center p-8 max-w-4xl mx-auto my-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <p className="text-lg md:text-xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
-          &quot;It&apos;s not useful now, but I might need it in the
-          future.&quot;
+          &quot;Do I really need this? Or is it time to let go?&quot;
         </p>
 
         <div className="space-y-8">
           <div className="space-y-6">
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               <span className="font-semibold text-gray-800 dark:text-gray-200">
-                THE PASTA MAKER:
+                THE UNUSED GADGETS:
               </span>{" "}
-              The one time I used it, it was great! The fresh pasta tasted
-              better, it was healthier, and the kids had fun using the machine
-              with me. But I haven&apos;t made fresh pasta in over two years. Is
-              the pasta maker clutter?
+              It seemed so useful when I bought it, but it hasn&apos;t been
+              touched in years. Is it time to reclaim that space?
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               <span className="font-semibold text-gray-800 dark:text-gray-200">
-                THE FORMAL DRESSES:
+                THE FORGOTTEN CLOTHES:
               </span>{" "}
-              These three fancy dresses still look nice on me and I really like
-              them. But I haven&apos;t been to a formal occasion in five years.
-              Are these dresses clutter?
+              They still fit and look good, but I haven&apos;t worn them in
+              ages. Are they really worth keeping?
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               <span className="font-semibold text-gray-800 dark:text-gray-200">
-                THE BOOKS:
+                THE STACK OF BOOKS:
               </span>{" "}
-              I would love to read all of these books on my shelf. They would
-              certainly help me grow intellectually, emotionally, and
-              spiritually. But I still haven&apos;t finished the book I started
-              last year. Are these books clutter?
+              They inspire me, but they&apos;ve been collecting dust. Should I
+              focus on a select few instead?
             </p>
           </div>
 
           <div className="dark:border-gray-700 pt-8">
             <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200">
-              &quot;Give yourself a Declutter Deadline: Use It or Lose It!&quot;
+              &quot;Set a Declutter Deadline: Use It or Let It Go&quot;
             </p>
 
             <div className="space-y-6">
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  THE PASTA MAKER:
+                  THE UNUSED GADGETS:
                 </span>{" "}
-                I have three months to make home-made pasta at least once. If I
-                can&apos;t find the time, if I don&apos;t have the energy, or if
-                I simply don&apos;t care enough to follow through, that&apos;s
-                okay! I will say goodbye to the pasta maker and enjoy the extra
-                cabinet space.
+                Give yourself one month to use it. If it doesn&apos;t prove its
+                value, it&apos;s time to let it go.
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  THE FORMAL DRESSES:
+                  THE FORGOTTEN CLOTHES:
                 </span>{" "}
-                My husband and I have six months to do something fancy enough
-                for me to wear one of these dresses. If it&apos;s too expensive,
-                or if we decide would have more fun doing something more casual,
-                that&apos;s okay! I will choose my favorite dress (just in
-                case), let go of the others, and enjoy the extra closet space.
+                Plan an occasion to wear them within three months. If they stay
+                in the closet, consider donating them.
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
-                  THE BOOKS:
+                  THE STACK OF BOOKS:
                 </span>{" "}
-                I have three months to finish the book I&apos;m currently
-                reading. If I don&apos;t have the time, the mental energy, and
-                the motivation to finish one book, that&apos;s okay! I will
-                choose my top three books, let the rest go, and enjoy the extra
-                shelf space.
+                Select one book to finish in two months. If it doesn&apos;t
+                captivate you, pass it along to someone else.
               </p>
             </div>
           </div>
         </div>
         <p className="text-gray-600 dark:text-gray-400 text-lg mt-8 italic border-t border-gray-200 dark:border-gray-700 pt-6">
-          - PracticalFamily.org
+          - Inspired by the Minimalist Movement
         </p>
       </div>
 
@@ -132,43 +117,40 @@ const LandingPage = () => {
             How It Works
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-            Our tool helps you take charge of your possessions and start your
-            decluttering journey with ease.
+            Our smart tool makes decluttering simple and actionable.
           </p>
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
           {/* Feature 1 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-              Identify Your Possessions
+              Identify and Organize
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Add items manually, or take a photo of them and leverage AI object
-              detection to quickly add items. Gain a clear overview of what you
-              own and see where your clutter accumulates.
+              Upload photos of your spaces, and our AI will detect and list the
+              items. Gain clarity on what you own.
             </p>
           </div>
 
           {/* Feature 2 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-              Set Timeframes for Decision Making
+              Set Declutter Deadlines
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Define deadlines for items—decide whether to keep, donate, or
-              discard. When the time comes, we will send you a reminder email.
+              Assign deadlines to items. Decide whether to keep, donate, or
+              discard. We&apos;ll send reminders when the time comes.
             </p>
           </div>
 
           {/* Feature 3 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-              Track Your Progress Over Time
+              Track Your Progress
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Visualize your decluttering progress and stay motivated as you
-              transform your space. With each step, you&apos;ll feel lighter and
-              more at peace.
+              Monitor your decluttering journey with visual progress reports.
+              Celebrate each step toward a more organized space.
             </p>
           </div>
         </div>
@@ -182,7 +164,7 @@ const LandingPage = () => {
           </h2>
           <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
             <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-              Pre-Launch Access
+              Early Access
             </h3>
             <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
               FREE
@@ -195,8 +177,8 @@ const LandingPage = () => {
             </div>
             <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
               <li>Up to 1,000 items</li>
-              <li>10 AI image object detections per month</li>
-              <li>Progress tracking</li>
+              <li>10 AI photo analyses per month</li>
+              <li>Progress tracking and insights</li>
               <li>Declutter deadline management</li>
             </ul>
             <Link href="/signup">
