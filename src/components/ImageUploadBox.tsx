@@ -8,6 +8,7 @@ import { resizeImageFile } from "@/client-lib/resize-image";
 import useSWRMutation from "swr/mutation";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
+import NextImage from "next/image";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
@@ -104,10 +105,12 @@ export default function ImageUploadBox() {
                   For better results, lay your items flat on a surface and take
                   a photo of them.
                 </p>
-                <img
+                <NextImage
                   src="/example-image-stuff.jpg"
                   alt="Example of automatic item detection"
                   className="mt-2 w-full rounded-lg border-2 border-gray-200 shadow-sm"
+                  width={300}
+                  height={300}
                 />
               </div>
             }

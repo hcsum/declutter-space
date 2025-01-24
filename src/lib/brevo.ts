@@ -86,8 +86,6 @@ export class BrevoAdapter {
 
     const relativeTime = formatDistanceToNow(item.startDate);
 
-    console.log("relativeTime", relativeTime);
-
     sendSmtpEmail.subject = `Hi ${user.name}, have you used ${item.name} in the pass ${relativeTime}?`;
     sendSmtpEmail.htmlContent = `<p>This email is to remind you that, ${relativeTime} ago, you set a deadline for ${item.name}</p>`;
     if (items.length > 1) {

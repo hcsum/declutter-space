@@ -22,7 +22,12 @@ const ItemFormSchema = z.object({
   pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
   deadline: z.coerce
     .date()
-    .min(new Date(), { message: "Deadline must be in the future." }),
+    .refine(
+      (date) => date.getTime() > new Date().getTime() - 1000 * 60 * 60 * 24,
+      {
+        message: "Deadline must be in the future.",
+      },
+    ),
 });
 
 export type ItemFormState =

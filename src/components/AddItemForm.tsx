@@ -48,6 +48,7 @@ const AddItemForm = () => {
         <DatePicker
           label="Deadline"
           name="deadline"
+          disablePast
           slotProps={{
             textField: {
               required: true,

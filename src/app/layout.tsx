@@ -1,6 +1,6 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Signika } from "next/font/google";
 import "./globals.css";
 import LandingPageHeader from "@/components/Header";
 import UIProvider from "@/components/UIProvider";
@@ -13,6 +13,11 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const signika = Signika({
+  variable: "--font-signika",
   subsets: ["latin"],
 });
 
@@ -37,7 +42,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased font-geist`}
+        className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased`}
       >
         <div className="min-h-[80vh]">
           <LightDarkModeProvider>

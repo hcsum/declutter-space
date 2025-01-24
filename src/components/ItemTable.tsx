@@ -240,6 +240,7 @@ const ItemTable = ({
                           handleInputChange("deadline", newValue);
                         }
                       }}
+                      disablePast
                       format="MM/dd/yyyy"
                       slotProps={{
                         textField: {
