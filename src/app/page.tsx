@@ -143,9 +143,9 @@ const LandingPage = () => {
               Identify Your Possessions
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Use AI-powered photo analysis to categorize and quantify the items
-              in your home. Gain a clear overview of what you own and see where
-              your clutter accumulates.
+              Add items manually, or take a photo of them and leverage AI object
+              detection to quickly add items. Gain a clear overview of what you
+              own and see where your clutter accumulates.
             </p>
           </div>
 
@@ -156,8 +156,7 @@ const LandingPage = () => {
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
               Define deadlines for items—decide whether to keep, donate, or
-              discard. The time constraints help you make clear decisions and
-              minimize the mental burden.
+              discard. When the time comes, we will send you a reminder email.
             </p>
           </div>
 
@@ -195,7 +194,7 @@ const LandingPage = () => {
               </div>
             </div>
             <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-              <li>Up to 10,000 items</li>
+              <li>Up to 1,000 items</li>
               <li>10 AI image object detections per month</li>
               <li>Progress tracking</li>
               <li>Declutter deadline management</li>
