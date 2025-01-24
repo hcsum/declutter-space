@@ -81,13 +81,10 @@ export class BrevoAdapter {
 
     const to = {
       email: user.email,
-      // email: "sumtsui@outlook.com",
       name: user.name,
     };
 
-    const relativeTime = formatDistanceToNow(item.deadline, {
-      // addSuffix: true,
-    });
+    const relativeTime = formatDistanceToNow(item.startDate);
 
     console.log("relativeTime", relativeTime);
 

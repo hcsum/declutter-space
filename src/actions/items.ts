@@ -1,6 +1,5 @@
 "use server";
 
-import { ItemFormSchema, ItemFormState } from "@/lib/definitions";
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
 import { uploadImageToWorker } from "@/lib/upload-helper";
@@ -9,7 +8,32 @@ import fs from "fs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-export type ItemCreateInput = Omit<Prisma.ItemCreateInput, "userId" | "user">;
+export type ItemCreateInput = {
+  name: string;
+  pieces: number;
+  deadline: Date;
+};
+
+const ItemFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters long." })
+    .trim(),
+  pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
+  deadline: z.coerce
+    .date()
+    .min(new Date(), { message: "Deadline must be in the future." }),
+});
+
+export type ItemFormState =
+  | {
+      errors?: {
+        name?: string[];
+        pieces?: string[];
+        deadline?: string[];
+      };
+    }
+  | undefined;
 
 export async function getItems(
   page: number = 1,
@@ -30,7 +54,6 @@ export async function getItems(
       : {}),
   };
 
-  // Get total count for pagination
   const total = await prisma.item.count({
     where: whereClause,
   });
@@ -40,7 +63,7 @@ export async function getItems(
     orderBy: [
       { updatedAt: "desc" },
       { createdAt: "desc" },
-      { deadline: "asc" },
+      { deadline: "desc" },
     ],
     take: limit,
     skip: (page - 1) * limit,
@@ -72,14 +95,12 @@ export async function createItem(
 
   const { name, pieces, deadline } = validationResult.data;
 
-  const deadlineDate = new Date();
-  deadlineDate.setMonth(deadlineDate.getMonth() + deadline);
-
   await prisma.item.create({
     data: {
       name,
       pieces,
-      deadline: deadlineDate,
+      deadline,
+      startDate: new Date(),
       plan: ItemPlan.UNDECIDED,
       user: { connect: { id: userId } },
     },
@@ -101,9 +122,12 @@ export async function createManyItems(
   }
 
   await prisma.item.createMany({
-    data: items.map((item) => ({
+    data: validationResult.data.map((item) => ({
       ...item,
       userId: userId,
+      startDate: new Date(),
+      deadline: item.deadline,
+      plan: ItemPlan.UNDECIDED,
     })),
   });
   revalidatePath("/dashboard");
@@ -140,17 +164,10 @@ export async function bulkAddItemsByImage(imageData: string) {
   }
 }
 
-export async function updateItem(
-  id: string,
-  data: {
-    name: string;
-    pieces: number;
-    deadline: Date;
-  },
-) {
+export async function updateItem(id: string, data: Partial<ItemCreateInput>) {
   const { userId } = await verifySession();
 
-  const validationResult = ItemFormSchema.safeParse(data);
+  const validationResult = ItemFormSchema.partial().safeParse(data);
 
   if (!validationResult.success) {
     return {
@@ -158,16 +175,27 @@ export async function updateItem(
     };
   }
 
+  const item = await prisma.item.findUniqueOrThrow({
+    where: {
+      id,
+      userId,
+    },
+  });
+
+  const updateData: Prisma.ItemUpdateInput = {};
+  if (data.name !== undefined) updateData.name = data.name;
+  if (data.pieces !== undefined) updateData.pieces = data.pieces;
+  if (data.deadline !== undefined) updateData.deadline = data.deadline;
+  if (data.deadline !== item.deadline) {
+    updateData.startDate = new Date();
+  }
+
   await prisma.item.update({
     where: {
       id,
       userId,
     },
-    data: {
-      name: data.name,
-      pieces: data.pieces,
-      deadline: data.deadline,
-    },
+    data: updateData,
   });
 
   revalidatePath("/dashboard");

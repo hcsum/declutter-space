@@ -6,27 +6,12 @@ import { Prisma } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import Select from "@mui/material/Select";
-import { MenuItem, Pagination } from "@mui/material";
-import FormControl from "@mui/material/FormControl";
+import { Pagination } from "@mui/material";
 import "./scrollbar.css";
-
-const getRelativeTimeString = (deadline: Date) => {
-  const now = new Date();
-  const diffTime = deadline.getTime() - now.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-  if (diffDays < 0) return "Past due";
-  if (diffDays === 0) return "Today";
-  if (diffDays === 1) return "Tomorrow";
-  if (diffDays < 7) return `${diffDays} ${diffDays === 1 ? "day" : "days"}`;
-  const weeks = Math.floor(diffDays / 7);
-  if (diffDays < 30) return `${weeks} ${weeks === 1 ? "week" : "weeks"}`;
-  const months = Math.floor(diffDays / 30);
-  if (diffDays < 365) return `${months} ${months === 1 ? "month" : "months"}`;
-  const years = Math.floor(diffDays / 365);
-  return `${years} ${years === 1 ? "year" : "years"}`;
-};
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import { formatDistanceToNow } from "date-fns";
 
 const ItemTable = ({
   items,
@@ -139,11 +124,11 @@ const ItemTable = ({
     }
   };
 
-  const calculateNewDeadline = (months: number): Date => {
-    const date = new Date();
-    date.setMonth(date.getMonth() + months);
-    return date;
-  };
+  // const calculateNewDeadline = (months: number): Date => {
+  //   const date = new Date();
+  //   date.setMonth(date.getMonth() + months);
+  //   return date;
+  // };
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -247,33 +232,28 @@ const ItemTable = ({
                   Deadline:
                 </div>
                 {editingItem?.id === item.id ? (
-                  <FormControl fullWidth size="small">
-                    <Select
-                      value={
-                        Math.round(
-                          (editingItem!.deadline?.getTime() -
-                            new Date().getTime()) /
-                            (1000 * 60 * 60 * 24 * 30),
-                        ) || 1
-                      }
-                      onChange={(e) => {
-                        const months = Number(e.target.value);
-                        const newDeadline = calculateNewDeadline(months);
-                        handleInputChange("deadline", newDeadline);
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      value={editingItem.deadline}
+                      onChange={(newValue) => {
+                        if (newValue) {
+                          handleInputChange("deadline", newValue);
+                        }
                       }}
-                    >
-                      <MenuItem value={1}>1 month</MenuItem>
-                      <MenuItem value={3}>3 months</MenuItem>
-                      <MenuItem value={6}>6 months</MenuItem>
-                      <MenuItem value={9}>9 months</MenuItem>
-                      <MenuItem value={12}>1 year</MenuItem>
-                      <MenuItem value={18}>1 and a half year</MenuItem>
-                      <MenuItem value={24}>2 years</MenuItem>
-                    </Select>
-                  </FormControl>
+                      format="MM/dd/yyyy"
+                      slotProps={{
+                        textField: {
+                          size: "small",
+                          fullWidth: true,
+                          error: !!validationErrors.deadline,
+                          helperText: validationErrors.deadline?.join(", "),
+                        },
+                      }}
+                    />
+                  </LocalizationProvider>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
-                    {`in ${getRelativeTimeString(item.deadline)}`}
+                    {`in ${formatDistanceToNow(item.deadline)}`}
                   </div>
                 )}
               </div>

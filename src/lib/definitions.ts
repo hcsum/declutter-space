@@ -31,15 +31,6 @@ export const LoginFormSchema = z.object({
     .trim(),
 });
 
-export const ItemFormSchema = z.object({
-  name: z
-    .string()
-    .min(2, { message: "Name must be at least 2 characters long." })
-    .trim(),
-  pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
-  deadline: z.coerce.number().min(1, { message: "Must be at least 1 month." }),
-});
-
 export type AuthFormState =
   | {
       errors?: {

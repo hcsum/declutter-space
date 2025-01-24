@@ -2,15 +2,10 @@
 
 import { createItem } from "@/actions/items";
 import { useActionState } from "react";
-import {
-  TextField,
-  Button,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Box,
-} from "@mui/material";
+import { TextField, Button, Box } from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 
 const AddItemForm = () => {
   const [state, action, pending] = useActionState(createItem, undefined);
@@ -49,25 +44,20 @@ const AddItemForm = () => {
         helperText={state?.errors?.pieces}
       />
 
-      <FormControl fullWidth>
-        <InputLabel id="deadline-label">Deadline</InputLabel>
-        <Select
-          labelId="deadline-label"
-          id="deadline"
-          name="deadline"
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <DatePicker
           label="Deadline"
-          defaultValue="1"
-          required
-        >
-          <MenuItem value="1">1 month</MenuItem>
-          <MenuItem value="3">3 months</MenuItem>
-          <MenuItem value="6">6 months</MenuItem>
-          <MenuItem value="9">9 months</MenuItem>
-          <MenuItem value="12">1 year</MenuItem>
-          <MenuItem value="18">1.5 years</MenuItem>
-          <MenuItem value="24">2 years</MenuItem>
-        </Select>
-      </FormControl>
+          name="deadline"
+          slotProps={{
+            textField: {
+              required: true,
+              fullWidth: true,
+              error: !!state?.errors?.deadline,
+              helperText: state?.errors?.deadline,
+            },
+          }}
+        />
+      </LocalizationProvider>
 
       <Button
         type="submit"
