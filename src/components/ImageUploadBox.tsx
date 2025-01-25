@@ -103,13 +103,11 @@ export default function ImageUploadBox() {
             title={
               <div className="p-2">
                 <p className="text-sm font-medium mb-3">
-                  For better results, lay your items flat on a surface and take
-                  a photo of them. In beta, the object detection is not perfect,
-                  we are fine toning it and will roll out asap with the paid
-                  version. Stay tuned!
+                  For better object detection result, organize your items and
+                  lay them out, make sure all items are visiable.
                 </p>
                 <NextImage
-                  src="/example-image-stuff.jpg"
+                  src="/example-stuff.webp"
                   alt="Example of automatic item detection"
                   className="mt-2 w-full rounded-lg border-2 border-gray-200 shadow-sm"
                   width={300}

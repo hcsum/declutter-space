@@ -47,6 +47,8 @@ export async function uploadImageToWorker(imageData: string) {
 
     const { data } = await response.json();
 
+    console.log("data", data);
+
     return JSON.parse(data) as DetectedItemChatGPT[];
   } catch (error) {
     console.error("Error uploading image:", error);
