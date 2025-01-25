@@ -2,9 +2,8 @@
 
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
-import { uploadImageToWorker } from "@/lib/upload-helper";
+import { uploadImageToWorker } from "@/lib/upload-helper-chatgpt";
 import { ItemPlan, Prisma } from "@prisma/client";
-import fs from "fs";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -148,21 +147,17 @@ export async function deleteItem(id: string) {
 export async function bulkAddItemsByImage(imageData: string) {
   await verifySession();
 
-  // Convert base64 to buffer and save to temp file
-  const base64Data = imageData.replace(/^data:image\/\w+;base64,/, "");
-  const buffer = Buffer.from(base64Data, "base64");
-
-  const tempFilePath = `/tmp/upload-${Date.now()}.png`;
-  fs.writeFileSync(tempFilePath, buffer);
-
   try {
+    const base64WithPrefix = imageData.startsWith("data:image/")
+      ? imageData
+      : `data:image/jpeg;base64,${imageData}`;
+
     // Upload image and process it
-    const items = await uploadImageToWorker(tempFilePath);
+    const items = await uploadImageToWorker(base64WithPrefix);
 
-    // Clean up temp file
-    fs.unlinkSync(tempFilePath);
+    console.log("items", items);
 
-    return items.filter((item) => item.score > 0.2);
+    return items;
   } catch (error) {
     console.error("Error processing image:", error);
     throw new Error("Failed to process image");

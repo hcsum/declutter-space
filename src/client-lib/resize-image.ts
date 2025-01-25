@@ -1,5 +1,7 @@
-import { MAX_FILE_SIZE_FOR_UPLOAD_MB } from "@/lib/definitions";
-import { MAX_FILE_SIZE_ALLOWED_MB } from "@/lib/definitions";
+import {
+  MAX_FILE_SIZE_ALLOWED_MB,
+  MAX_FILE_SIZE_FOR_UPLOAD_MB,
+} from "@/lib/definitions";
 import imageCompression from "browser-image-compression";
 
 export async function resizeImageFile(file: File): Promise<string | null> {
@@ -14,12 +16,11 @@ export async function resizeImageFile(file: File): Promise<string | null> {
   );
 
   try {
-    const options = {
-      maxSizeMB: MAX_FILE_SIZE_FOR_UPLOAD_MB,
+    const compressedFile = await imageCompression(file, {
       useWebWorker: true,
-    };
-
-    const compressedFile = await imageCompression(file, options);
+      maxWidthOrHeight: 750,
+      maxSizeMB: MAX_FILE_SIZE_FOR_UPLOAD_MB,
+    });
     console.log(
       "Compressed file size:",
       (compressedFile.size / 1024 / 1024).toFixed(2),

@@ -33,8 +33,6 @@ export async function uploadImageToWorker(filePath: string) {
     // Convert the ArrayBuffer to a Uint8Array
     const pixelArray = [...new Uint8Array(arrayBuffer)];
 
-    // console.log("Prepared pixel array:", pixelArray.slice(0, 100)); // Log the first 100 values for debugging
-
     // Send the POST request to the worker with the proxy agent
     const response = await fetch(process.env.WORKER_API_URL!, {
       method: "POST",

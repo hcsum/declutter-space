@@ -2,18 +2,19 @@
 
 import React, { useState } from "react";
 import { bulkAddItemsByImage } from "@/actions/items";
-import { DetectedItem } from "@/lib/upload-helper";
+import { DetectedItemChatGPT } from "@/lib/upload-helper-chatgpt";
 import AddingItemDialog from "@/components/AddingItemDialog";
 import { resizeImageFile } from "@/client-lib/resize-image";
 import useSWRMutation from "swr/mutation";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import NextImage from "next/image";
+import { MAX_FILE_SIZE_ALLOWED_MB } from "@/lib/definitions";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [detectedItems, setDetectedItems] = useState<DetectedItem[]>([]);
+  const [detectedItems, setDetectedItems] = useState<DetectedItemChatGPT[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [imageSize, setImageSize] = useState<{
     width: number;
@@ -151,7 +152,7 @@ export default function ImageUploadBox() {
                     and drop
                   </p>
                   <p className="text-xs text-gray-500 dark:text-gray-400">
-                    PNG, JPG, JPEG (MAX. 10MB)
+                    PNG, JPG, JPEG (MAX. {MAX_FILE_SIZE_ALLOWED_MB}MB)
                   </p>
                 </>
               )}

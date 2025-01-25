@@ -1,5 +1,5 @@
 import { createManyItems, ItemCreateInput } from "@/actions/items";
-import { DetectedItem } from "@/lib/upload-helper";
+import { DetectedItemChatGPT } from "@/lib/upload-helper-chatgpt";
 import { Dialog, useMediaQuery } from "@mui/material";
 import { ItemPlan } from "@prisma/client";
 import { useActionState } from "react";
@@ -7,14 +7,14 @@ import { useState, useEffect } from "react";
 
 interface AddingItemDialogProps {
   isOpen: boolean;
-  detectedItems: DetectedItem[];
+  detectedItems: DetectedItemChatGPT[];
   uploadedImage: string | null;
   onConfirm: (itemTotal: number) => void;
   onCancel: () => void;
   imageSize: { width: number; height: number } | null;
 }
 
-interface DetectedItemWithChecked extends DetectedItem {
+interface DetectedItemWithChecked extends DetectedItemChatGPT {
   checked: boolean;
   pieces: number;
 }
@@ -25,7 +25,6 @@ const AddingItemDialog = ({
   uploadedImage,
   onConfirm,
   onCancel,
-  imageSize,
 }: AddingItemDialogProps) => {
   const [editableItems, setEditableItems] = useState<DetectedItemWithChecked[]>(
     [],
@@ -34,7 +33,11 @@ const AddingItemDialog = ({
   useEffect(() => {
     if (detectedItems.length > 0) {
       setEditableItems(
-        detectedItems.map((item) => ({ ...item, checked: true, pieces: 1 })),
+        detectedItems.map((item) => ({
+          ...item,
+          checked: true,
+          pieces: item.count,
+        })),
       );
     }
   }, [detectedItems]);
@@ -100,30 +103,7 @@ const AddingItemDialog = ({
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full h-auto md:h-auto md:max-w-md md:w-full flex flex-col md:rounded-lg">
         <div className="relative">
           {uploadedImage && (
-            <>
-              <img
-                src={uploadedImage}
-                alt="Uploaded"
-                className="w-full h-auto"
-              />
-              {imageSize &&
-                detectedItems.map((item, index) => (
-                  <div
-                    key={index}
-                    className="absolute border-2 border-red-500"
-                    style={{
-                      left: `${(item.box.xmin / imageSize.width) * 100}%`,
-                      top: `${(item.box.ymin / imageSize.height) * 100}%`,
-                      width: `${((item.box.xmax - item.box.xmin) / imageSize.width) * 100}%`,
-                      height: `${((item.box.ymax - item.box.ymin) / imageSize.height) * 100}%`,
-                    }}
-                  >
-                    <span className="absolute top-0 left-0 bg-red-500 text-white text-xs px-1">
-                      {item.label} ({(item.score * 100).toFixed(2)}%)
-                    </span>
-                  </div>
-                ))}
-            </>
+            <img src={uploadedImage} alt="Uploaded" className="w-full h-auto" />
           )}
         </div>
         <h3 className="text-lg font-semibold mb-4 mt-2">Detected Items</h3>
@@ -184,9 +164,6 @@ const AddingItemDialog = ({
                   min="1"
                   className="w-20 px-2 py-1 border rounded dark:bg-gray-700 dark:border-gray-600"
                 />
-                <span className="text-sm text-gray-500 whitespace-nowrap">
-                  {(item.score * 100).toFixed(1)}%
-                </span>
               </div>
             ))}
           </div>
