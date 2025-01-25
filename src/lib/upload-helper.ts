@@ -5,7 +5,7 @@ import fetch from "node-fetch";
 import { HttpsProxyAgent } from "https-proxy-agent";
 import { MAX_FILE_SIZE_FOR_UPLOAD_MB } from "./definitions";
 
-const worker_api_key = process.env.WORKER_API_KEY!;
+const worker_secret = process.env.WORKER_SECRET!;
 
 export type DetectedItem = {
   score: number;
@@ -40,7 +40,7 @@ export async function uploadImageToWorker(filePath: string) {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-api-key": worker_api_key, // Include the API key
+        secret: worker_secret,
       },
       body: JSON.stringify({
         image: pixelArray,

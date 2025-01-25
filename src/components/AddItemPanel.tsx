@@ -15,7 +15,7 @@ const AddItemPanel = ({ itemCount }: { itemCount: number }) => {
         className="flex justify-between items-center px-4 py-2 cursor-pointer"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <span className="font-semibold">Add New</span>
+        <span className="font-semibold">Add Item</span>
         <IconButton
           sx={{
             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",

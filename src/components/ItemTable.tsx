@@ -7,7 +7,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import { Pagination } from "@mui/material";
-import "./scrollbar.css";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -175,7 +174,6 @@ const ItemTable = ({
       />
       {/* <div className="space-y-4 overflow-y-scroll scrollbar-always h-[60vh]"> */}
       <div className="space-y-4 mb-6">
-        {/* List container with gap */}
         {items.map((item) => (
           <div
             key={item.id}
@@ -310,6 +308,11 @@ const ItemTable = ({
             </div>
           </div>
         ))}
+        {items.length === 0 && (
+          <div className="text-center text-gray-500 dark:text-gray-400">
+            <p>No items found. Get started by adding an item.</p>
+          </div>
+        )}
       </div>
     </div>
   );
