@@ -12,7 +12,7 @@ const LandingPage = () => {
         className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
       >
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
             Discover peace through decluttering
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
@@ -49,7 +49,7 @@ const LandingPage = () => {
 
       {/* Get You Thinking Section */}
       <div className="flex flex-col items-center text-center p-8 max-w-4xl mx-auto my-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <p className="text-lg md:text-xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
+        <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
           &quot;Do I really need this? Or is it time to let go?&quot;
         </p>
 
@@ -79,7 +79,7 @@ const LandingPage = () => {
           </div>
 
           <div className="dark:border-gray-700 pt-8">
-            <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200">
+            <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
               &quot;Set a Declutter Deadline: Use It or Let It Go&quot;
             </p>
 
