@@ -16,9 +16,8 @@ const LandingPage = () => {
             Discover peace through decluttering
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
-            Upload photos of your drawers, closets, or storage spaces. Our tool
-            will help you list, categorize, and set declutter deadlines for
-            every item, so you can decide what stays and what goes.
+            Easily keep track of your belongings, set deadlines for every item,
+            so you can decide what stays and what goes.
           </p>
           <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
