@@ -7,15 +7,18 @@ const LandingPage = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
       {/* Main Content */}
-      <section className="bg-white dark:bg-gray-800 py-16 px-6 text-center">
+      <section
+        id="hero-section"
+        className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
+      >
         <div className="max-w-3xl mx-auto">
           <h1 className="text-4xl md:text-5xl font-bold mb-6 leading-tight">
-            Simplify Your Space, Simplify Your Life
+            Discover peace through decluttering
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-400 mb-8">
-            Discover the power of decluttering. Upload photos of your drawers,
-            closets, or basements, and let our tool help you identify and manage
-            your belongings effortlessly.
+          <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
+            Upload photos of your drawers, closets, or storage spaces. Our tool
+            will help you list, categorize, and set declutter deadlines for
+            every item, so you can decide what stays and what goes.
           </p>
           <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
