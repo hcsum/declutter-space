@@ -3,18 +3,21 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
 
 model User {
-  id        String   @id @default(uuid())
-  name      String
-  email     String   @unique
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  items     Item[]
+  id                     String    @id @default(uuid())
+  name                   String
+  email                  String    @unique
+  password               String
+  imageAnalysisUsedCount Int       @default(0)
+  imageAnalysisUsedAt    DateTime?
+  createdAt              DateTime  @default(now())
+  updatedAt              DateTime  @updatedAt
+  items                  Item[]
 }
 
 enum ItemPlan {

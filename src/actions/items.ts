@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
 import { uploadImageToWorker } from "@/lib/upload-helper-chatgpt";
+import { validateImageAnalysisUsage } from "@/lib/utils";
 import { ItemPlan, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -145,7 +146,17 @@ export async function deleteItem(id: string) {
 }
 
 export async function bulkAddItemsByImage(imageData: string) {
-  await verifySession();
+  const { userId } = await verifySession();
+
+  const user = await prisma.user.findUniqueOrThrow({
+    where: { id: userId },
+  });
+
+  if (!validateImageAnalysisUsage(user)) {
+    throw new Error(
+      "Monthly image analysis limit reached (10 analyses per month)",
+    );
+  }
 
   try {
     const base64WithPrefix = imageData.startsWith("data:image/")
@@ -156,6 +167,14 @@ export async function bulkAddItemsByImage(imageData: string) {
     const items = await uploadImageToWorker(base64WithPrefix);
 
     console.log("items", items);
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        imageAnalysisUsedCount: { increment: 1 },
+        imageAnalysisUsedAt: new Date(),
+      },
+    });
 
     return items;
   } catch (error) {
