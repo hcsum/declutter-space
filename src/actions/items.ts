@@ -163,7 +163,6 @@ export async function bulkAddItemsByImage(imageData: string) {
       ? imageData
       : `data:image/jpeg;base64,${imageData}`;
 
-    // Upload image and process it
     const items = await uploadImageToWorker(base64WithPrefix);
 
     console.log("items", items);

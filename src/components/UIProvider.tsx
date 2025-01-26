@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { AppRouterCacheProvider } from "@mui/material-nextjs/v15-appRouter";
-import theme from "@/lib/mui-theme";
+import theme from "@/client-lib/mui-theme";
 import { ThemeProvider } from "@mui/material/styles";
 import { useLightDarkMode } from "./LightDarkModeContext";
 
