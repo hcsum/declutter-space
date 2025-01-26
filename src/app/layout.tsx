@@ -23,13 +23,12 @@ const signika = Signika({
 
 export const metadata: Metadata = {
   title: "Declutter Space",
-  description: "Sort out your stuff, sort out your mind",
+  description: "A tool to help you declutter",
   keywords: [
     "declutter",
-    "space",
-    "minimalism",
-    "simple living",
-    "life simplification",
+    "declutter app",
+    "declutter tool",
+    "declutter software",
     "minimalist lifestyle",
   ],
 };
