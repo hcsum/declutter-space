@@ -21,13 +21,15 @@ export default function ImageUploadBox() {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [detectedItems, setDetectedItems] = useState<DetectedItemChatGPT[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
-  const [imageSize, setImageSize] = useState<{
-    width: number;
-    height: number;
-  } | null>(null);
 
-  const { data: user } = useSWR("user", () =>
-    getUserById({ imageAnalysisUsedCount: true }),
+  const { data: remainingQuota = "-", mutate } = useSWR(
+    "remainingQuota",
+    async () => {
+      const { imageAnalysisUsedCount } = await getUserById({
+        imageAnalysisUsedCount: true,
+      });
+      return MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;
+    },
   );
 
   const { trigger: processImage, isMutating } = useSWRMutation(
@@ -38,15 +40,9 @@ export default function ImageUploadBox() {
         if (!resizedImage) return;
         setUploadedImage(resizedImage);
 
-        // Get image dimensions when it's loaded
-        const img = new Image();
-        img.onload = () => {
-          setImageSize({ width: img.width, height: img.height });
-        };
-        img.src = resizedImage;
-
         const items = await bulkAddItemsByImage(resizedImage);
         if (items) {
+          mutate(Number(remainingQuota) - 1);
           setDetectedItems(items);
           setShowConfirmDialog(true);
         }
@@ -106,7 +102,6 @@ export default function ImageUploadBox() {
         uploadedImage={uploadedImage}
         onConfirm={onItemsAdded}
         onCancel={handleCancel}
-        imageSize={imageSize}
       />
 
       <div className="mb-6">
@@ -137,9 +132,7 @@ export default function ImageUploadBox() {
           </Tooltip>
         </label>
         <p className="text-sm text-gray-500 dark:text-gray-400">
-          Remaining quota this month:{" "}
-          {MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH -
-            (user?.imageAnalysisUsedCount ?? 0)}
+          Remaining quota this month: {remainingQuota}
         </p>
         <div className="mt-2 flex items-center justify-center w-full">
           <label

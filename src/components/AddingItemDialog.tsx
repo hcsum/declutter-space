@@ -11,7 +11,6 @@ interface AddingItemDialogProps {
   uploadedImage: string | null;
   onConfirm: (itemTotal: number) => void;
   onCancel: () => void;
-  imageSize: { width: number; height: number } | null;
 }
 
 interface DetectedItemWithChecked extends DetectedItemChatGPT {
