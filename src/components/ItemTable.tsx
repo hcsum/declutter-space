@@ -172,7 +172,6 @@ const ItemTable = ({
         page={currentPage}
         onChange={handlePageChange}
       />
-      {/* <div className="space-y-4 overflow-y-scroll scrollbar-always h-[60vh]"> */}
       <div className="space-y-4 mb-6">
         {items.map((item) => (
           <div
@@ -252,7 +251,9 @@ const ItemTable = ({
                   </LocalizationProvider>
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
-                    {`in ${formatDistanceToNow(item.deadline)}`}
+                    {`${formatDistanceToNow(item.deadline, {
+                      addSuffix: true,
+                    })}`}
                   </div>
                 )}
               </div>

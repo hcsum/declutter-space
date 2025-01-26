@@ -8,31 +8,26 @@ import {
   LoginFormSchema,
 } from "@/lib/definitions";
 import prisma from "@/lib/prisma";
-import bcrypt from "bcryptjs"; // Use bcryptjs instead
+import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 
 export async function signup(state: AuthFormState, formData: FormData) {
-  // Validate form fields
   const validatedFields = SignupFormSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
     password: formData.get("password"),
   });
 
-  // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
     };
   }
 
-  // Prepare data for insertion into the database
   const { name, email, password } = validatedFields.data;
 
-  // Hash the user's password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Insert the user into the database
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -57,21 +52,17 @@ export async function signup(state: AuthFormState, formData: FormData) {
     };
   }
 
-  // Create user session
   await createSession(user.id);
 
-  // Redirect user to main page
   redirect("/dashboard");
 }
 
 export async function login(state: AuthFormState, formData: FormData) {
-  // Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
   });
 
-  // If any form fields are invalid, return early
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
@@ -80,22 +71,18 @@ export async function login(state: AuthFormState, formData: FormData) {
 
   const { email, password } = validatedFields.data;
 
-  // Find user by email
   const user = await prisma.user.findUnique({
     where: { email },
   });
 
-  // If no user found or password doesn't match
   if (!user || !(await bcrypt.compare(password, user.password))) {
     return {
       message: "Invalid email or password",
     };
   }
 
-  // Create user session
   await createSession(user.id);
 
-  // Redirect user to main page
   redirect("/dashboard");
 }
 

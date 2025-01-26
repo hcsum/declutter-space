@@ -9,7 +9,12 @@ import useSWRMutation from "swr/mutation";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import NextImage from "next/image";
-import { MAX_FILE_SIZE_ALLOWED_MB } from "@/lib/definitions";
+import {
+  MAX_FILE_SIZE_ALLOWED_MB,
+  MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH,
+} from "@/lib/definitions";
+import { getUserById } from "@/actions/user";
+import useSWR from "swr";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
@@ -20,6 +25,11 @@ export default function ImageUploadBox() {
     width: number;
     height: number;
   } | null>(null);
+
+  const { data: user } = useSWR("user", () =>
+    getUserById({ imageAnalysisUsedCount: true }),
+  );
+
   const { trigger: processImage, isMutating } = useSWRMutation(
     "bulkAddItemsByImage",
     async (url: string, { arg }: { arg: File }) => {
@@ -41,8 +51,11 @@ export default function ImageUploadBox() {
           setShowConfirmDialog(true);
         }
       } catch (error) {
-        console.error("Failed to process image:", error);
-        alert("Failed to process image");
+        if (error instanceof Error) {
+          alert(error.message);
+        } else {
+          alert("An unknown error occurred");
+        }
       }
     },
   );
@@ -104,10 +117,11 @@ export default function ImageUploadBox() {
               <div className="p-2">
                 <p className="text-sm font-medium mb-3">
                   For better object detection result, organize your items and
-                  lay them out, make sure all items are visiable.
+                  lay them out, make sure all items are visible, ensure proper
+                  lighting. Example image:
                 </p>
                 <NextImage
-                  src="/example-stuff.webp"
+                  src="/example_image_to_upload.jpg"
                   alt="Example of automatic item detection"
                   className="mt-2 w-full rounded-lg border-2 border-gray-200 shadow-sm"
                   width={300}
@@ -122,6 +136,11 @@ export default function ImageUploadBox() {
             <InfoIcon className="w-5 h-5 ml-1 cursor-help text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" />
           </Tooltip>
         </label>
+        <p className="text-sm text-gray-500 dark:text-gray-400">
+          Remaining quota this month:{" "}
+          {MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH -
+            (user?.imageAnalysisUsedCount ?? 0)}
+        </p>
         <div className="mt-2 flex items-center justify-center w-full">
           <label
             htmlFor="file_input"

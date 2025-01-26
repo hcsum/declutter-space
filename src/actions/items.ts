@@ -152,11 +152,7 @@ export async function bulkAddItemsByImage(imageData: string) {
     where: { id: userId },
   });
 
-  if (!validateImageAnalysisUsage(user)) {
-    throw new Error(
-      "Monthly image analysis limit reached (10 analyses per month)",
-    );
-  }
+  validateImageAnalysisUsage(user);
 
   try {
     const base64WithPrefix = imageData.startsWith("data:image/")

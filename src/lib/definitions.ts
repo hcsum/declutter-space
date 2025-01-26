@@ -58,3 +58,4 @@ export interface SessionPayload extends JWTPayload {
 
 export const MAX_FILE_SIZE_ALLOWED_MB = 15;
 export const MAX_FILE_SIZE_FOR_UPLOAD_MB = 0.5;
+export const MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH = 10;
