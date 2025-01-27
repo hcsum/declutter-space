@@ -27,9 +27,10 @@ export const metadata: Metadata = {
   keywords: [
     "declutter",
     "declutter app",
-    "declutter tool",
-    "declutter software",
+    "decluttering tool",
+    "declutter helper",
     "minimalist lifestyle",
+    "minimalist tool",
   ],
 };
 
