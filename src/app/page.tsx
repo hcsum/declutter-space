@@ -6,18 +6,19 @@ import ContactForm from "@/components/ContactForm";
 const LandingPage = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
-      {/* Main Content */}
+      {/* Hero Section */}
       <section
         id="hero-section"
         className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
       >
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
-            Discover peace through decluttering
+            Transform Your Life by Decluttering
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
-            Easily keep track of your belongings, set deadlines for every item,
-            so you can decide what stays and what goes.
+            Upload photos of your spaces, easily track your belongings, and
+            declutter with confidence. Set deadlines for every item and take
+            control of your home one step at a time.
           </p>
           <Link href="/login">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
@@ -31,7 +32,7 @@ const LandingPage = () => {
             height={600}
             className="h-auto w-full max-w-xl mx-auto rounded-lg dark:bg-white"
             src="/hero.png"
-            alt="Illustration of a minimalist space representing organization and clarity"
+            alt="Illustration of a decluttered minimalist space"
           />
         </div>
       </section>
@@ -40,8 +41,8 @@ const LandingPage = () => {
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            &quot;Every item in your space affects your mind. Free your
-            environment to free yourself.&quot;
+            &quot;Decluttering frees your mind. Free your space to free
+            yourself.&quot;
           </h2>
         </div>
       </section>
@@ -66,14 +67,15 @@ const LandingPage = () => {
                 THE FORGOTTEN CLOTHES:
               </span>{" "}
               They still fit and look good, but I haven&apos;t worn them in
-              ages. Are they really worth keeping?
+              ages. Are they worth keeping, or should I declutter my closet and
+              donate them?
             </p>
             <p className="text-gray-600 dark:text-gray-400 text-lg">
               <span className="font-semibold text-gray-800 dark:text-gray-200">
                 THE STACK OF BOOKS:
               </span>{" "}
               They inspire me, but they&apos;ve been collecting dust. Should I
-              focus on a select few instead?
+              focus on a select few and donate the rest?
             </p>
           </div>
 
@@ -88,21 +90,22 @@ const LandingPage = () => {
                   THE UNUSED GADGETS:
                 </span>{" "}
                 Give yourself one month to use it. If it doesn&apos;t prove its
-                value, it&apos;s time to let it go.
+                value, it&apos;s time to declutter.
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
                   THE FORGOTTEN CLOTHES:
                 </span>{" "}
                 Plan an occasion to wear them within three months. If they stay
-                in the closet, consider donating them.
+                in the closet, it&apos;s time to declutter and donate.
               </p>
               <p className="text-gray-600 dark:text-gray-400 text-lg">
                 <span className="font-semibold text-gray-800 dark:text-gray-200">
                   THE STACK OF BOOKS:
                 </span>{" "}
                 Select one book to finish in two months. If it doesn&apos;t
-                captivate you, pass it along to someone else.
+                captivate you, declutter your shelf and pass it along to someone
+                else.
               </p>
             </div>
           </div>
@@ -116,10 +119,11 @@ const LandingPage = () => {
       <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900" id="features">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-            How It Works
+            How Decluttering Works
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-            Our smart tool makes decluttering simple and actionable.
+            Our decluttering tool makes simplifying your space easy and
+            actionable.
           </p>
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
@@ -129,19 +133,19 @@ const LandingPage = () => {
               Identify and Organize
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Upload photos of your spaces, and our AI will detect and list the
-              items. Gain clarity on what you own.
+              Upload photos and let our tool help you declutter by identifying
+              and listing your belongings.
             </p>
           </div>
 
           {/* Feature 2 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-              Set Declutter Deadlines
+              Set Decluttering Deadlines
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Assign deadlines to items. Decide whether to keep, donate, or
-              discard. We&apos;ll send reminders when the time comes.
+              Assign deadlines to declutter specific items. We&apos;ll remind
+              you when it&apos;s time to decide.
             </p>
           </div>
 
@@ -151,8 +155,8 @@ const LandingPage = () => {
               Track Your Progress
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Monitor your decluttering journey with visual progress reports.
-              Celebrate each step toward a more organized space.
+              Monitor your decluttering journey with progress reports. Celebrate
+              your steps toward a clutter-free home.
             </p>
           </div>
         </div>
@@ -174,14 +178,14 @@ const LandingPage = () => {
                 (Limited Time)
               </span>
               <div className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-                $3/month after launch
+                $4/month after launch
               </div>
             </div>
             <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-              <li>Up to 1,000 items</li>
-              <li>10 AI photo analyses per month</li>
-              <li>Progress tracking and insights</li>
-              <li>Declutter deadline management</li>
+              <li>Declutter up to 1,000 items</li>
+              <li>10 photo analyses per month</li>
+              <li>Track progress and set deadlines</li>
+              <li>Personalized decluttering insights</li>
             </ul>
             <Link href="/signup">
               <button className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 transition w-full">
