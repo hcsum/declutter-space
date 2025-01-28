@@ -23,15 +23,18 @@ const signika = Signika({
 
 export const metadata: Metadata = {
   title: "Declutter Space",
-  description: "A tool to help you declutter",
+  description:
+    "A tool to help you declutter. Easily upload your items by image recognition, and track your items with ease. Set deadlines for every item and take control of your home one step at a time. Receive email reminders when your items are due.",
   keywords: [
     "declutter",
     "declutter app",
     "decluttering tool",
     "declutter helper",
-    "minimalist lifestyle",
-    "minimalist tool",
   ],
+  metadataBase: new URL("https://declutterspace.net"),
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({
