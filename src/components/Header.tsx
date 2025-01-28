@@ -93,9 +93,9 @@ const Header: React.FC = () => {
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
       <div className="mx-auto flex justify-between items-center">
         <Link href={logoLink}>
-          <h1 className="text-2xl font-bold text-black dark:text-white font-signika">
+          <p className="text-2xl font-bold text-black dark:text-white font-signika">
             DeclutterSpace
-          </h1>
+          </p>
         </Link>
         <div className="flex items-center space-x-6">
           {pathname === "/" && (
