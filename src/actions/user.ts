@@ -3,7 +3,7 @@ import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 
-export async function getUserById<T extends Prisma.UserSelect>(
+export async function getUserInfo<T extends Prisma.UserSelect>(
   select?: T,
 ): Promise<Prisma.UserGetPayload<{ select: T }>> {
   const { userId } = await verifySession();

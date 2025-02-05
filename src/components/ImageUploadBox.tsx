@@ -13,7 +13,7 @@ import {
   MAX_FILE_SIZE_ALLOWED_MB,
   MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH,
 } from "@/lib/definitions";
-import { getUserById } from "@/actions/user";
+import { getUserInfo } from "@/actions/user";
 import useSWR from "swr";
 
 export default function ImageUploadBox() {
@@ -23,9 +23,9 @@ export default function ImageUploadBox() {
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
   const { data: remainingQuota = "-", mutate } = useSWR(
-    "remainingQuota",
+    "getUserInfo",
     async () => {
-      const { imageAnalysisUsedCount } = await getUserById({
+      const { imageAnalysisUsedCount } = await getUserInfo({
         imageAnalysisUsedCount: true,
       });
       return MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;

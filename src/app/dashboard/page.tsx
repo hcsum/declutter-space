@@ -1,6 +1,8 @@
 import { getItems } from "@/actions/items";
 import ItemTable from "@/components/ItemTable";
 import AddItemPanel from "@/components/AddItemPanel";
+import { getUserInfo } from "@/actions/user";
+import NotVerified from "./user/notVerified";
 
 const Dashboard = async ({
   searchParams,
@@ -10,6 +12,11 @@ const Dashboard = async ({
   const { page = "1", search = "" } = await searchParams;
   const currentPage = Number(page);
   const { items, totalPages, total } = await getItems(currentPage, 10, search);
+  const userInfo = await getUserInfo({ isVerified: true });
+
+  if (!userInfo.isVerified) {
+    return <NotVerified />;
+  }
 
   return (
     <div className="flex justify-center px-6 w-full min-h-[80vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">

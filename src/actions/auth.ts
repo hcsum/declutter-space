@@ -1,7 +1,7 @@
 "use server";
 // https://nextjs.org/docs/app/building-your-application/authentication
 
-import { createSession, deleteSession } from "@/lib/session";
+import { createSession, deleteSession, verifySession } from "@/lib/session";
 import {
   SignupFormSchema,
   AuthFormState,
@@ -219,6 +219,27 @@ export async function verifyUserByEmail(token: string) {
     console.error("Failed to verify email", error);
     return {
       errmsg: "An error occurred while verifying your email. Please try again.",
+    };
+  }
+}
+
+export async function sendVerificationEmail() {
+  try {
+    const { userId } = await verifySession();
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
+    });
+    const token = await createUser1HToken(userId);
+    await brevo.sendVerificationEmail(user?.email as string, token);
+
+    return {
+      sent: true,
+    };
+  } catch (error) {
+    console.error("Failed to send verification email", error);
+    return {
+      errmsg:
+        "Fail to send verification email. Please contact us for assistance.",
     };
   }
 }
