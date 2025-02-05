@@ -28,7 +28,7 @@ const LandingPage = () => {
             your spaces, track your belongings, and declutter with confidence.
             Set deadlines and free yourself from the chaos.
           </p>
-          <Link href="/login">
+          <Link href="/signup">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
               Join Beta
             </button>
