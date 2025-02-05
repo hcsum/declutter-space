@@ -26,7 +26,8 @@ async function verifyUser1HToken(token) {
 }
 
 (async () => {
-  const token = await createUser1HToken("123");
+  const token = await createUser1HToken("9114221e-0c86-4fed-b82c-eb5f9cba51a6");
+  console.log(token);
   const payload = await verifyUser1HToken(token);
   console.log(payload);
 })();
