@@ -1,13 +1,12 @@
-"use server";
-
-import "server-only";
-import { SignJWT, jwtVerify } from "jose";
+/* eslint-disable @typescript-eslint/no-require-imports */
+require("dotenv").config();
+const { SignJWT, jwtVerify } = require("jose");
 
 const USER_1H_TOKEN_SECRET =
   process.env.USER_1H_TOKEN_SECRET || "fallback-secret";
 const encodedKey = new TextEncoder().encode(USER_1H_TOKEN_SECRET);
 
-export async function createUser1HToken(userId: string) {
+async function createUser1HToken(userId) {
   return new SignJWT({ userId })
     .setProtectedHeader({ alg: "HS512" })
     .setExpirationTime("1h")
@@ -15,7 +14,7 @@ export async function createUser1HToken(userId: string) {
     .sign(encodedKey);
 }
 
-export async function verifyUser1HToken(token: string) {
+async function verifyUser1HToken(token) {
   try {
     const { payload } = await jwtVerify(token, encodedKey, {
       algorithms: ["HS512"],
@@ -25,3 +24,9 @@ export async function verifyUser1HToken(token: string) {
     console.log("Failed to verify reset token", error);
   }
 }
+
+(async () => {
+  const token = await createUser1HToken("123");
+  const payload = await verifyUser1HToken(token);
+  console.log(payload);
+})();

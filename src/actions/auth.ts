@@ -1,7 +1,7 @@
 "use server";
 // https://nextjs.org/docs/app/building-your-application/authentication
 
-import { createSession, deleteSession, encrypt, decrypt } from "@/lib/session";
+import { createSession, deleteSession } from "@/lib/session";
 import {
   SignupFormSchema,
   AuthFormState,
@@ -13,7 +13,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { BrevoAdapter } from "@/lib/brevo";
-import { createResetPasswordToken } from "@/lib/jwt";
+import { createUser1HToken, verifyUser1HToken } from "@/lib/jwt";
 
 const brevo = BrevoAdapter.getInstance();
 
@@ -67,9 +67,9 @@ export async function signup(state: AuthFormState, formData: FormData) {
     };
   }
 
-  const resetToken = await createResetPasswordToken(user.id);
+  const token = await createUser1HToken(user.id);
 
-  await brevo.sendVerificationEmail(parsedEmail, resetToken);
+  await brevo.sendVerificationEmail(parsedEmail, token);
 
   return {
     message:
@@ -136,8 +136,7 @@ export async function forgotPassword(
     });
 
     if (user) {
-      const expiresAt = Math.floor(Date.now() / 1000) + 3600; // 1 hour
-      const token = await encrypt({ userId: user.id, exp: expiresAt });
+      const token = await createUser1HToken(user.id);
       await brevo.sendPasswordResetEmail(email as string, token);
     }
 
@@ -173,7 +172,7 @@ export async function resetPassword(
   }
 
   try {
-    const decryptedToken = await decrypt(token as string);
+    const decryptedToken = await verifyUser1HToken(token as string);
 
     if (!decryptedToken) {
       return {
@@ -196,6 +195,30 @@ export async function resetPassword(
     console.error(error);
     return {
       errmsg: "An error occurred while resetting your password.",
+    };
+  }
+}
+
+export async function verifyUserByEmail(token: string) {
+  const decryptedToken = await verifyUser1HToken(token);
+  if (!decryptedToken) {
+    return {
+      errmsg: "Invalid link or the link has expired. Please request a new one.",
+    };
+  }
+
+  try {
+    await prisma.user.update({
+      where: { id: decryptedToken.userId as string },
+      data: { isVerified: true },
+    });
+
+    await createSession(decryptedToken.userId as string);
+    redirect("/dashboard");
+  } catch (error) {
+    console.error("Failed to verify email", error);
+    return {
+      errmsg: "An error occurred while verifying your email. Please try again.",
     };
   }
 }

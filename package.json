@@ -49,6 +49,7 @@
     "@types/node-fetch": "^2.6.12",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dot-env": "^0.0.1",
     "eslint": "^9",
     "eslint-config-next": "15.1.4",
     "postcss": "^8",

@@ -141,7 +141,7 @@ export class BrevoAdapter {
     };
 
     sendSmtpEmail.subject = "Please verify your email";
-    sendSmtpEmail.htmlContent = `<p>You are one step away from completing your registration. Click <a href="${process.env.SITE_URL}/api/auth
+    sendSmtpEmail.htmlContent = `<p>You are one step away from completing your registration. Click <a href="${process.env.SITE_URL}/
     verify-email?token=${token}">here</a> to verify your email.</p>`;
     sendSmtpEmail.sender = sender;
     sendSmtpEmail.to = [to];
