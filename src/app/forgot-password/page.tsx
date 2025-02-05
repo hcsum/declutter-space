@@ -1,11 +1,11 @@
 import { ForgotPasswordForm } from "./forgot-password-form";
 
-export default function ForgotPasswordPage({
+export default async function ForgotPasswordPage({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
-  const token = searchParams.token;
+  const token = (await searchParams).token;
 
   return <ForgotPasswordForm token={token} />;
 }
