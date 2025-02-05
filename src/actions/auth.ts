@@ -212,15 +212,14 @@ export async function verifyUserByEmail(token: string) {
       where: { id: decryptedToken.userId as string },
       data: { isVerified: true },
     });
-
-    await createSession(decryptedToken.userId as string);
-    redirect("/dashboard");
   } catch (error) {
     console.error("Failed to verify email", error);
     return {
       errmsg: "An error occurred while verifying your email. Please try again.",
     };
   }
+  await createSession(decryptedToken.userId as string);
+  redirect("/dashboard");
 }
 
 export async function sendVerificationEmail() {
