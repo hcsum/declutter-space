@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { decrypt } from "@/lib/jwt";
+import { decrypt } from "./lib/session";
 
 // 1. Specify protected and public routes
 const protectedRoutes = ["/dashboard"];
@@ -34,6 +34,7 @@ export default async function middleware(req: NextRequest) {
 }
 
 // Routes Middleware should not run on
+// leave api to handle auth by itself
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|.*\\.png$).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.png$).*)"],
 };

@@ -1,7 +1,7 @@
 "use server";
 // https://nextjs.org/docs/app/building-your-application/authentication
 
-import { createSession, deleteSession } from "@/lib/session";
+import { createSession, deleteSession, encrypt, decrypt } from "@/lib/session";
 import {
   SignupFormSchema,
   AuthFormState,
@@ -13,7 +13,7 @@ import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { BrevoAdapter } from "@/lib/brevo";
-import { encrypt, decrypt } from "@/lib/jwt";
+import { createResetPasswordToken } from "@/lib/jwt";
 
 const brevo = BrevoAdapter.getInstance();
 
@@ -49,7 +49,7 @@ export async function signup(state: AuthFormState, formData: FormData) {
 
   if (existingUser) {
     return {
-      message: "An error occurred while creating your account.",
+      errmsg: "User already exists. Please login instead.",
     };
   }
 
@@ -63,13 +63,18 @@ export async function signup(state: AuthFormState, formData: FormData) {
 
   if (!user) {
     return {
-      message: "An error occurred while creating your account.",
+      errmsg: "An error occurred while creating your account.",
     };
   }
 
-  await createSession(user.id);
+  const resetToken = await createResetPasswordToken(user.id);
 
-  redirect("/dashboard");
+  await brevo.sendVerificationEmail(parsedEmail, resetToken);
+
+  return {
+    message:
+      "Account created successfully. Please check your email for a verification link.",
+  };
 }
 
 export async function login(state: AuthFormState, formData: FormData) {

@@ -17,6 +17,7 @@ model User {
   imageAnalysisUsedAt    DateTime?
   createdAt              DateTime  @default(now())
   updatedAt              DateTime  @updatedAt
+  isVerified             Boolean   @default(false)
   items                  Item[]
 }
 

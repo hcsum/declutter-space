@@ -4,7 +4,30 @@ import "server-only";
 import { cookies } from "next/headers";
 import { cache } from "react";
 import { redirect } from "next/navigation";
-import { encrypt, decrypt } from "@/lib/jwt";
+import { SignJWT, jwtVerify } from "jose";
+import { SessionPayload } from "./definitions";
+
+const secretKey = process.env.SESSION_SECRET;
+const encodedKey = new TextEncoder().encode(secretKey);
+
+export async function encrypt(payload: SessionPayload) {
+  return new SignJWT(payload)
+    .setProtectedHeader({ alg: "HS256" })
+    .setExpirationTime("14d")
+    .setIssuedAt()
+    .sign(encodedKey);
+}
+
+export async function decrypt(session: string | undefined = "") {
+  try {
+    const { payload } = await jwtVerify(session, encodedKey, {
+      algorithms: ["HS256"],
+    });
+    return payload;
+  } catch (error) {
+    console.log("Failed to verify session", error);
+  }
+}
 
 export async function createSession(userId: string) {
   const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000); // 14 days

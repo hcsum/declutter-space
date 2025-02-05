@@ -21,6 +21,11 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
           {isSignup ? "Create Your Account" : "Login to Your Account"}
         </h1>
 
+        {state?.message && (
+          <p className="text-sm text-green-500 text-center mb-4">
+            {state.message}
+          </p>
+        )}
         {state?.errmsg && (
           <p className="text-sm text-red-500 text-center mb-4">
             {state.errmsg}
