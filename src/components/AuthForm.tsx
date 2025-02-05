@@ -20,10 +20,9 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
           {isSignup ? "Create Your Account" : "Login to Your Account"}
         </h1>
 
-        {/* Error Message for Login */}
-        {state?.message && (
+        {state?.errmsg && (
           <p className="text-sm text-red-500 text-center mb-4">
-            {state.message}
+            {state.errmsg}
           </p>
         )}
 
@@ -91,6 +90,17 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
               </div>
             )}
           </div>
+
+          {!isSignup && (
+            <div className="text-right">
+              <a
+                href="/forgot-password"
+                className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+              >
+                Forgot Password?
+              </a>
+            </div>
+          )}
 
           <button
             disabled={pending}

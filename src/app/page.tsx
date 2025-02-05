@@ -3,11 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
 
+// https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
+// https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
+// key words:
+// overwhelmed by clutter
+// how to declutter your home
+// declutter your home
+// decluttering tips
+// a guide to getting rid of almost everything
 const LandingPage = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
       {/* Hero Section */}
-      <section className="bg-white dark:bg-gray-800 py-16 px-6 text-center">
+      <section
+        id="hero-section"
+        className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
+      >
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
             Overwhelmed by Clutter? Take Control Today!
@@ -29,79 +40,131 @@ const LandingPage = () => {
             height={600}
             className="h-auto w-full max-w-xl mx-auto rounded-lg dark:bg-white"
             src="/hero.png"
-            alt="Minimalist decluttered space"
+            alt="Illustration of a decluttered minimalist space"
           />
         </div>
       </section>
 
-      {/* The Burden of Clutter */}
-      <section className="py-16 px-6 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-2xl md:text-3xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            Are You Feeling Overwhelmed by Clutter?
+      {/* Quote Section */}
+      <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
+            Every item in your space shapes your mindset. Create a clutter-free
+            environment to unlock a calmer, more focused you.
           </h2>
-          <p className="text-lg text-gray-600 dark:text-gray-400 mb-8">
-            Clutter steals time, space, and peace of mind. From unused gadgets
-            to piles of paper, the weight of &quot;someday&quot; items adds up.
-            But what if you could make decluttering easy?
-          </p>
         </div>
       </section>
 
-      {/* Common Clutter Struggles */}
+      {/* Get You Thinking Section */}
       <div className="flex flex-col items-center text-center p-8 max-w-4xl mx-auto my-16 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
-        <h3 className="text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200">
-          Why Do We Hold On to So Much Stuff?
-        </h3>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-          <strong>Fear of Letting Go:</strong> &quot;What if I need it
-          later?&quot;
+        <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
+          &quot;Do I really need this? Or is it time to let go?&quot;
         </p>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-          <strong>Sentimental Attachment:</strong> &quot;But this was a
-          gift...&quot;
-        </p>
-        <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
-          <strong>Decision Fatigue:</strong> &quot;I just don&apos;t know where
-          to start.&quot;
+
+        <div className="space-y-8">
+          <div className="space-y-6">
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              <span className="font-semibold text-gray-800 dark:text-gray-200">
+                THE UNUSED GADGETS:
+              </span>{" "}
+              It seemed so useful when I bought it, but it hasn&apos;t been
+              touched in years. Is it time to reclaim that space?
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              <span className="font-semibold text-gray-800 dark:text-gray-200">
+                THE FORGOTTEN CLOTHES:
+              </span>{" "}
+              They still fit and look good, but I haven&apos;t worn them in
+              ages. Are they worth keeping, or should I declutter my closet and
+              donate them?
+            </p>
+            <p className="text-gray-600 dark:text-gray-400 text-lg">
+              <span className="font-semibold text-gray-800 dark:text-gray-200">
+                THE STACK OF BOOKS:
+              </span>{" "}
+              They inspire me, but they&apos;ve been collecting dust. Should I
+              focus on a select few and donate the rest?
+            </p>
+          </div>
+
+          <div className="dark:border-gray-700 pt-8">
+            <p className="text-xl md:text-2xl font-semibold mb-8 text-gray-800 dark:text-gray-200 italic">
+              &quot;Set a Declutter Deadline: Use It or Let It Go&quot;
+            </p>
+
+            <div className="space-y-6">
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                  THE UNUSED GADGETS:
+                </span>{" "}
+                Give yourself one month to use it. If it doesn&apos;t prove its
+                value, it&apos;s time to declutter.
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                  THE FORGOTTEN CLOTHES:
+                </span>{" "}
+                Plan an occasion to wear them within three months. If they stay
+                in the closet, it&apos;s time to declutter and donate.
+              </p>
+              <p className="text-gray-600 dark:text-gray-400 text-lg">
+                <span className="font-semibold text-gray-800 dark:text-gray-200">
+                  THE STACK OF BOOKS:
+                </span>{" "}
+                Select one book to finish in two months. If it doesn&apos;t
+                captivate you, declutter your shelf and pass it along to someone
+                else.
+              </p>
+            </div>
+          </div>
+        </div>
+        <p className="text-gray-600 dark:text-gray-400 text-lg mt-8 italic border-t border-gray-200 dark:border-gray-700 pt-6">
+          - Inspired by the Minimalist Movement
         </p>
       </div>
 
-      {/* Decluttering Process */}
+      {/* Features Section */}
       <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900" id="features">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-            How to Declutter Your Home with Ease
+            How Decluttering Works
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-            Our tool makes the process simple, structured, and stress-free.
+            Our decluttering tool makes simplifying your space easy and
+            actionable.
           </p>
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
+          {/* Feature 1 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
-              Identify & Organize
+              Identify and Organize
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Upload photos, let our tool list your belongings, and categorize
-              them with ease.
+              Upload photos and let our tool help you declutter by identifying
+              and listing your belongings.
             </p>
           </div>
+
+          {/* Feature 2 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
               Set Decluttering Deadlines
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Assign deadlines to unused items—use them or lose them.
+              Assign deadlines to declutter specific items. We&apos;ll remind
+              you when it&apos;s time to decide.
             </p>
           </div>
+
+          {/* Feature 3 */}
           <div className="flex flex-col items-center text-center bg-white dark:bg-gray-800 rounded-lg shadow-sm p-8">
             <h3 className="text-2xl font-semibold mb-4 text-gray-800 dark:text-gray-200">
               Track Your Progress
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Stay motivated with progress tracking and reminders to keep you on
-              track.
+              Monitor your decluttering journey with progress reports. Celebrate
+              your steps toward a clutter-free home.
             </p>
           </div>
         </div>
@@ -111,7 +174,7 @@ const LandingPage = () => {
       <section className="py-20 px-6 bg-white dark:bg-gray-800" id="pricing">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-            Start Decluttering for Free
+            Pricing
           </h2>
           <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
             <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
@@ -120,7 +183,6 @@ const LandingPage = () => {
             <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
               FREE
               <span className="text-lg text-gray-600 dark:text-gray-400">
-                {" "}
                 (Limited Time)
               </span>
               <div className="text-lg text-gray-600 dark:text-gray-400 mt-2">
