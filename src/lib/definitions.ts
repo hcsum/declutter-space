@@ -64,6 +64,10 @@ export type AuthFormState =
         password?: string[];
         confirmPassword?: string[];
       };
+      formData?: {
+        name?: string;
+        email?: string;
+      };
       message?: string;
       errmsg?: string;
     }

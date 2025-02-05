@@ -7,7 +7,7 @@ import { redirect } from "next/navigation";
 import { encrypt, decrypt } from "@/lib/jwt";
 
 export async function createSession(userId: string) {
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
+  const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000); // 14 days
   const session = await encrypt({ userId, expiresAt });
   const cookieStore = await cookies();
 

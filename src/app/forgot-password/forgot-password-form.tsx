@@ -1,6 +1,7 @@
 "use client";
 
 import { forgotPassword, resetPassword } from "@/actions/auth";
+import Link from "next/link";
 import { useActionState } from "react";
 
 export function ForgotPasswordForm({ token }: { token?: string }) {
@@ -27,9 +28,21 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
             </p>
           )}
           {state?.message && (
-            <p className="text-sm text-green-500 text-center mb-4">
-              {state.message}
-            </p>
+            <>
+              <p className="text-sm text-green-500 text-center mb-4">
+                {state.message}
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
+                You can now{" "}
+                <Link
+                  href="/login"
+                  className="text-blue-500 hover:underline dark:text-blue-400"
+                >
+                  login
+                </Link>{" "}
+                with your new password.
+              </p>
+            </>
           )}
 
           <form action={formAction} className="space-y-4">

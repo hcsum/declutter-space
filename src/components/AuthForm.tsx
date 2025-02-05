@@ -10,8 +10,9 @@ interface AuthFormProps {
 
 export default function AuthForm({ formType, action }: AuthFormProps) {
   const [state, formAction, pending] = useActionState(action, undefined);
-
   const isSignup = formType === "signup";
+
+  const formData = state?.formData || {};
 
   return (
     <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
@@ -39,6 +40,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
                 id="name"
                 name="name"
                 placeholder="Name"
+                defaultValue={formData.name}
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
               {state?.errors?.name && (
@@ -58,6 +60,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
               id="email"
               name="email"
               placeholder="Email"
+              defaultValue={formData.email}
               className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
             />
             {state?.errors?.email && (

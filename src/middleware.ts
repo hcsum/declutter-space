@@ -16,10 +16,6 @@ export default async function middleware(req: NextRequest) {
   const cookie = (await cookies()).get("session")?.value;
   const session = await decrypt(cookie);
 
-  if (session?.exp && session.exp < Math.floor(Date.now() / 1000)) {
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
-  }
-
   // 4. Redirect to /login if the user is not authenticated
   if (isProtectedRoute && !session?.userId) {
     return NextResponse.redirect(new URL("/login", req.nextUrl));

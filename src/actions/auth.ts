@@ -18,24 +18,33 @@ import { encrypt, decrypt } from "@/lib/jwt";
 const brevo = BrevoAdapter.getInstance();
 
 export async function signup(state: AuthFormState, formData: FormData) {
+  const name = formData.get("name");
+  const email = formData.get("email");
+  const password = formData.get("password");
+
   const validatedFields = SignupFormSchema.safeParse({
-    name: formData.get("name"),
-    email: formData.get("email"),
-    password: formData.get("password"),
+    name,
+    email,
+    password,
   });
 
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      formData: { name: name as string, email: email as string },
     };
   }
 
-  const { name, email, password } = validatedFields.data;
+  const {
+    name: parsedName,
+    email: parsedEmail,
+    password: parsedPassword,
+  } = validatedFields.data;
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(parsedPassword, 10);
 
   const existingUser = await prisma.user.findUnique({
-    where: { email },
+    where: { email: parsedEmail },
   });
 
   if (existingUser) {
@@ -46,8 +55,8 @@ export async function signup(state: AuthFormState, formData: FormData) {
 
   const user = await prisma.user.create({
     data: {
-      email,
-      name,
+      email: parsedEmail,
+      name: parsedName,
       password: hashedPassword,
     },
   });
@@ -64,26 +73,29 @@ export async function signup(state: AuthFormState, formData: FormData) {
 }
 
 export async function login(state: AuthFormState, formData: FormData) {
+  const email = formData.get("email");
+  const password = formData.get("password");
+
   const validatedFields = LoginFormSchema.safeParse({
-    email: formData.get("email"),
-    password: formData.get("password"),
+    email,
+    password,
   });
 
   if (!validatedFields.success) {
     return {
       errors: validatedFields.error.flatten().fieldErrors,
+      formData: { email: email as string },
     };
   }
 
-  const { email, password } = validatedFields.data;
-
   const user = await prisma.user.findUnique({
-    where: { email },
+    where: { email: email as string },
   });
 
-  if (!user || !(await bcrypt.compare(password, user.password))) {
+  if (!user || !(await bcrypt.compare(password as string, user.password))) {
     return {
       errmsg: "Invalid email or password",
+      formData: { email: email as string },
     };
   }
 
@@ -160,14 +172,8 @@ export async function resetPassword(
 
     if (!decryptedToken) {
       return {
-        errmsg: "Invalid token",
-      };
-    }
-
-    const currentTimeInSeconds = Math.floor(Date.now() / 1000);
-    if (decryptedToken.exp && decryptedToken.exp < currentTimeInSeconds) {
-      return {
-        errmsg: "This link has expired. Please request a new one.",
+        errmsg:
+          "Invalid link or the link has expired. Please request a new one.",
       };
     }
 
