@@ -77,6 +77,12 @@ export default function RootLayout({
               >
                 Privacy Policy
               </a>
+              <a
+                href="/posts"
+                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
+              >
+                Blog
+              </a>
             </div>
           </div>
         </footer>
