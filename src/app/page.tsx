@@ -24,9 +24,9 @@ const LandingPage = () => {
             Overwhelmed by Clutter? Take Control Today!
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
-            Clutter isn&apos;t just stuff—it&apos;s stress. Upload photos of
-            your spaces, track your belongings, and declutter with confidence.
-            Set deadlines and free yourself from the chaos.
+            Clutter isn&apos;t just stuff—it&apos;s stress. Keep track of the
+            items you thought you might need someday. Set deadlines for them,
+            when the day come, decide what goes and what stays.
           </p>
           <Link href="/signup">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
@@ -141,8 +141,8 @@ const LandingPage = () => {
               Identify and Organize
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Upload photos and let our tool help you declutter by identifying
-              and listing your belongings.
+              Adding your items in bulk by uploading photos of them, let our AI
+              tool help you easily identifying and listing belongings.
             </p>
           </div>
 
