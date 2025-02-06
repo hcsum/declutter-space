@@ -22,14 +22,14 @@ const signika = Signika({
 });
 
 export const metadata: Metadata = {
-  title: "Declutter Space - Organize Your Home with AI-Powered Item Management",
+  title: "Declutter Space - The Declutter App for your home",
   description:
-    "A tool to help you declutter. Easily upload your items by image recognition, and track your items with ease. Set deadlines for every item and take control of your home one step at a time. Receive email reminders when your items are due.",
+    "An app for decluttering. Easily upload your items by image recognition, and track your items with ease. Set deadlines for every item and take control of your home one step at a time. Receive email reminders when your items are due.",
   keywords: [
     "declutter",
     "declutter app",
-    "decluttering tool",
-    "declutter helper",
+    "app for decluttering",
+    "minimalism",
   ],
   metadataBase: new URL("https://declutterspace.net"),
   alternates: {

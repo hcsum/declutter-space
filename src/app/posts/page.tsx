@@ -14,11 +14,11 @@ export default function PostsPage() {
     {
       id: 1,
       title:
-        "Overwhelmed by Clutter? Learn How Our AI-Enabled Tool Can Help You Declutter Your Home",
+        "Overwhelmed by Clutter? Learn How Our App For Decluttering Can Help You Declutter Your Home",
       excerpt:
         "Clutter has a sneaky way of accumulating in our homes. We hold onto things we no longer need, often without realizing the emotional and psychological reasons behind it.",
       date: "2025-01-20",
-      slug: "overwhelmed-by-clutter-how-to-declutter-your-home",
+      slug: "how-to-declutter-your-home",
     },
     // Add more sample posts as needed
   ];

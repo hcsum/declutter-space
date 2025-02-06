@@ -24,9 +24,10 @@ const LandingPage = () => {
             Overwhelmed by Clutter? Take Control Today!
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
-            Clutter isn&apos;t just stuff—it&apos;s stress. Keep track of the
-            items you thought you might need someday. Set deadlines for them,
-            when the day come, decide what goes and what stays.
+            Clutter isn&apos;t just stuff—it&apos;s stress. Our app for
+            decluttering helps you keep track of the items you thought you might
+            need someday. Set deadlines for them, when the day comes, decide
+            what goes and what stays.
           </p>
           <Link href="/signup">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
@@ -130,8 +131,9 @@ const LandingPage = () => {
             How Decluttering Works
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-            Our decluttering tool makes simplifying your space easy and
-            actionable.
+            Our app for decluttering makes simplifying your space easy and
+            actionable. Get started with the most intuitive app for decluttering
+            your home.
           </p>
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
@@ -141,8 +143,9 @@ const LandingPage = () => {
               Identify and Organize
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Adding your items in bulk by uploading photos of them, let our AI
-              tool help you easily identifying and listing belongings.
+              Adding your items in bulk by uploading photos of them, this app
+              for decluttering uses AI to help you easily identify and list
+              belongings.
             </p>
           </div>
 
@@ -163,8 +166,9 @@ const LandingPage = () => {
               Track Your Progress
             </h3>
             <p className="text-gray-600 dark:text-gray-400">
-              Monitor your decluttering journey with progress reports. Celebrate
-              your steps toward a clutter-free home.
+              Monitor your decluttering journey with progress reports. As the
+              leading app for decluttering, we help you celebrate your steps
+              toward a clutter-free home.
             </p>
           </div>
         </div>
@@ -190,7 +194,7 @@ const LandingPage = () => {
               </div>
             </div>
             <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-              <li>Declutter up to 1,000 items</li>
+              <li>Declutter up to 10,000 items</li>
               <li>10 photo analyses per month</li>
               <li>Track progress and set deadlines</li>
               <li>Personalized decluttering insights</li>
