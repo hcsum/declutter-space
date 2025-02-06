@@ -235,6 +235,27 @@ const LandingPage = () => {
                 more informed decisions about what to keep or let go.
               </p>
             </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Why I didn&apos;t receive notification emails when my items are
+                due?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                It might be because your email provider mistakenly spammed our
+                email. Please look for them in the spam folder. If problem
+                persists, please contact us for further assistance.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                What if I&apos;m not satisfied?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                We offer a 30-day money-back guarantee. If you&apos;re not
+                completely satisfied, just let us know and we&apos;ll refund
+                your subscription fee.
+              </p>
+            </div>
           </div>
         </div>
       </section>
