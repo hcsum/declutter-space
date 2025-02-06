@@ -4,6 +4,14 @@ export default function PostsPage() {
   // This would typically fetch from an API or database
   const posts = [
     {
+      id: 3,
+      title: "The Art of Letting Go: A Practical Guide to Decluttering",
+      excerpt:
+        'Clutter isn\'t just physical stuff—it\'s mental weight. Every item we keep "just in case" or "for someday" takes up not only space in our homes but also space in our minds. But how do we decide what stays and what goes?',
+      date: "2025-02-05",
+      slug: "the-art-of-letting-go-a-practical-guide-to-decluttering",
+    },
+    {
       id: 2,
       title: "A Guide to Getting Rid of Almost Everything",
       excerpt:
@@ -13,12 +21,11 @@ export default function PostsPage() {
     },
     {
       id: 1,
-      title:
-        "Overwhelmed by Clutter? Learn How Our App For Decluttering Can Help You Declutter Your Home",
+      title: "How to Declutter Your Home, With the help of AI",
       excerpt:
         "Clutter has a sneaky way of accumulating in our homes. We hold onto things we no longer need, often without realizing the emotional and psychological reasons behind it.",
       date: "2025-01-20",
-      slug: "how-to-declutter-your-home",
+      slug: "how-to-declutter-your-home-with-the-help-of-ai",
     },
     // Add more sample posts as needed
   ];

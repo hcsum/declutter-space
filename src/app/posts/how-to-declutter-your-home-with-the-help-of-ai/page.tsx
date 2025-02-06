@@ -1,9 +1,7 @@
 export default function DeclutterPost() {
   return (
     <article className="prose dark:prose-invert prose-headings:text-gray-700 max-w-3xl mx-auto py-8 px-4 prose-h2:mt-12 prose-h3:mt-8 prose-p:mb-6">
-      <h1>
-        How to Declutter Your Home: A Complete Guide Using AI-Powered Tools
-      </h1>
+      <h1>How to Declutter Your Home, With the help of AI</h1>
 
       <p>
         Clutter has a sneaky way of accumulating in our homes. We hold onto

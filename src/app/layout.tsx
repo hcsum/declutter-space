@@ -26,10 +26,11 @@ export const metadata: Metadata = {
   description:
     "An app for decluttering. Easily upload your items by image recognition, and track your items with ease. Set deadlines for every item and take control of your home one step at a time. Receive email reminders when your items are due.",
   keywords: [
-    "declutter",
-    "declutter app",
+    "decluttering tips",
     "app for decluttering",
-    "minimalism",
+    "declutter your home",
+    "how to declutter your home",
+    "declutter space",
   ],
   metadataBase: new URL("https://declutterspace.net"),
   alternates: {
@@ -82,6 +83,13 @@ export default function RootLayout({
                 className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
               >
                 Blog
+              </a>
+              <a
+                href="https://freelancer-tools.shop/"
+                title="Freelancer Tools Directory"
+                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
+              >
+                Freelancer Tools Directory
               </a>
             </div>
           </div>

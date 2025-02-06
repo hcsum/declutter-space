@@ -17,13 +17,13 @@ const LandingPage = () => {
       >
         <div className="max-w-3xl mx-auto">
           <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
-            Overwhelmed by Clutter? Take Control Today!
+            Wondering How to Declutter Your Home? Try Our Deadline-based App
           </h1>
           <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
             Clutter isn&apos;t just stuff—it&apos;s stress. Our app for
             decluttering helps you keep track of the items you thought you might
-            need someday. Set deadlines for them, when the day comes, decide
-            what goes and what stays.
+            need someday. Set deadlines for them, when the day comes, you can
+            decide what goes and what stays.
           </p>
           <Link href="/signup">
             <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
@@ -127,9 +127,9 @@ const LandingPage = () => {
             How Decluttering Works
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
-            Our app for decluttering makes simplifying your space easy and
-            actionable. Get started with the most intuitive app for decluttering
-            your home.
+            Discover how to declutter your home with our intuitive app that
+            makes simplifying your space easy and actionable. Get started with
+            the most intuitive app for decluttering your home.
           </p>
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
@@ -217,11 +217,12 @@ const LandingPage = () => {
                 How is this different from other decluttering apps?
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Unlike other solutions, our app for decluttering focuses
-                specifically on helping you make decisions about items
-                you&apos;re unsure about. Instead of just organizing everything,
-                we help you determine what truly deserves space in your life
-                through our unique deadline-based approach.
+                Unlike other solutions that just teach you how to declutter your
+                home, our app for decluttering focuses specifically on helping
+                you make decisions about items you&apos;re unsure about. Instead
+                of just organizing everything, we help you determine what truly
+                deserves space in your life through our unique deadline-based
+                approach.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
@@ -229,10 +230,10 @@ const LandingPage = () => {
                 Will this really help me declutter?
               </h3>
               <p className="text-gray-600 dark:text-gray-400">
-                Yes! As the most intuitive app for decluttering, we combine
-                psychological insights with practical tools. By setting concrete
-                deadlines and tracking your usage of items, you&apos;ll make
-                more informed decisions about what to keep or let go.
+                Yes! We don&apos;t just show you how to declutter your home - we
+                combine psychological insights with practical tools. By setting
+                concrete deadlines and tracking your usage of items, you&apos;ll
+                make more informed decisions about what to keep or let go.
               </p>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
