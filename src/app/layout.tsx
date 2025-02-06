@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     "app for decluttering",
     "declutter your home",
     "how to declutter your home",
-    "declutter space",
+    "declutterspace",
   ],
   metadataBase: new URL("https://declutterspace.net"),
   alternates: {
@@ -65,15 +65,24 @@ export default function RootLayout({
             <p className="text-sm mt-2">
               Built with love to help you simplify your life.
             </p>
-            <div className="mt-4 flex flex-col sm:flex-row justify-center sm:space-x-4 [&>a]:text-gray-400 [&>a]:text-sm [&>a]:mx-2 [&>a]:sm:mx-0">
-              <a href="/customer-service-policy">Customer Service Policy</a>
-              <a href="/privacy-policy">Privacy Policy</a>
-              <a href="/posts">Blog</a>
+            <div className="mt-4 flex flex-col sm:flex-row justify-center sm:space-x-4">
               <a
-                href="https://freelancer-tools.shop/"
-                title="Freelancer Tools Directory"
+                href="/customer-service-policy"
+                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
               >
-                Freelancer Tools Directory
+                Customer Service Policy
+              </a>
+              <a
+                href="/privacy-policy"
+                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="/posts"
+                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
+              >
+                Blog
               </a>
             </div>
           </div>
