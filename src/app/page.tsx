@@ -5,12 +5,8 @@ import ContactForm from "@/components/ContactForm";
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
-// key words:
-// overwhelmed by clutter
-// how to declutter your home
-// declutter your home
-// decluttering tips
-// a guide to getting rid of almost everything
+// key word: app for decluttering
+
 const LandingPage = () => {
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
@@ -190,20 +186,55 @@ const LandingPage = () => {
                 (Limited Time)
               </span>
               <div className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-                $4/month after launch
+                $3/month after launch
               </div>
             </div>
             <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-              <li>Declutter up to 10,000 items</li>
-              <li>10 photo analyses per month</li>
-              <li>Track progress and set deadlines</li>
-              <li>Personalized decluttering insights</li>
+              <li>Declutter up to 5,000 items</li>
+              <li>5 photo analyses per month</li>
+              <li>Set deadlines and get email reminders</li>
+              <li>Categorize your items (coming soon)</li>
+              <li>Personalized decluttering insights (coming soon)</li>
             </ul>
             <Link href="/signup">
               <button className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 transition w-full">
                 Join Beta
               </button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900">
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-center text-gray-800 dark:text-gray-200">
+            Frequently Asked Questions
+          </h2>
+          <div className="space-y-8">
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                How is this different from other decluttering apps?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Unlike other solutions, our app for decluttering focuses
+                specifically on helping you make decisions about items
+                you&apos;re unsure about. Instead of just organizing everything,
+                we help you determine what truly deserves space in your life
+                through our unique deadline-based approach.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Will this really help me declutter?
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Yes! As the most intuitive app for decluttering, we combine
+                psychological insights with practical tools. By setting concrete
+                deadlines and tracking your usage of items, you&apos;ll make
+                more informed decisions about what to keep or let go.
+              </p>
+            </div>
           </div>
         </div>
       </section>
