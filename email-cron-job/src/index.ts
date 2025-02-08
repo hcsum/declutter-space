@@ -15,13 +15,11 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-// import { ScheduledController, ExecutionContext } from '@cloudflare/workers-types';
 import { ScheduledController } from '@cloudflare/workers-types';
 
 export default {
 	// The scheduled handler is invoked at the interval set in our wrangler.json's
 	// [[triggers]] configuration.
-	// async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext): Promise<void> {
 	async scheduled(controller: ScheduledController): Promise<void> {
 		console.log(`trigger fired at ${controller.cron}`);
 
