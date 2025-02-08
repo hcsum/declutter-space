@@ -48,7 +48,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased`}
       >
-        <div className="min-h-[80vh] bg-gray-50 dark:bg-gray-900">
+        <div className="min-h-[80vh] bg-gray-50 dark:bg-gray-900 relative">
           <LightDarkModeProvider>
             <UIProvider>
               <LandingPageHeader />
