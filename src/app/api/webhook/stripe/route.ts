@@ -7,6 +7,7 @@ import Stripe from "stripe";
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: Request) {
+  console.log("webhook received");
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature")!;
 
@@ -16,6 +17,8 @@ export async function POST(req: Request) {
       signature,
       webhookSecret,
     );
+
+    console.log("event", event);
 
     switch (event.type) {
       case "customer.subscription.created":
@@ -49,6 +52,8 @@ export async function POST(req: Request) {
         break;
       }
     }
+
+    console.log("webhook processed");
 
     return NextResponse.json({ received: true });
   } catch (error) {

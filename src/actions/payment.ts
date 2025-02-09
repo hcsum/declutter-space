@@ -14,7 +14,7 @@ export async function createPaymentIntent() {
         enabled: true,
       },
       metadata: {
-        userId: userId,
+        userId,
       },
     });
 
