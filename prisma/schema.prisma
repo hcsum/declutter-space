@@ -19,6 +19,8 @@ model User {
   updatedAt              DateTime  @updatedAt
   isVerified             Boolean   @default(false)
   items                  Item[]
+
+  Subscription Subscription[]
 }
 
 enum ItemPlan {
@@ -50,6 +52,7 @@ enum ItemReminderType {
   THIRD
 }
 
+// not in use yet
 model ItemReminder {
   id        String           @id @default(uuid())
   itemId    String
@@ -58,4 +61,15 @@ model ItemReminder {
   sentAt    DateTime
   createdAt DateTime         @default(now())
   updatedAt DateTime         @updatedAt
+}
+
+model Subscription {
+  id               String    @id @default(uuid())
+  userId           String    @unique
+  user             User      @relation(fields: [userId], references: [id])
+  stripeId         String? // Stripe subscription ID
+  currentPeriodEnd DateTime // Instead of expiresAt - when current billing period ends
+  canceledAt       DateTime? // When user requested cancellation
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 }
