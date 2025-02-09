@@ -17,8 +17,6 @@ export async function checkSubscriptionStatus(): Promise<SubscriptionStatus> {
       where: { userId },
     });
 
-    console.log("subscription", subscription);
-
     if (!subscription) {
       return "free_trial";
     }

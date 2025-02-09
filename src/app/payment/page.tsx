@@ -22,7 +22,7 @@ export default function PaymentPage() {
   }
 
   return (
-    <div className="max-w-md mx-auto p-6">
+    <div className="max-w-md mx-auto p-6 pb-20">
       <h1 className="text-2xl font-bold mb-4 text-gray-800 dark:text-gray-200">
         Ready to complete your payment?
       </h1>
