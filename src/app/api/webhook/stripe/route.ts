@@ -29,15 +29,22 @@ export async function POST(req: Request) {
         const invoice = event.data.object as Stripe.Invoice;
         console.log("invoice", invoice);
         if (invoice.subscription) {
-          const subscription = await stripe.subscriptions.retrieve(
+          const stripeSubscription = await stripe.subscriptions.retrieve(
             invoice.subscription as string,
           );
 
-          await prisma.subscription.update({
-            where: { userId: subscription.metadata.userId },
-            data: {
+          await prisma.membership.upsert({
+            where: { userId: stripeSubscription.metadata.userId },
+            create: {
+              userId: stripeSubscription.metadata.userId,
+              stripeSubscriptionId: stripeSubscription.id,
               currentPeriodEnd: new Date(
-                subscription.current_period_end * 1000,
+                stripeSubscription.current_period_end * 1000,
+              ),
+            },
+            update: {
+              currentPeriodEnd: new Date(
+                stripeSubscription.current_period_end * 1000,
               ),
             },
           });
@@ -45,34 +52,11 @@ export async function POST(req: Request) {
         break;
       }
 
-      case "customer.subscription.created":
-      case "customer.subscription.updated": {
-        const subscription = event.data.object as Stripe.Subscription;
-
-        console.log("subscription", subscription);
-
-        await prisma.subscription.upsert({
-          where: { userId: subscription.metadata.userId },
-          create: {
-            userId: subscription.metadata.userId,
-            stripeSubscriptionId: subscription.id,
-            stripeCustomerId: subscription.customer as string,
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          },
-          update: {
-            stripeSubscriptionId: subscription.id,
-            stripeCustomerId: subscription.customer as string,
-            currentPeriodEnd: new Date(subscription.current_period_end * 1000),
-          },
-        });
-        break;
-      }
-
       case "customer.subscription.deleted": {
-        const subscription = event.data.object as Stripe.Subscription;
+        const stripeSubscription = event.data.object as Stripe.Subscription;
 
-        await prisma.subscription.update({
-          where: { userId: subscription.metadata.userId },
+        await prisma.membership.update({
+          where: { userId: stripeSubscription.metadata.userId },
           data: {
             canceledAt: new Date(),
           },

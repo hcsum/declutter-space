@@ -2,7 +2,8 @@ import { logout } from "@/actions/auth";
 import { getUserInfo } from "@/actions/user";
 
 const UserPage = async () => {
-  const { status, name } = await getUserInfo();
+  const { membership, name } = await getUserInfo();
+  const { status, currentPeriodEnd } = membership;
 
   const statusColors = {
     active: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100",
@@ -28,13 +29,28 @@ const UserPage = async () => {
 
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-            Subscription Status
+            Membership Status
           </h2>
           <div
             className={`inline-block ${statusColors[status]} px-4 py-2 rounded-full text-sm font-medium shadow-md`}
           >
             {statusText[status]}
           </div>
+          {status === "active" && (
+            <p className="text-gray-600 dark:text-gray-400">
+              Next billing date: {currentPeriodEnd?.toLocaleDateString()}
+            </p>
+          )}
+          {status === "expired" && (
+            <p className="text-gray-600 dark:text-gray-400">
+              Subscription ended on {currentPeriodEnd?.toLocaleDateString()}
+            </p>
+          )}
+          {status === "canceled" && (
+            <p className="text-gray-600 dark:text-gray-400">
+              Subscription will end on {currentPeriodEnd?.toLocaleDateString()}
+            </p>
+          )}
           {status !== "active" && (
             <a
               href="/payment"

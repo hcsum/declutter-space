@@ -9,20 +9,28 @@ export async function createPaymentIntent() {
   try {
     const { userId } = await verifySession();
 
-    const subscription = await prisma.subscription.findUnique({
-      where: { userId },
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       select: { stripeCustomerId: true },
     });
 
     const customerId =
-      subscription?.stripeCustomerId ||
+      user?.stripeCustomerId ||
       (
         await stripe.customers.create({
           metadata: { userId },
         })
       ).id;
 
-    // Create a subscription
+    // Save the customerId if it's new
+    if (!user?.stripeCustomerId) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { stripeCustomerId: customerId },
+      });
+    }
+
+    // Create a stripe subscription
     const newSubscription = await stripe.subscriptions.create({
       customer: customerId,
       items: [{ price: process.env.STRIPE_PRICE_ID! }],

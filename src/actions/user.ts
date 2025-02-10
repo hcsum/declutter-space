@@ -2,12 +2,17 @@
 import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { checkSubscriptionStatus, SubscriptionStatus } from "./subscription";
+import { checkMembershipStatus, MembershipStatus } from "./membership";
 
 export async function getUserInfo<T extends Prisma.UserSelect>(
   select?: T,
 ): Promise<
-  Prisma.UserGetPayload<{ select: T }> & { status: SubscriptionStatus }
+  Prisma.UserGetPayload<{ select: T }> & {
+    membership: {
+      status: MembershipStatus;
+      currentPeriodEnd: Date | null;
+    };
+  }
 > {
   const { userId } = await verifySession();
 
@@ -23,7 +28,7 @@ export async function getUserInfo<T extends Prisma.UserSelect>(
     },
   })) as Prisma.UserGetPayload<{ select: T }>;
 
-  const status = await checkSubscriptionStatus();
+  const membership = await checkMembershipStatus();
 
-  return { ...result, status };
+  return { ...result, membership };
 }

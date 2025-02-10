@@ -13,6 +13,7 @@ model User {
   name                   String
   email                  String    @unique
   password               String
+  stripeCustomerId       String?
   imageAnalysisUsedCount Int       @default(0)
   imageAnalysisUsedAt    DateTime?
   createdAt              DateTime  @default(now())
@@ -20,7 +21,7 @@ model User {
   isVerified             Boolean   @default(false)
   items                  Item[]
 
-  Subscription Subscription[]
+  Membership Membership[]
 }
 
 enum ItemPlan {
@@ -63,13 +64,12 @@ model ItemReminder {
   updatedAt DateTime         @updatedAt
 }
 
-model Subscription {
+model Membership {
   id                   String    @id @default(uuid())
   userId               String    @unique
   user                 User      @relation(fields: [userId], references: [id])
   stripeSubscriptionId String? // Stripe subscription ID (starts with 'sub_')
-  stripeCustomerId     String? // Stripe customer ID (starts with 'cus_')
-  currentPeriodEnd     DateTime // Instead of expiresAt - when current billing period ends
+  currentPeriodEnd     DateTime? // When current billing period ends
   canceledAt           DateTime? // When user requested cancellation
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
