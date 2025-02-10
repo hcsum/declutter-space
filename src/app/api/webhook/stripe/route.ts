@@ -4,6 +4,15 @@ import { stripe } from "@/lib/stripe";
 import { prisma } from "@/lib/prisma";
 import Stripe from "stripe";
 
+// this help make the api public in Vercel preview?
+// by default, Vercel guard all api routes in preview.
+export const config = {
+  api: {
+    bodyParser: false,
+  },
+  runtime: "edge",
+};
+
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: Request) {
