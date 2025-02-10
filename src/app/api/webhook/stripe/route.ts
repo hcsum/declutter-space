@@ -41,6 +41,8 @@ export async function POST(req: Request) {
             currentPeriodEnd: new Date(
               stripeSubscription.current_period_end * 1000,
             ),
+            canceledAt: null,
+            paymentFailedAt: null,
           },
         });
         break;
