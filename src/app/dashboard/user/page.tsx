@@ -1,31 +1,48 @@
 import { logout } from "@/actions/auth";
+import { getUserInfo } from "@/actions/user";
 
-const UserPage = () => {
+const UserPage = async () => {
+  const { status, name } = await getUserInfo();
+
+  const statusColors = {
+    active: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100",
+    canceled:
+      "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-100",
+    expired: "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-100",
+    free_trial: "bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-100",
+  };
+
+  const statusText = {
+    active: "Active",
+    canceled: "Canceled",
+    expired: "Expired",
+    free_trial: "Free Trial",
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 md:p-8">
       <div className="max-w-2xl md:mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
-        <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-8">
-          User Profile
-        </h1>
-
-        {/* <div className="mb-8">
-          <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
-            Account Information
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">Username: John Doe</p>
-          <p className="text-gray-600 dark:text-gray-400">
-            Email: johndoe@example.com
-          </p>
-        </div> */}
+        <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
+          Hi, {name}
+        </h2>
 
         <div className="mb-8">
           <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
             Subscription Status
           </h2>
-          <div className="inline-block bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-100 px-4 py-2 rounded-full text-sm font-medium shadow-md">
-            {/* Add subscription status from your database */}
-            Free Trial
+          <div
+            className={`inline-block ${statusColors[status]} px-4 py-2 rounded-full text-sm font-medium shadow-md`}
+          >
+            {statusText[status]}
           </div>
+          {status !== "active" && (
+            <a
+              href="/payment"
+              className="block mt-4 text-blue-600 dark:text-blue-400 hover:underline"
+            >
+              Upgrade to Pro
+            </a>
+          )}
         </div>
 
         <form action={logout}>
