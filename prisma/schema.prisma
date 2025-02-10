@@ -64,12 +64,13 @@ model ItemReminder {
 }
 
 model Subscription {
-  id               String    @id @default(uuid())
-  userId           String    @unique
-  user             User      @relation(fields: [userId], references: [id])
-  stripeId         String? // Stripe subscription ID
-  currentPeriodEnd DateTime // Instead of expiresAt - when current billing period ends
-  canceledAt       DateTime? // When user requested cancellation
-  createdAt        DateTime  @default(now())
-  updatedAt        DateTime  @updatedAt
+  id                   String    @id @default(uuid())
+  userId               String    @unique
+  user                 User      @relation(fields: [userId], references: [id])
+  stripeSubscriptionId String? // Stripe subscription ID (starts with 'sub_')
+  stripeCustomerId     String? // Stripe customer ID (starts with 'cus_')
+  currentPeriodEnd     DateTime // Instead of expiresAt - when current billing period ends
+  canceledAt           DateTime? // When user requested cancellation
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
 }
