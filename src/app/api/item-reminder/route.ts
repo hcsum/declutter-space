@@ -2,6 +2,7 @@ import { BrevoAdapter } from "@/lib/brevo";
 import prisma from "@/lib/prisma";
 import { groupBy } from "lodash";
 
+// todo: add secret
 export async function GET() {
   try {
     const today = new Date();
