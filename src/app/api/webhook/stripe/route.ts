@@ -6,13 +6,13 @@ import Stripe from "stripe";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
-export async function GET() {
-  return NextResponse.json({ message: "Hello" }, { status: 200 });
-}
+// export async function GET() {
+//   return NextResponse.json({ message: "Hello" }, { status: 200 });
+// }
 
-export async function OPTIONS() {
-  return NextResponse.json({}, { status: 200 });
-}
+// export async function OPTIONS() {
+//   return NextResponse.json({}, { status: 200 });
+// }
 
 export async function POST(req: Request) {
   if (req.body === null) {
@@ -36,6 +36,8 @@ export async function POST(req: Request) {
       case "customer.subscription.created":
       case "customer.subscription.updated": {
         const subscription = event.data.object as Stripe.Subscription;
+
+        console.log("subscription", subscription);
 
         await prisma.subscription.upsert({
           where: { userId: subscription.metadata.userId },
