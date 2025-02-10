@@ -15,7 +15,16 @@ export const config = {
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
+// Add OPTIONS handler for CORS
+export async function OPTIONS() {
+  return NextResponse.json({}, { status: 200 });
+}
+
 export async function POST(req: Request) {
+  if (req.body === null) {
+    return NextResponse.json({ error: "No body provided" }, { status: 400 });
+  }
+
   console.log("webhook received");
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature")!;
