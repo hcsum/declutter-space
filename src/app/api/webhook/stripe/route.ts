@@ -28,6 +28,12 @@ export async function POST(req: Request) {
           invoice.subscription as string,
         );
 
+        if (stripeSubscription.status === "canceled") {
+          await stripe.subscriptions.update(stripeSubscription.id, {
+            cancel_at_period_end: false,
+          });
+        }
+
         await prisma.membership.upsert({
           where: { userId: stripeSubscription.metadata.userId },
           create: {

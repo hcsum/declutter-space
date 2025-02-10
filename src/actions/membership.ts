@@ -95,9 +95,9 @@ export async function createPaymentIntent() {
   try {
     const { userId } = await verifySession();
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findUniqueOrThrow({
       where: { id: userId },
-      select: { stripeCustomerId: true },
+      select: { stripeCustomerId: true, id: true },
     });
 
     const customerId =
@@ -116,16 +116,24 @@ export async function createPaymentIntent() {
       });
     }
 
-    // Create a stripe subscription
-    const newSubscription = await stripe.subscriptions.create({
-      customer: customerId,
-      items: [{ price: process.env.STRIPE_PRICE_ID! }],
-      payment_behavior: "default_incomplete",
-      expand: ["latest_invoice.payment_intent"],
-      metadata: { userId },
+    const membership = await prisma.membership.findUnique({
+      where: {
+        userId: user.id,
+      },
     });
 
-    const invoice = newSubscription.latest_invoice as Stripe.Invoice;
+    const subscription =
+      membership && membership.stripeSubscriptionId
+        ? await stripe.subscriptions.retrieve(membership.stripeSubscriptionId)
+        : await stripe.subscriptions.create({
+            customer: customerId,
+            items: [{ price: process.env.STRIPE_PRICE_ID! }],
+            payment_behavior: "default_incomplete",
+            expand: ["latest_invoice.payment_intent"],
+            metadata: { userId },
+          });
+
+    const invoice = subscription.latest_invoice as Stripe.Invoice;
     const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
 
     return { clientSecret: paymentIntent.client_secret };
