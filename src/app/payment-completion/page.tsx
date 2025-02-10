@@ -44,8 +44,8 @@ function PaymentCompletionContent() {
           </p>
         </>
       )}
-      <Link href="/" className="text-blue-500 hover:text-blue-700">
-        Return to Home
+      <Link href="/dashboard" className="text-blue-500 hover:text-blue-700">
+        Return to Dashboard
       </Link>
     </div>
   );

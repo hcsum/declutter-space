@@ -2,6 +2,7 @@
 
 import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
 
 export type MembershipStatus = "active" | "canceled" | "expired" | "free_trial";
 
@@ -50,5 +51,40 @@ export async function checkMembershipStatus(): Promise<{
   } catch (error) {
     console.error("Error checking subscription:", error);
     return { status: "expired", currentPeriodEnd: null };
+  }
+}
+
+export async function cancelMembership() {
+  try {
+    const { userId } = await verifySession();
+
+    const membership = await prisma.membership.findUnique({
+      where: { userId },
+      select: { stripeSubscriptionId: true },
+    });
+
+    if (!membership || !membership.stripeSubscriptionId) {
+      throw new Error("No active membership found");
+    }
+
+    // Cancel the Stripe subscription
+    await stripe.subscriptions.update(membership.stripeSubscriptionId, {
+      cancel_at_period_end: true,
+    });
+
+    // Update the membership in the database
+    await prisma.membership.update({
+      where: { userId },
+      data: { canceledAt: new Date() },
+    });
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error canceling membership:", error);
+    return {
+      success: false,
+      error:
+        error instanceof Error ? error.message : "An unknown error occurred",
+    };
   }
 }
