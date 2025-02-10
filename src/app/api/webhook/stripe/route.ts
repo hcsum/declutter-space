@@ -28,38 +28,36 @@ export async function POST(req: Request) {
       case "invoice.payment_succeeded": {
         const invoice = event.data.object as Stripe.Invoice;
         console.log("invoice", invoice);
-        if (invoice.subscription) {
-          const stripeSubscription = await stripe.subscriptions.retrieve(
-            invoice.subscription as string,
-          );
+        const stripeSubscription = await stripe.subscriptions.retrieve(
+          invoice.subscription as string,
+        );
 
-          await prisma.membership.upsert({
-            where: { userId: stripeSubscription.metadata.userId },
-            create: {
-              userId: stripeSubscription.metadata.userId,
-              stripeSubscriptionId: stripeSubscription.id,
-              currentPeriodEnd: new Date(
-                stripeSubscription.current_period_end * 1000,
-              ),
-            },
-            update: {
-              currentPeriodEnd: new Date(
-                stripeSubscription.current_period_end * 1000,
-              ),
-            },
-          });
-        }
+        await prisma.membership.upsert({
+          where: { userId: stripeSubscription.metadata.userId },
+          create: {
+            userId: stripeSubscription.metadata.userId,
+            stripeSubscriptionId: stripeSubscription.id,
+            currentPeriodEnd: new Date(
+              stripeSubscription.current_period_end * 1000,
+            ),
+          },
+          update: {
+            currentPeriodEnd: new Date(
+              stripeSubscription.current_period_end * 1000,
+            ),
+          },
+        });
         break;
       }
-
-      case "customer.subscription.deleted": {
-        const stripeSubscription = event.data.object as Stripe.Subscription;
-
+      case "invoice.payment_failed": {
+        const invoice = event.data.object as Stripe.Invoice;
+        console.log("invoice", invoice);
+        const stripeSubscription = await stripe.subscriptions.retrieve(
+          invoice.subscription as string,
+        );
         await prisma.membership.update({
           where: { userId: stripeSubscription.metadata.userId },
-          data: {
-            canceledAt: new Date(),
-          },
+          data: { paymentFailedAt: new Date() },
         });
         break;
       }

@@ -1,7 +1,7 @@
 "use client";
 
 import PaymentForm from "@/components/PaymentForm";
-import { createPaymentIntent } from "@/actions/payment";
+import { createPaymentIntent } from "@/actions/membership";
 import useSWR from "swr";
 
 export default function PaymentPage() {

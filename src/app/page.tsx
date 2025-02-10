@@ -25,11 +25,21 @@ const LandingPage = () => {
             need someday. Set deadlines for them, when the day comes, you can
             decide what goes and what stays.
           </p>
-          <Link href="/signup">
-            <button className="bg-blue-500 text-white px-6 py-3 rounded-lg text-lg hover:bg-blue-600 transition">
-              Join Beta
-            </button>
-          </Link>
+          <div className="space-y-4 text-center">
+            <Link href="/signup">
+              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
+                Get Early Access
+              </button>
+            </Link>
+            <div>
+              <Link
+                href="/login"
+                className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
+              >
+                Already have an account? Login
+              </Link>
+            </div>
+          </div>
         </div>
         <div className="mt-10">
           <Image
@@ -196,11 +206,21 @@ const LandingPage = () => {
               <li>Categorize your items (coming soon)</li>
               <li>Personalized decluttering insights (coming soon)</li>
             </ul>
-            <Link href="/signup">
-              <button className="bg-blue-500 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-600 transition w-full">
-                Join Beta
-              </button>
-            </Link>
+            <div className="space-y-4 text-center">
+              <Link href="/signup">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
+                  Get Early Access
+                </button>
+              </Link>
+              <div>
+                <Link
+                  href="/login"
+                  className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
+                >
+                  Already have an account? Login
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

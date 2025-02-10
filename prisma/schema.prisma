@@ -71,6 +71,7 @@ model Membership {
   stripeSubscriptionId String? // Stripe subscription ID (starts with 'sub_')
   currentPeriodEnd     DateTime? // When current billing period ends
   canceledAt           DateTime? // When user requested cancellation
+  paymentFailedAt      DateTime? // When payment failed
   createdAt            DateTime  @default(now())
   updatedAt            DateTime  @updatedAt
 }

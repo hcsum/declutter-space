@@ -98,10 +98,8 @@ const UserPageClient = ({
 
         <div className="mt-auto flex flex-col sm:flex-row sm:justify-end">
           <button
-            onClick={() => {
-              logout();
-            }}
-            className="w-full sm:w-auto bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800 text-white font-medium py-3 px-4 rounded-md shadow-md focus:outline-none focus:ring-4 focus:ring-red-300 transition-colors"
+            onClick={logout}
+            className="w-full sm:w-auto bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-100 font-medium py-3 px-4 rounded-md shadow-md focus:outline-none focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600 transition-colors"
           >
             Logout
           </button>
