@@ -79,15 +79,7 @@ const UserPageClient = ({
           <button
             onClick={async () => {
               setIsCanceling(true);
-              const result = await cancelMembership();
-              setIsCanceling(false);
-              if (result.success) {
-                alert(
-                  "Your membership will be canceled at the end of the current period.",
-                );
-              } else {
-                alert(`Failed to cancel membership: ${result.error}`);
-              }
+              await cancelMembership();
             }}
             disabled={isCanceling}
             className="text-blue-600 dark:text-blue-400 hover:underline mb-4"

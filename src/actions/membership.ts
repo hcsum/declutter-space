@@ -4,6 +4,7 @@ import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
+import { revalidatePath } from "next/cache";
 
 export type MembershipStatus = "active" | "canceled" | "expired" | "free_trial";
 
@@ -79,7 +80,7 @@ export async function cancelMembership() {
       data: { canceledAt: new Date() },
     });
 
-    return { success: true };
+    revalidatePath("/dashboard/user");
   } catch (error) {
     console.error("Error canceling membership:", error);
     return {

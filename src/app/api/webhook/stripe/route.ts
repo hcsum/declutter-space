@@ -7,10 +7,6 @@ import Stripe from "stripe";
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 
 export async function POST(req: Request) {
-  if (req.body === null) {
-    return NextResponse.json({ error: "No body provided" }, { status: 400 });
-  }
-
   console.log("webhook received");
   const body = await req.text();
   const signature = (await headers()).get("stripe-signature")!;
