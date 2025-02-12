@@ -49,7 +49,7 @@ const CheckoutForm = () => {
         disabled={!stripe || isLoading}
         className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
       >
-        {isLoading ? "Processing..." : "Pay now"}
+        {isLoading ? "Processing..." : "Submit"}
       </button>
       {errorMessage && <div className="text-red-500 mt-4">{errorMessage}</div>}
     </form>
