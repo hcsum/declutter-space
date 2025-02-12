@@ -2,16 +2,14 @@
 import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import { checkMembershipStatus, MembershipStatus } from "./membership";
+import { checkMembershipStatus } from "./membership";
+import Stripe from "stripe";
 
 export async function getUserInfo<T extends Prisma.UserSelect>(
   select?: T,
 ): Promise<
   Prisma.UserGetPayload<{ select: T }> & {
-    membership: {
-      status: MembershipStatus;
-      currentPeriodEnd: Date | null;
-    };
+    membership: Stripe.Subscription | null;
   }
 > {
   const { userId } = await verifySession();

@@ -1,17 +1,17 @@
 "use server";
 
+// https://docs.stripe.com/billing/quickstart
+// https://docs.stripe.com/billing/subscriptions/build-subscriptions
+// freaking confusing
+
 import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
-import { revalidatePath } from "next/cache";
 
-export type MembershipStatus = "active" | "canceled" | "expired" | "free_trial";
+export type MembershipStatus = Stripe.Subscription.Status;
 
-export async function checkMembershipStatus(): Promise<{
-  status: MembershipStatus;
-  currentPeriodEnd: Date | null;
-}> {
+export async function checkMembershipStatus(): Promise<Stripe.Subscription | null> {
   try {
     const { userId } = await verifySession();
     const membership = await prisma.membership.findUnique({
@@ -19,126 +19,86 @@ export async function checkMembershipStatus(): Promise<{
     });
 
     if (!membership) {
-      return { status: "free_trial", currentPeriodEnd: null };
+      return null;
     }
 
-    const now = new Date();
+    const sub = await stripe.subscriptions.retrieve(
+      membership.stripeSubscriptionId!,
+    );
 
-    // Check expiration first
-    if (membership.currentPeriodEnd && membership.currentPeriodEnd < now) {
-      return {
-        status: "expired",
-        currentPeriodEnd: membership.currentPeriodEnd,
-      };
-    }
-
-    // If not expired, check if it's canceled
-    if (membership.canceledAt) {
-      return {
-        status: "canceled",
-        currentPeriodEnd: membership.currentPeriodEnd,
-      };
-    }
-
-    // If there's a valid subscription that's not expired or canceled, it's active
-    if (membership.currentPeriodEnd) {
-      return {
-        status: "active",
-        currentPeriodEnd: membership.currentPeriodEnd,
-      };
-    }
-
-    // Fallback to free trial
-    return { status: "free_trial", currentPeriodEnd: null };
+    return {
+      ...sub,
+      current_period_end: sub.current_period_end * 1000,
+      current_period_start: sub.current_period_start * 1000,
+      cancel_at: sub.cancel_at ? sub.cancel_at * 1000 : null,
+      canceled_at: sub.canceled_at ? sub.canceled_at * 1000 : null,
+    };
   } catch (error) {
     console.error("Error checking subscription:", error);
-    return { status: "expired", currentPeriodEnd: null };
+    throw new Error("fail to check memebership status");
   }
 }
 
-export async function cancelMembership() {
-  try {
-    const { userId } = await verifySession();
-
-    const membership = await prisma.membership.findUnique({
-      where: { userId },
-      select: { stripeSubscriptionId: true },
-    });
-
-    if (!membership || !membership.stripeSubscriptionId) {
-      throw new Error("No active membership found");
-    }
-
-    // Cancel the Stripe subscription
-    await stripe.subscriptions.update(membership.stripeSubscriptionId, {
-      cancel_at_period_end: true,
-    });
-
-    // Update the membership in the database
-    await prisma.membership.update({
-      where: { userId },
-      data: { canceledAt: new Date() },
-    });
-
-    revalidatePath("/dashboard/user");
-  } catch (error) {
-    console.error("Error canceling membership:", error);
-    return {
-      success: false,
-      error:
-        error instanceof Error ? error.message : "An unknown error occurred",
-    };
-  }
-}
-
-export async function createPaymentIntent() {
+export async function createStripeSession() {
   try {
     const { userId } = await verifySession();
 
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: userId },
-      select: { stripeCustomerId: true, id: true },
+      select: { stripeCustomerId: true },
     });
 
-    const customerId =
-      user?.stripeCustomerId ||
-      (
+    let customerId = user.stripeCustomerId;
+    if (!customerId) {
+      customerId = (
         await stripe.customers.create({
           metadata: { userId },
         })
       ).id;
-
-    // Save the customerId if it's new
-    if (!user?.stripeCustomerId) {
       await prisma.user.update({
         where: { id: userId },
         data: { stripeCustomerId: customerId },
       });
     }
 
-    const membership = await prisma.membership.findUnique({
-      where: {
-        userId: user.id,
-      },
+    const session = await stripe.checkout.sessions.create({
+      mode: "subscription",
+      customer: customerId,
+      line_items: [
+        {
+          price: process.env.STRIPE_PRICE_ID!,
+          quantity: 1,
+        },
+      ],
+      metadata: { userId },
+      success_url: `${process.env.SITE_URL}/payment-completion?success=1`,
+      cancel_url: `${process.env.SITE_URL}/payment-completion?canceled=1`,
     });
 
-    const subscription =
-      membership && membership.stripeSubscriptionId
-        ? await stripe.subscriptions.retrieve(membership.stripeSubscriptionId)
-        : await stripe.subscriptions.create({
-            customer: customerId,
-            items: [{ price: process.env.STRIPE_PRICE_ID! }],
-            payment_behavior: "default_incomplete",
-            expand: ["latest_invoice.payment_intent"],
-            metadata: { userId },
-          });
-
-    const invoice = subscription.latest_invoice as Stripe.Invoice;
-    const paymentIntent = invoice.payment_intent as Stripe.PaymentIntent;
-
-    return { clientSecret: paymentIntent.client_secret };
-  } catch (error) {
-    console.error("Error:", error);
+    return { url: session.url, sessionId: session.id };
+  } catch (e) {
+    console.error("Error:", e);
     throw new Error("Error creating subscription");
+  }
+}
+
+export async function createStripePortalSession() {
+  try {
+    const { userId } = await verifySession();
+
+    const user = await prisma.user.findUniqueOrThrow({
+      where: { id: userId },
+      select: { stripeCustomerId: true },
+    });
+
+    const session = await stripe.billingPortal.sessions.create({
+      customer: user.stripeCustomerId!,
+      return_url: `${process.env.SITE_URL}/dashboard/user`,
+    });
+
+    return { url: session.url, sessionId: session.id };
+  } catch (e) {
+    console.error("Error:", e);
+    throw new Error("Error creating portal session");
   }
 }

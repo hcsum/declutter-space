@@ -65,13 +65,10 @@ model ItemReminder {
 }
 
 model Membership {
-  id                   String    @id @default(uuid())
-  userId               String    @unique
-  user                 User      @relation(fields: [userId], references: [id])
+  id                   String   @id @default(uuid())
+  userId               String   @unique
+  user                 User     @relation(fields: [userId], references: [id])
   stripeSubscriptionId String? // Stripe subscription ID (starts with 'sub_')
-  currentPeriodEnd     DateTime? // When current billing period ends
-  canceledAt           DateTime? // When user requested cancellation
-  paymentFailedAt      DateTime? // When payment failed
-  createdAt            DateTime  @default(now())
-  updatedAt            DateTime  @updatedAt
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
 }
