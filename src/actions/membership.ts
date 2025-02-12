@@ -1,8 +1,7 @@
 "use server";
 
 // https://docs.stripe.com/billing/quickstart
-// https://docs.stripe.com/billing/subscriptions/build-subscriptions
-// freaking confusing
+// https://docs.stripe.com/billing/subscriptions/build-subscriptions this is the way to go
 
 import { verifySession } from "@/lib/session";
 import { prisma } from "@/lib/prisma";
@@ -22,6 +21,7 @@ export async function checkMembershipStatus(): Promise<Stripe.Subscription | nul
       return null;
     }
 
+    // https://docs.stripe.com/api?lang=node
     const sub = await stripe.subscriptions.retrieve(
       membership.stripeSubscriptionId!,
     );
