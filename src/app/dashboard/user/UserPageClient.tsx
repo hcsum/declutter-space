@@ -2,6 +2,7 @@
 
 import { logout } from "@/actions/auth";
 import Stripe from "stripe";
+import { useRouter } from "next/navigation";
 
 const statusColors = {
   active: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100",
@@ -38,6 +39,12 @@ const UserPageClient = ({
   stripeUrl: string | null;
   stripePortalUrl: string | null;
 }) => {
+  const router = useRouter();
+
+  const navigateBack = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 md:p-8">
       <div className="max-w-2xl md:mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
@@ -114,8 +121,14 @@ const UserPageClient = ({
 
         <div className="mt-auto flex flex-col sm:flex-row sm:justify-end">
           <button
+            onClick={navigateBack}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto mb-4 sm:mb-0 sm:mr-4"
+          >
+            Back to Dashboard
+          </button>
+          <button
             onClick={logout}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
+            className="bg-gray-500 hover:bg-gray-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
           >
             Logout
           </button>
