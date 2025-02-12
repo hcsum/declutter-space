@@ -71,8 +71,8 @@ export async function createStripeSession() {
         },
       ],
       metadata: { userId },
-      success_url: `${process.env.SITE_URL}/payment-completion?success=1`,
-      cancel_url: `${process.env.SITE_URL}/payment-completion?canceled=1`,
+      success_url: `${process.env.SITE_URL}/dashboard/user`,
+      cancel_url: `${process.env.SITE_URL}/dashboard/user`,
     });
 
     return { url: session.url, sessionId: session.id };
