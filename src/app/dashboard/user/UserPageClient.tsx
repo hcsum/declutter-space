@@ -52,7 +52,7 @@ const UserPageClient = ({
           {membership ? (
             <>
               <div
-                className={`inline-block text-black px-4 py-2 rounded-full text-sm font-medium shadow-md mb-4 ${statusColors[membership.status] || statusColors.incomplete}`}
+                className={`inline-block font-semibold text-black px-4 py-2 rounded-full text-sm font-medium shadow-md mb-4 ${statusColors[membership.status] || statusColors.incomplete}`}
               >
                 {statusText[membership.status] || statusText.incomplete}
               </div>
