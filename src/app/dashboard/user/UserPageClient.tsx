@@ -3,6 +3,8 @@
 import { logout } from "@/actions/auth";
 import Stripe from "stripe";
 import { useRouter } from "next/navigation";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import Button from "@mui/material/Button";
 
 const statusColors = {
   active: "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-100",
@@ -47,7 +49,15 @@ const UserPageClient = ({
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 md:p-8">
-      <div className="max-w-2xl md:mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-8">
+      <div className="max-w-2xl md:mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg px-8 py-4">
+        <Button
+          onClick={navigateBack}
+          startIcon={<ArrowBackIcon />}
+          aria-label="Back to Dashboard"
+          sx={{ mb: 2 }}
+        >
+          Back
+        </Button>
         <h2 className="text-xl font-semibold text-gray-700 dark:text-gray-200 mb-4">
           Hi, {name}
         </h2>
@@ -94,7 +104,7 @@ const UserPageClient = ({
               {stripePortalUrl && (
                 <a
                   href={stripePortalUrl}
-                  className="block mt-4 text-blue-600 dark:text-blue-400 hover:underline"
+                  className="block mt-4 w-fit font-bold text-blue-600 dark:text-blue-400 hover:underline"
                 >
                   Manage Subscription
                 </a>
@@ -103,14 +113,14 @@ const UserPageClient = ({
           ) : (
             <>
               <div
-                className={`inline-block text-white bg-blue-500 px-4 py-2 rounded-full text-sm font-medium shadow-md mb-4`}
+                className={`inline-block text-black bg-gray-100 px-4 py-2 rounded-full text-sm font-medium shadow-md mb-4`}
               >
                 FREE TRIAL
               </div>
               {stripeUrl && (
                 <a
                   href={stripeUrl}
-                  className="block font-bold mt-4 text-blue-600 dark:text-blue-400 hover:underline"
+                  className="block w-full text-center font-bold mt-4 text-white bg-blue-600 dark:bg-blue-500 hover:bg-blue-800 dark:hover:bg-blue-600 px-6 py-3 rounded-lg text-lg transition-colors duration-200 md:w-fit"
                 >
                   Join Membership
                 </a>
@@ -121,14 +131,8 @@ const UserPageClient = ({
 
         <div className="mt-auto flex flex-col sm:flex-row sm:justify-end">
           <button
-            onClick={navigateBack}
-            className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto mb-4 sm:mb-0 sm:mr-4"
-          >
-            Back to Dashboard
-          </button>
-          <button
             onClick={logout}
-            className="bg-gray-500 hover:bg-gray-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
+            className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
           >
             Logout
           </button>
