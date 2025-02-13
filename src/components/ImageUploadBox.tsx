@@ -97,57 +97,8 @@ export default function ImageUploadBox() {
   return (
     <>
       <AddingItemDialog
-        isOpen={true}
-        detectedItems={[
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-          {
-            label: "test",
-            count: 1,
-          },
-          {
-            label: "test2",
-            count: 2,
-          },
-        ]}
+        isOpen={showConfirmDialog}
+        detectedItems={detectedItems}
         uploadedImage={uploadedImage}
         onConfirm={onItemsAdded}
         onCancel={handleCancel}
