@@ -2,10 +2,15 @@
 
 import { createItem } from "@/actions/items";
 import { useActionState } from "react";
-import { TextField, Button, Box } from "@mui/material";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
+import {
+  TextField,
+  Button,
+  Box,
+  MenuItem,
+  Select,
+  InputLabel,
+  FormControl,
+} from "@mui/material";
 
 const AddItemForm = () => {
   const [state, action, pending] = useActionState(createItem, undefined);
@@ -44,21 +49,25 @@ const AddItemForm = () => {
         helperText={state?.errors?.pieces}
       />
 
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <DatePicker
-          label="Deadline"
+      <FormControl fullWidth>
+        <InputLabel id="deadline-label">Deadline</InputLabel>
+        <Select
+          labelId="deadline-label"
+          id="deadline"
           name="deadline"
-          disablePast
-          slotProps={{
-            textField: {
-              required: true,
-              fullWidth: true,
-              error: !!state?.errors?.deadline,
-              helperText: state?.errors?.deadline,
-            },
-          }}
-        />
-      </LocalizationProvider>
+          defaultValue={6}
+          label="Deadline"
+          required
+        >
+          <MenuItem value={2}>2 months</MenuItem>
+          <MenuItem value={3}>3 months</MenuItem>
+          <MenuItem value={6}>6 months</MenuItem>
+          <MenuItem value={9}>9 months</MenuItem>
+          <MenuItem value={12}>1 year</MenuItem>
+          <MenuItem value={18}>1 and a half year</MenuItem>
+          <MenuItem value={24}>2 years</MenuItem>
+        </Select>
+      </FormControl>
 
       <Button
         type="submit"

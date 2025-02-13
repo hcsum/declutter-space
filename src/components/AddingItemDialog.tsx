@@ -1,9 +1,18 @@
 import { createManyItems, ItemCreateInput } from "@/actions/items";
 import { DetectedItemChatGPT } from "@/lib/upload-helper-chatgpt";
-import { Dialog, useMediaQuery } from "@mui/material";
+import {
+  Dialog,
+  useMediaQuery,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
+  TextField,
+} from "@mui/material";
 import { ItemPlan } from "@prisma/client";
 import { useActionState } from "react";
 import { useState, useEffect } from "react";
+import { CheckCircle, AddCircle } from "@mui/icons-material";
 
 interface AddingItemDialogProps {
   isOpen: boolean;
@@ -16,6 +25,7 @@ interface AddingItemDialogProps {
 interface DetectedItemWithChecked extends DetectedItemChatGPT {
   checked: boolean;
   pieces: number;
+  deadline: number;
 }
 
 const AddingItemDialog = ({
@@ -36,6 +46,7 @@ const AddingItemDialog = ({
           ...item,
           checked: true,
           pieces: item.count,
+          deadline: 6,
         })),
       );
     }
@@ -53,7 +64,7 @@ const AddingItemDialog = ({
       .map((item) => ({
         name: item.label,
         pieces: item.pieces,
-        deadline: new Date(new Date().setDate(new Date().getDate() + 180)),
+        deadline: 6,
         plan: ItemPlan.UNDECIDED,
       }));
     action(confirmedItems);
@@ -82,6 +93,14 @@ const AddingItemDialog = ({
     );
   };
 
+  const handleDeadlineChange = (index: number, deadline: string) => {
+    setEditableItems((items) =>
+      items.map((item, i) =>
+        i === index ? { ...item, deadline: parseInt(deadline) } : item,
+      ),
+    );
+  };
+
   useEffect(() => {
     if (isOpen) {
       document.body.style.overflow = "hidden"; // Prevent scrolling
@@ -98,74 +117,86 @@ const AddingItemDialog = ({
   if (!isOpen) return null;
 
   return (
-    <Dialog open={isOpen} onClose={onCancel} fullScreen={isMobile}>
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 w-full h-auto md:h-auto md:max-w-md md:w-full flex flex-col md:rounded-lg">
+    <Dialog
+      open={isOpen}
+      onClose={onCancel}
+      fullScreen={isMobile}
+      maxWidth="sm"
+      fullWidth
+    >
+      <div className="bg-white dark:bg-gray-800 rounded-lg p-6 h-auto md:h-auto flex flex-col md:rounded-lg">
         <div className="relative">
           {uploadedImage && (
             <img src={uploadedImage} alt="Uploaded" className="w-full h-auto" />
           )}
         </div>
-        <h3 className="text-lg font-semibold mb-4 mt-2">Detected Items</h3>
+        <h3 className="text-lg font-semibold mb-4 mt-2">
+          Detected Items: {detectedItems.length}
+        </h3>
         <form action={handleConfirm} className="flex flex-col h-full">
-          <div className="space-y-2 mb-6 overflow-y-auto flex-grow max-h-[60vh] md:max-h-80 overflow-y-scroll">
-            {editableItems.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center gap-2"
+          {editableItems.map((item, index) => (
+            <div
+              key={index}
+              className="flex gap-2 justify-start items-baseline border-b border-gray-200 dark:border-gray-600 mb-8"
+            >
+              <button
+                type="button"
+                onClick={() => handleCheckChange(index, !item.checked)}
+                className={`p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 ${
+                  item.checked ? "text-green-500" : "text-gray-400"
+                }`}
               >
-                <button
-                  type="button"
-                  onClick={() => handleCheckChange(index, !item.checked)}
-                  className={`p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 ${
-                    item.checked ? "text-green-500" : "text-gray-400"
-                  }`}
-                >
-                  {item.checked ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25Zm3 10.5a.75.75 0 0 0 0-1.5H9a.75.75 0 0 0 0 1.5h6Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-6 h-6"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 9a.75.75 0 0 0-1.5 0v2.25H9a.75.75 0 0 0 0 1.5h2.25V15a.75.75 0 0 0 1.5 0v-2.25H15a.75.75 0 0 0 0-1.5h-2.25V9Z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
-                  )}
-                </button>
-                <input
-                  type="text"
+                {item.checked ? (
+                  <CheckCircle className="w-6 h-6" />
+                ) : (
+                  <AddCircle className="w-6 h-6" />
+                )}
+              </button>
+              <div className="flex flex-col gap-2 mb-4 w-full md:flex-row md:gap-4 md:items-center">
+                <TextField
+                  label="Name"
+                  id={`name-${index}`}
                   value={item.label}
                   onChange={(e) => handleLabelChange(index, e.target.value)}
                   className="flex-1 px-2 py-1 border rounded dark:bg-gray-700 dark:border-gray-600"
                 />
-                <input
+                <TextField
+                  label="Pieces"
+                  id={`pieces-${index}`}
                   type="number"
                   value={item.pieces ?? 1}
                   onChange={(e) =>
-                    handlePiecesChange(index, parseInt(e.target.value) || 1)
+                    handlePiecesChange(index, parseInt(e.target.value))
                   }
-                  min="1"
                   className="w-20 px-2 py-1 border rounded dark:bg-gray-700 dark:border-gray-600"
                 />
+                <FormControl className="w-content">
+                  <InputLabel id={`deadline-label-${index}`}>
+                    Deadline
+                  </InputLabel>
+                  <Select
+                    labelId={`deadline-label-${index}`}
+                    id={`deadline-${index}`}
+                    value={String(item.deadline ?? 6)}
+                    onChange={(e) =>
+                      handleDeadlineChange(index, e.target.value)
+                    }
+                    label="Deadline"
+                    required
+                  >
+                    <MenuItem value="2">2 months</MenuItem>
+                    <MenuItem value="3">3 months</MenuItem>
+                    <MenuItem value="6">6 months</MenuItem>
+                    <MenuItem value="9">9 months</MenuItem>
+                    <MenuItem value="12">1 year</MenuItem>
+                    <MenuItem value="18">1 and a half year</MenuItem>
+                    <MenuItem value="24">2 years</MenuItem>
+                  </Select>
+                </FormControl>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
+          <p>{editableItems.filter((it) => it.checked).length} selected</p>
           <div className="flex justify-end space-x-4">
             <button
               type="button"

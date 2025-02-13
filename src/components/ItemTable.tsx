@@ -1,6 +1,5 @@
 "use client";
 
-import { FaSearch, FaEdit, FaTrash, FaSave } from "react-icons/fa";
 import { deleteItem, updateItem } from "@/actions/items";
 import { Prisma } from "@prisma/client";
 import { useState } from "react";
@@ -11,6 +10,10 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { formatDistanceToNow } from "date-fns";
+import SearchIcon from "@mui/icons-material/Search";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
 
 const ItemTable = ({
   items,
@@ -163,7 +166,7 @@ const ItemTable = ({
           onClick={handleSearchSubmit}
           className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
         >
-          <FaSearch />
+          <SearchIcon />
         </button>
       </div>
       <Pagination
@@ -280,7 +283,7 @@ const ItemTable = ({
                       {isUpdating === item.id ? (
                         <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
                       ) : (
-                        <FaSave />
+                        <SaveIcon />
                       )}
                     </button>
                     <button
@@ -293,7 +296,7 @@ const ItemTable = ({
                       {isDeleting === item.id ? (
                         <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
                       ) : (
-                        <FaTrash />
+                        <DeleteIcon />
                       )}
                     </button>
                   </>
@@ -302,7 +305,7 @@ const ItemTable = ({
                     onClick={() => handleEditClick(item)}
                     className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
                   >
-                    <FaEdit />
+                    <EditIcon />
                   </button>
                 )}
               </div>
