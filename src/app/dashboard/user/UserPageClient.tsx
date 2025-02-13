@@ -54,7 +54,7 @@ const UserPageClient = ({
           onClick={navigateBack}
           startIcon={<ArrowBackIcon />}
           aria-label="Back to Dashboard"
-          sx={{ mb: 2 }}
+          sx={{ mb: 4 }}
         >
           Back
         </Button>

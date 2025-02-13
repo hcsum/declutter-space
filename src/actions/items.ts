@@ -11,10 +11,25 @@ import { z } from "zod";
 export type ItemCreateInput = {
   name: string;
   pieces: number;
-  deadline: Date;
+  deadline: number; // Changed to number to represent months
 };
 
-const ItemFormSchema = z.object({
+export type ItemUpateInput = {
+  name: string;
+  pieces: number;
+  deadline: Date; // Changed to number to represent months
+};
+
+const CreateItemFormSchema = z.object({
+  name: z
+    .string()
+    .min(2, { message: "Name must be at least 2 characters long." })
+    .trim(),
+  pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
+  deadline: z.coerce.number().min(1, { message: "Invalid deadline." }), // Validate as number
+});
+
+const UpdateItemFormSchema = z.object({
   name: z
     .string()
     .min(2, { message: "Name must be at least 2 characters long." })
@@ -88,7 +103,7 @@ export async function createItem(
 ): Promise<ItemFormState | undefined> {
   const { userId } = await verifySession();
 
-  const validationResult = ItemFormSchema.safeParse(
+  const validationResult = CreateItemFormSchema.safeParse(
     Object.fromEntries(formData),
   );
 
@@ -100,11 +115,16 @@ export async function createItem(
 
   const { name, pieces, deadline } = validationResult.data;
 
+  // Calculate the deadline date based on the selected months
+  const deadlineDate = new Date(
+    new Date().setMonth(new Date().getMonth() + deadline),
+  );
+
   await prisma.item.create({
     data: {
       name,
       pieces,
-      deadline,
+      deadline: deadlineDate,
       startDate: new Date(),
       plan: ItemPlan.UNDECIDED,
       user: { connect: { id: userId } },
@@ -118,7 +138,7 @@ export async function createManyItems(
 ): Promise<{ errors?: string } | undefined> {
   const { userId } = await verifySession();
 
-  const validationResult = z.array(ItemFormSchema).safeParse(items);
+  const validationResult = z.array(CreateItemFormSchema).safeParse(items);
 
   if (!validationResult.success) {
     return {
@@ -131,7 +151,9 @@ export async function createManyItems(
       ...item,
       userId: userId,
       startDate: new Date(),
-      deadline: item.deadline,
+      deadline: new Date(
+        new Date().setMonth(new Date().getMonth() + item.deadline),
+      ),
       plan: ItemPlan.UNDECIDED,
     })),
   });
@@ -178,10 +200,10 @@ export async function bulkAddItemsByImage(imageData: string) {
   }
 }
 
-export async function updateItem(id: string, data: Partial<ItemCreateInput>) {
+export async function updateItem(id: string, data: Partial<ItemUpateInput>) {
   const { userId } = await verifySession();
 
-  const validationResult = ItemFormSchema.partial().safeParse(data);
+  const validationResult = UpdateItemFormSchema.partial().safeParse(data);
 
   if (!validationResult.success) {
     return {
@@ -200,7 +222,8 @@ export async function updateItem(id: string, data: Partial<ItemCreateInput>) {
   if (data.name !== undefined) updateData.name = data.name;
   if (data.pieces !== undefined) updateData.pieces = data.pieces;
   if (data.deadline !== undefined) updateData.deadline = data.deadline;
-  if (data.deadline !== item.deadline) {
+
+  if (updateData.deadline && updateData.deadline !== item.deadline) {
     updateData.startDate = new Date();
   }
 
