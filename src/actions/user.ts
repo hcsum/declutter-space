@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { checkMembershipStatus } from "./membership";
 import Stripe from "stripe";
+import { redirect } from "next/navigation";
 
 export async function getUserInfo<T extends Prisma.UserSelect>(
   select?: T,
@@ -14,7 +15,7 @@ export async function getUserInfo<T extends Prisma.UserSelect>(
 > {
   const { userId } = await verifySession();
 
-  const result = (await prisma.user.findUniqueOrThrow({
+  const result = (await prisma.user.findUnique({
     where: {
       id: userId as string,
     },
@@ -24,7 +25,11 @@ export async function getUserInfo<T extends Prisma.UserSelect>(
       email: true,
       ...select,
     },
-  })) as Prisma.UserGetPayload<{ select: T }>;
+  })) as Prisma.UserGetPayload<{ select: T }> | null;
+
+  if (!result) {
+    redirect("/login");
+  }
 
   const membership = await checkMembershipStatus();
 
