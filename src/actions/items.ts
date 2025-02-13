@@ -145,6 +145,7 @@ export async function createManyItems(
       errors: "invalid items",
     };
   }
+  console.log("items", items);
 
   await prisma.item.createMany({
     data: validationResult.data.map((item) => ({

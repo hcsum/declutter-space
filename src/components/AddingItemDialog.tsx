@@ -64,9 +64,10 @@ const AddingItemDialog = ({
       .map((item) => ({
         name: item.label,
         pieces: item.pieces,
-        deadline: 6,
+        deadline: item.deadline,
         plan: ItemPlan.UNDECIDED,
       }));
+    console.log("confirmedItems", confirmedItems);
     action(confirmedItems);
     onConfirm(confirmedItems.length);
   };
@@ -94,11 +95,13 @@ const AddingItemDialog = ({
   };
 
   const handleDeadlineChange = (index: number, deadline: string) => {
+    console.log("deadline", deadline);
     setEditableItems((items) =>
       items.map((item, i) =>
         i === index ? { ...item, deadline: parseInt(deadline) } : item,
       ),
     );
+    console.log("editableItems", editableItems);
   };
 
   useEffect(() => {
@@ -119,10 +122,10 @@ const AddingItemDialog = ({
   return (
     <Dialog
       open={isOpen}
-      onClose={onCancel}
       fullScreen={isMobile}
       maxWidth="sm"
       fullWidth
+      disableEscapeKeyDown
     >
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 h-auto md:h-auto flex flex-col md:rounded-lg">
         <div className="relative">
@@ -133,7 +136,7 @@ const AddingItemDialog = ({
         <h3 className="text-lg font-semibold mb-4 mt-2">
           Detected Items: {detectedItems.length}
         </h3>
-        <form action={handleConfirm} className="flex flex-col h-full">
+        <div className="flex flex-col h-full">
           {editableItems.map((item, index) => (
             <div
               key={index}
@@ -197,9 +200,8 @@ const AddingItemDialog = ({
             </div>
           ))}
           <p>{editableItems.filter((it) => it.checked).length} selected</p>
-          <div className="flex justify-end space-x-4">
+          <form action={handleConfirm} className="flex justify-end space-x-4">
             <button
-              type="button"
               onClick={onCancel}
               disabled={pending}
               className={`px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded ${
@@ -219,8 +221,8 @@ const AddingItemDialog = ({
             >
               {pending ? "Adding..." : "Confirm"}
             </button>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </Dialog>
   );
