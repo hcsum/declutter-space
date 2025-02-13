@@ -14,6 +14,12 @@ export type ItemCreateInput = {
   deadline: number; // Changed to number to represent months
 };
 
+export type ItemUpateInput = {
+  name: string;
+  pieces: number;
+  deadline: Date; // Changed to number to represent months
+};
+
 const CreateItemFormSchema = z.object({
   name: z
     .string()
@@ -194,7 +200,7 @@ export async function bulkAddItemsByImage(imageData: string) {
   }
 }
 
-export async function updateItem(id: string, data: Partial<ItemCreateInput>) {
+export async function updateItem(id: string, data: Partial<ItemUpateInput>) {
   const { userId } = await verifySession();
 
   const validationResult = UpdateItemFormSchema.partial().safeParse(data);
@@ -212,17 +218,12 @@ export async function updateItem(id: string, data: Partial<ItemCreateInput>) {
     },
   });
 
-  const updatedDeadline =
-    data.deadline !== undefined
-      ? new Date(new Date().setMonth(new Date().getMonth() + data.deadline))
-      : undefined;
-
   const updateData: Prisma.ItemUpdateInput = {};
   if (data.name !== undefined) updateData.name = data.name;
   if (data.pieces !== undefined) updateData.pieces = data.pieces;
-  if (data.deadline !== undefined) updateData.deadline = updatedDeadline;
+  if (data.deadline !== undefined) updateData.deadline = data.deadline;
 
-  if (updatedDeadline !== item.deadline) {
+  if (updateData.deadline && updateData.deadline !== item.deadline) {
     updateData.startDate = new Date();
   }
 
