@@ -1,7 +1,6 @@
 "use client";
 
 import { createItem } from "@/actions/items";
-import { getCategories } from "@/actions/category";
 import { useActionState } from "react";
 import {
   TextField,
@@ -13,21 +12,10 @@ import {
   FormControl,
   FormHelperText,
 } from "@mui/material";
-import { useEffect, useState } from "react";
 import { Category } from "@prisma/client";
 
-const AddItemForm = () => {
+const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const [state, action, pending] = useActionState(createItem, undefined);
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      const categories = await getCategories();
-      setCategories(categories);
-    };
-
-    fetchCategories();
-  }, []);
 
   return (
     <Box

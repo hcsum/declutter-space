@@ -5,8 +5,15 @@ import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import AddItemForm from "./AddItemForm";
 import ImageUploadBox from "./ImageUploadBox";
+import { Category } from "@prisma/client";
 
-const AddItemPanel = ({ itemCount }: { itemCount: number }) => {
+const AddItemPanel = ({
+  itemCount,
+  categories,
+}: {
+  itemCount: number;
+  categories: Category[];
+}) => {
   const [isExpanded, setIsExpanded] = useState(itemCount < 1);
 
   return (
@@ -34,7 +41,7 @@ const AddItemPanel = ({ itemCount }: { itemCount: number }) => {
             <span className="mx-4 text-gray-500">OR</span>
             <div className="flex-grow border-t border-gray-300"></div>
           </div>
-          <AddItemForm />
+          <AddItemForm categories={categories} />
         </div>
       </Collapse>
     </div>

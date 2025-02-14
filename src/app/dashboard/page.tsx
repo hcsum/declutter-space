@@ -40,7 +40,7 @@ const Dashboard = async ({
 
           {/* Right column - Forms */}
           <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-0">
-            <AddItemPanel itemCount={items.length} />
+            <AddItemPanel itemCount={items.length} categories={categories} />
             <CategoryPanel categories={categories} />
           </div>
         </div>
