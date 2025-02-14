@@ -1,11 +1,11 @@
 "use client";
 
-import { deleteItem, updateItem } from "@/actions/items";
-import { Prisma } from "@prisma/client";
+import { deleteItem, ItemUpdateInput, updateItem } from "@/actions/items";
+import { Prisma, Category } from "@prisma/client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import { Pagination } from "@mui/material";
+import { MenuItem, Pagination, Select } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -15,19 +15,28 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 
+type Item = Prisma.ItemGetPayload<{
+  include: { category: true };
+}>;
+
+type EditingItem = ItemUpdateInput & {
+  id: string;
+};
+
 const ItemTable = ({
   items,
+  categories,
   totalPages,
   currentPage,
 }: {
-  items: Prisma.ItemGetPayload<null>[];
+  items: Item[];
+  categories: Category[];
   totalPages: number;
   currentPage: number;
 }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [editingItem, setEditingItem] =
-    useState<Prisma.ItemGetPayload<null> | null>(null);
+  const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
   }>({});
@@ -54,12 +63,18 @@ const ItemTable = ({
     }
   };
 
-  const handleEditClick = (item: Prisma.ItemGetPayload<null>) => {
-    setEditingItem(item);
+  const handleEditClick = (item: Item) => {
+    setEditingItem({
+      id: item.id,
+      name: item.name,
+      pieces: item.pieces,
+      deadline: item.deadline,
+      categoryId: item.category?.id,
+    });
   };
 
   const handleInputChange = (
-    field: "name" | "pieces" | "deadline",
+    field: "name" | "pieces" | "deadline" | "categoryId",
     value: string | number | Date,
   ) => {
     setEditingItem((prev) => ({
@@ -80,7 +95,8 @@ const ItemTable = ({
       const hasChanges =
         originalItem.name !== editingItem.name ||
         originalItem.pieces !== editingItem.pieces ||
-        originalItem.deadline.getTime() !== editingItem.deadline.getTime();
+        originalItem.deadline.getTime() !== editingItem.deadline?.getTime() ||
+        originalItem.categoryId !== editingItem.categoryId;
 
       if (!hasChanges) {
         setEditingItem(null);
@@ -92,6 +108,7 @@ const ItemTable = ({
         name: editingItem.name,
         pieces: editingItem.pieces,
         deadline: editingItem.deadline,
+        categoryId: editingItem.categoryId,
       });
 
       if (result?.errors) {
@@ -125,12 +142,6 @@ const ItemTable = ({
       }
     }
   };
-
-  // const calculateNewDeadline = (months: number): Date => {
-  //   const date = new Date();
-  //   date.setMonth(date.getMonth() + months);
-  //   return date;
-  // };
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -203,13 +214,12 @@ const ItemTable = ({
                 )}
               </div>
 
-              <div className="flex-1">
+              <div className="flex-[0.5]">
                 <div className="text-sm text-gray-500 dark:text-gray-400">
                   Pieces:
                 </div>
                 {editingItem?.id === item.id ? (
                   <TextField
-                    fullWidth
                     type="number"
                     value={editingItem?.pieces}
                     onChange={(e) =>
@@ -223,6 +233,33 @@ const ItemTable = ({
                 ) : (
                   <div className="text-gray-900 dark:text-gray-100">
                     {item.pieces}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex-[1.5]">
+                <div className="text-sm text-gray-500 dark:text-gray-400">
+                  Category:
+                </div>
+                {editingItem?.id === item.id ? (
+                  <Select
+                    value={editingItem?.categoryId}
+                    onChange={(e) =>
+                      handleInputChange("categoryId", e.target.value)
+                    }
+                    size="small"
+                    variant="outlined"
+                    sx={{ maxWidth: "200px" }}
+                  >
+                    {categories.map((category) => (
+                      <MenuItem key={category.id} value={category.id}>
+                        {category.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                ) : (
+                  <div className="text-gray-900 dark:text-gray-100">
+                    {item.category?.name ?? "-"}
                   </div>
                 )}
               </div>
@@ -259,15 +296,6 @@ const ItemTable = ({
                     })}`}
                   </div>
                 )}
-              </div>
-
-              <div className="flex-1">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Date Added:
-                </div>
-                <div className="text-gray-900 dark:text-gray-100">
-                  {item.createdAt.toLocaleDateString()}
-                </div>
               </div>
 
               <div className="flex gap-3">

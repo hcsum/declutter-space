@@ -2,6 +2,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
+import { z } from "zod";
 
 const presetCategories = [
   "Wardrobe (Clothes, Shoes, Accessories)",
@@ -18,18 +19,50 @@ const presetCategories = [
   "Hobby & Craft (Sewing, Painting, Musical Instruments)",
 ];
 
+const CategorySchema = z.object({
+  name: z
+    .string()
+    .min(1, { message: "Category name is required." })
+    .max(15, { message: "Category name must be 15 characters or less." }),
+});
+
+export type CategoryFormState =
+  | {
+      errors?: {
+        name?: string[];
+      };
+    }
+  | undefined;
+
 export const getCategories = async () => {
   const { userId } = await verifySession();
   return await prisma.category.findMany({
     where: { userId },
+    orderBy: { updatedAt: "desc" },
   });
 };
 
-export const createCategory = async (name: string) => {
+export const createCategory = async (
+  state: CategoryFormState | undefined,
+  formData: FormData,
+): Promise<CategoryFormState | undefined> => {
   const { userId } = await verifySession();
-  return await prisma.category.create({
-    data: { name, userId },
+
+  const validationResult = CategorySchema.safeParse(
+    Object.fromEntries(formData),
+  );
+
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  await prisma.category.create({
+    data: { name: validationResult.data.name, userId },
   });
+
+  return undefined;
 };
 
 export const createPresetCategories = async (userId: string) => {
@@ -38,11 +71,22 @@ export const createPresetCategories = async (userId: string) => {
   });
 };
 
-export const updateCategory = async (id: string, name: string) => {
+export const updateCategory = async (
+  id: string,
+  name: string,
+): Promise<CategoryFormState | undefined> => {
   const { userId } = await verifySession();
-  return await prisma.category.update({
+
+  const validationResult = CategorySchema.safeParse({ name });
+  if (!validationResult.success) {
+    return {
+      errors: validationResult.error.flatten().fieldErrors,
+    };
+  }
+
+  await prisma.category.update({
     where: { id, userId },
-    data: { name },
+    data: { name: validationResult.data.name },
   });
 };
 

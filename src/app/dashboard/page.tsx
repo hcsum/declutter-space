@@ -32,6 +32,7 @@ const Dashboard = async ({
             </div>
             <ItemTable
               items={items}
+              categories={categories}
               totalPages={totalPages}
               currentPage={currentPage}
             />

@@ -14,6 +14,7 @@ import {
   updateCategory,
   deleteCategory,
 } from "@/actions/category";
+import { useActionState } from "react";
 
 interface CategoryPanelProps {
   categories: Prisma.CategoryGetPayload<null>[];
@@ -23,10 +24,12 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
   const router = useRouter();
   const [editingCategory, setEditingCategory] =
     useState<Prisma.CategoryGetPayload<null> | null>(null);
-  const [newCategoryName, setNewCategoryName] = useState<string>("");
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
+  const [validationErrors, setValidationErrors] = useState<{
+    [field: string]: string[];
+  }>({});
 
   const handleEditClick = (category: Prisma.CategoryGetPayload<null>) => {
     setEditingCategory(category);
@@ -44,8 +47,13 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
       if (!editingCategory) return;
       setIsUpdating(categoryId);
 
-      await updateCategory(categoryId, editingCategory.name);
+      const result = await updateCategory(categoryId, editingCategory.name);
+      if (result?.errors) {
+        setValidationErrors(result.errors);
+        return;
+      }
       setEditingCategory(null);
+      setValidationErrors({});
       router.refresh();
     } catch (error) {
       console.error("Error updating category:", error);
@@ -71,15 +79,10 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
     }
   };
 
-  const handleAddCategory = async () => {
-    try {
-      await createCategory(newCategoryName);
-      setNewCategoryName("");
-      router.refresh();
-    } catch (error) {
-      console.error("Error creating category:", error);
-    }
-  };
+  const [addCategoryActionState, addCategoryAction] = useActionState(
+    createCategory,
+    undefined,
+  );
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow mt-8">
@@ -100,22 +103,23 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
       </div>
       <Collapse in={isExpanded}>
         <div className="p-4">
-          <div className="flex items-center mb-4">
+          <form action={addCategoryAction} className="flex items-center mb-4">
             <TextField
+              name="name"
               fullWidth
               placeholder="New category name"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
               size="small"
               variant="outlined"
+              error={!!addCategoryActionState?.errors?.name}
+              helperText={addCategoryActionState?.errors?.name?.join(", ")}
             />
             <button
-              onClick={handleAddCategory}
+              type="submit"
               className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
             >
               <AddIcon />
             </button>
-          </div>
+          </form>
           <div className="space-y-4 mb-6">
             {categories.map((category) => (
               <div
@@ -130,6 +134,8 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                       onChange={(e) => handleInputChange(e.target.value)}
                       size="small"
                       variant="outlined"
+                      error={!!validationErrors.name}
+                      helperText={validationErrors.name?.join(", ")}
                     />
                   ) : (
                     <div className="font-medium">{category.name}</div>

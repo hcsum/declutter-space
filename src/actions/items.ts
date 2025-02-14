@@ -11,13 +11,15 @@ import { z } from "zod";
 export type ItemCreateInput = {
   name: string;
   pieces: number;
-  deadline: number; // Changed to number to represent months
+  deadline: number; // Represented in months
+  categoryId?: string; // Optional category ID
 };
 
-export type ItemUpateInput = {
-  name: string;
-  pieces: number;
-  deadline: Date; // Changed to number to represent months
+export type ItemUpdateInput = {
+  name?: string;
+  pieces?: number;
+  deadline?: Date;
+  categoryId?: string; // Optional category ID
 };
 
 const CreateItemFormSchema = z.object({
@@ -26,15 +28,20 @@ const CreateItemFormSchema = z.object({
     .min(2, { message: "Name must be at least 2 characters long." })
     .trim(),
   pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
-  deadline: z.coerce.number().min(1, { message: "Invalid deadline." }), // Validate as number
+  deadline: z.coerce.number().min(1, { message: "Invalid deadline." }),
+  categoryId: z.string().optional(), // Validate as optional string
 });
 
 const UpdateItemFormSchema = z.object({
   name: z
     .string()
     .min(2, { message: "Name must be at least 2 characters long." })
-    .trim(),
-  pieces: z.coerce.number().min(1, { message: "Must be at least 1 piece." }),
+    .trim()
+    .optional(),
+  pieces: z.coerce
+    .number()
+    .min(1, { message: "Must be at least 1 piece." })
+    .optional(),
   deadline: z.coerce
     .date()
     .refine(
@@ -42,7 +49,9 @@ const UpdateItemFormSchema = z.object({
       {
         message: "Deadline must be in the future.",
       },
-    ),
+    )
+    .optional(),
+  categoryId: z.string().optional(), // Validate as optional string
 });
 
 export type ItemFormState =
@@ -51,6 +60,7 @@ export type ItemFormState =
         name?: string[];
         pieces?: string[];
         deadline?: string[];
+        categoryId?: string[];
       };
     }
   | undefined;
@@ -63,7 +73,7 @@ export async function getItems(
   const { userId } = await verifySession();
 
   const whereClause = {
-    userId: userId,
+    userId,
     ...(search
       ? {
           name: {
@@ -85,6 +95,7 @@ export async function getItems(
       { createdAt: "desc" },
       { deadline: "desc" },
     ],
+    include: { category: true },
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -113,9 +124,8 @@ export async function createItem(
     };
   }
 
-  const { name, pieces, deadline } = validationResult.data;
+  const { name, pieces, deadline, categoryId } = validationResult.data;
 
-  // Calculate the deadline date based on the selected months
   const deadlineDate = new Date(
     new Date().setMonth(new Date().getMonth() + deadline),
   );
@@ -128,6 +138,7 @@ export async function createItem(
       startDate: new Date(),
       plan: ItemPlan.UNDECIDED,
       user: { connect: { id: userId } },
+      category: categoryId ? { connect: { id: categoryId } } : undefined,
     },
   });
   revalidatePath("/dashboard");
@@ -201,10 +212,10 @@ export async function bulkAddItemsByImage(imageData: string) {
   }
 }
 
-export async function updateItem(id: string, data: Partial<ItemUpateInput>) {
+export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
   const { userId } = await verifySession();
 
-  const validationResult = UpdateItemFormSchema.partial().safeParse(data);
+  const validationResult = UpdateItemFormSchema.safeParse(data);
 
   if (!validationResult.success) {
     return {
@@ -223,6 +234,11 @@ export async function updateItem(id: string, data: Partial<ItemUpateInput>) {
   if (data.name !== undefined) updateData.name = data.name;
   if (data.pieces !== undefined) updateData.pieces = data.pieces;
   if (data.deadline !== undefined) updateData.deadline = data.deadline;
+  if (data.categoryId !== undefined) {
+    updateData.category = data.categoryId
+      ? { connect: { id: data.categoryId } }
+      : { disconnect: true };
+  }
 
   if (updateData.deadline && updateData.deadline !== item.deadline) {
     updateData.startDate = new Date();
