@@ -1,5 +1,7 @@
 import { getItems } from "@/actions/items";
+import { getCategories } from "@/actions/category";
 import ItemTable from "@/components/ItemTable";
+import CategoryPanel from "@/components/CategoryPanel";
 import AddItemPanel from "@/components/AddItemPanel";
 import { getUserInfo } from "@/actions/user";
 import NotVerified from "./user/notVerified";
@@ -12,6 +14,7 @@ const Dashboard = async ({
   const { page = "1", search = "" } = await searchParams;
   const currentPage = Number(page);
   const { items, totalPages, total } = await getItems(currentPage, 10, search);
+  const categories = await getCategories();
   const userInfo = await getUserInfo({ isVerified: true });
 
   if (!userInfo.isVerified) {
@@ -37,6 +40,7 @@ const Dashboard = async ({
           {/* Right column - Forms */}
           <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-0">
             <AddItemPanel itemCount={items.length} />
+            <CategoryPanel categories={categories} />
           </div>
         </div>
       </div>

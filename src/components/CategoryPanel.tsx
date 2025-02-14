@@ -1,0 +1,190 @@
+"use client";
+
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Collapse, IconButton, TextField } from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import SaveIcon from "@mui/icons-material/Save";
+import AddIcon from "@mui/icons-material/Add";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { Prisma } from "@prisma/client";
+import {
+  createCategory,
+  updateCategory,
+  deleteCategory,
+} from "@/actions/category";
+
+interface CategoryPanelProps {
+  categories: Prisma.CategoryGetPayload<null>[];
+}
+
+const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
+  const router = useRouter();
+  const [editingCategory, setEditingCategory] =
+    useState<Prisma.CategoryGetPayload<null> | null>(null);
+  const [newCategoryName, setNewCategoryName] = useState<string>("");
+  const [isUpdating, setIsUpdating] = useState<string | null>(null);
+  const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isExpanded, setIsExpanded] = useState<boolean>(false);
+
+  const handleEditClick = (category: Prisma.CategoryGetPayload<null>) => {
+    setEditingCategory(category);
+  };
+
+  const handleInputChange = (value: string) => {
+    setEditingCategory((prev) => ({
+      ...prev!,
+      name: value,
+    }));
+  };
+
+  const handleSaveClick = async (categoryId: string) => {
+    try {
+      if (!editingCategory) return;
+      setIsUpdating(categoryId);
+
+      await updateCategory(categoryId, editingCategory.name);
+      setEditingCategory(null);
+      router.refresh();
+    } catch (error) {
+      console.error("Error updating category:", error);
+    } finally {
+      setIsUpdating(null);
+    }
+  };
+
+  const handleDelete = async (categoryId: string) => {
+    const isConfirmed = window.confirm(
+      "Are you sure you want to delete this category?",
+    );
+    if (isConfirmed) {
+      try {
+        setIsDeleting(categoryId);
+        await deleteCategory(categoryId);
+        router.refresh();
+      } catch (error) {
+        console.error("Error deleting category:", error);
+      } finally {
+        setIsDeleting(null);
+      }
+    }
+  };
+
+  const handleAddCategory = async () => {
+    try {
+      await createCategory(newCategoryName);
+      setNewCategoryName("");
+      router.refresh();
+    } catch (error) {
+      console.error("Error creating category:", error);
+    }
+  };
+
+  return (
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow mt-8">
+      <div
+        className="flex justify-between items-center px-4 py-2 cursor-pointer"
+        onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <span className="font-semibold">Manage Categories</span>
+        <IconButton
+          sx={{
+            transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
+            transition: "transform 0.3s",
+          }}
+          className="text-gray-800 dark:text-gray-200"
+        >
+          <ExpandMoreIcon />
+        </IconButton>
+      </div>
+      <Collapse in={isExpanded}>
+        <div className="p-4">
+          <div className="flex items-center mb-4">
+            <TextField
+              fullWidth
+              placeholder="New category name"
+              value={newCategoryName}
+              onChange={(e) => setNewCategoryName(e.target.value)}
+              size="small"
+              variant="outlined"
+            />
+            <button
+              onClick={handleAddCategory}
+              className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+            >
+              <AddIcon />
+            </button>
+          </div>
+          <div className="space-y-4 mb-6">
+            {categories.map((category) => (
+              <div
+                key={category.id}
+                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  {editingCategory?.id === category.id ? (
+                    <TextField
+                      fullWidth
+                      value={editingCategory.name}
+                      onChange={(e) => handleInputChange(e.target.value)}
+                      size="small"
+                      variant="outlined"
+                    />
+                  ) : (
+                    <div className="font-medium">{category.name}</div>
+                  )}
+                  <div className="flex gap-3">
+                    {editingCategory?.id === category.id ? (
+                      <>
+                        <button
+                          onClick={() => handleSaveClick(category.id)}
+                          disabled={isUpdating === category.id}
+                          className="p-2 text-green-500 hover:bg-green-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isUpdating === category.id ? (
+                            <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <SaveIcon />
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(category.id)}
+                          disabled={
+                            isUpdating === category.id ||
+                            isDeleting === category.id
+                          }
+                          className="p-2 text-red-500 hover:bg-red-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isDeleting === category.id ? (
+                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <DeleteIcon />
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => handleEditClick(category)}
+                        className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg"
+                      >
+                        <EditIcon />
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+            {categories.length === 0 && (
+              <div className="text-center text-gray-500">
+                <p>No categories found. Get started by adding a category.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </Collapse>
+    </div>
+  );
+};
+
+export default CategoryPanel;

@@ -33,24 +33,34 @@ enum ItemPlan {
 }
 
 model Item {
-  id        String         @id @default(uuid())
-  userId    String
-  user      User           @relation(fields: [userId], references: [id])
-  name      String
-  pieces    Int
-  deadline  DateTime
-  startDate DateTime // reset when deadline is changed, display in the reminder email as XXX ago
-  plan      ItemPlan
-  createdAt DateTime       @default(now())
-  updatedAt DateTime       @updatedAt
-  image     String?
-  reminders ItemReminder[]
+  id         String         @id @default(uuid())
+  userId     String
+  user       User           @relation(fields: [userId], references: [id])
+  name       String
+  pieces     Int
+  deadline   DateTime
+  startDate  DateTime // reset when deadline is changed, display in the reminder email as XXX ago
+  plan       ItemPlan
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  image      String?
+  reminders  ItemReminder[]
+  category   Category?      @relation(fields: [categoryId], references: [id])
+  categoryId String?
 }
 
 enum ItemReminderType {
   FIRST
   SECOND
   THIRD
+}
+
+model Category {
+  id        String   @id @default(uuid())
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items     Item[]
 }
 
 // not in use yet
