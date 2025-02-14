@@ -177,7 +177,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
             ))}
             {categories.length === 0 && (
               <div className="text-center text-gray-500">
-                <p>No categories found. Get started by adding a category.</p>
+                <p>No category yet.</p>
               </div>
             )}
           </div>

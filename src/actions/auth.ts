@@ -14,6 +14,7 @@ import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { BrevoAdapter } from "@/lib/brevo";
 import { createUser1HToken, verifyUser1HToken } from "@/lib/jwt";
+import { createUser } from "./user";
 
 const brevo = BrevoAdapter.getInstance();
 
@@ -53,12 +54,10 @@ export async function signup(state: AuthFormState, formData: FormData) {
     };
   }
 
-  const user = await prisma.user.create({
-    data: {
-      email: parsedEmail,
-      name: parsedName,
-      password: hashedPassword,
-    },
+  const user = await createUser({
+    name: parsedName,
+    email: parsedEmail,
+    password: hashedPassword,
   });
 
   if (!user) {

@@ -21,7 +21,8 @@ model User {
   isVerified             Boolean   @default(false)
   items                  Item[]
 
-  Membership Membership[]
+  membership Membership[]
+  categories Category[]
 }
 
 enum ItemPlan {
@@ -61,6 +62,8 @@ model Category {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   items     Item[]
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 // not in use yet

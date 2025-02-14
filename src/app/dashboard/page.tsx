@@ -22,7 +22,7 @@ const Dashboard = async ({
   }
 
   return (
-    <div className="flex justify-center px-6 w-full min-h-[80vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+    <div className="flex justify-center px-6 w-full min-h-[100vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <div className="w-full lg:max-w-[90%] mt-4 md:mt-8">
         <div className="flex flex-col lg:flex-row lg:gap-8">
           {/* Left column - Table */}
