@@ -42,6 +42,11 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
     }));
   };
 
+  const [addCategoryActionState, addCategoryAction] = useActionState(
+    createCategory,
+    undefined,
+  );
+
   const handleSaveClick = async (categoryId: string) => {
     try {
       if (!editingCategory) return;
@@ -79,11 +84,6 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
     }
   };
 
-  const [addCategoryActionState, addCategoryAction] = useActionState(
-    createCategory,
-    undefined,
-  );
-
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow mt-8">
       <div
@@ -106,7 +106,6 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
           <form action={addCategoryAction} className="flex items-center mb-4">
             <TextField
               name="name"
-              fullWidth
               placeholder="New category name"
               size="small"
               variant="outlined"

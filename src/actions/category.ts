@@ -2,21 +2,36 @@
 
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
+// const presetCategories = [
+//   "Wardrobe (Clothes, Shoes, Accessories)",
+//   "Kitchen (Utensils, Appliances, Pantry Items)",
+//   "Electronics (Gadgets, Cables, Old Devices)",
+//   "Furniture (Chairs, Tables, Storage Units)",
+//   "Books & Stationery (Books, Notebooks, Office Supplies)",
+//   "Toys & Games (Kids' Toys, Board Games, Video Games)",
+//   "Decor & Collectibles (Wall Art, Figurines, Seasonal Decor)",
+//   "Personal Care (Cosmetics, Skincare, Grooming Items)",
+//   "Garage & Tools (Hardware, DIY Tools, Car Accessories)",
+//   "Sports & Fitness (Workout Equipment, Sports Gear)",
+//   "Outdoor & Camping (Tents, Travel Gear, Gardening Tools)",
+//   "Hobby & Craft (Sewing, Painting, Musical Instruments)",
+// ];
 const presetCategories = [
-  "Wardrobe (Clothes, Shoes, Accessories)",
-  "Kitchen (Utensils, Appliances, Pantry Items)",
-  "Electronics (Gadgets, Cables, Old Devices)",
-  "Furniture (Chairs, Tables, Storage Units)",
-  "Books & Stationery (Books, Notebooks, Office Supplies)",
-  "Toys & Games (Kids' Toys, Board Games, Video Games)",
-  "Decor & Collectibles (Wall Art, Figurines, Seasonal Decor)",
-  "Personal Care (Cosmetics, Skincare, Grooming Items)",
-  "Garage & Tools (Hardware, DIY Tools, Car Accessories)",
-  "Sports & Fitness (Workout Equipment, Sports Gear)",
-  "Outdoor & Camping (Tents, Travel Gear, Gardening Tools)",
-  "Hobby & Craft (Sewing, Painting, Musical Instruments)",
+  "Wardrobe",
+  "Kitchen",
+  "Electronics",
+  "Furniture",
+  "Books & Stationery",
+  "Toys & Games",
+  "Decor & Collectibles",
+  "Personal Care",
+  "Garage & Tools",
+  "Sports & Fitness",
+  "Outdoor & Camping",
+  "Hobby & Craft",
 ];
 
 const CategorySchema = z.object({
@@ -61,8 +76,7 @@ export const createCategory = async (
   await prisma.category.create({
     data: { name: validationResult.data.name, userId },
   });
-
-  return undefined;
+  revalidatePath("/dashboard");
 };
 
 export const createPresetCategories = async (userId: string) => {
