@@ -11,13 +11,13 @@ import { z } from "zod";
 export type ItemCreateInput = {
   name: string;
   pieces: number;
-  deadline: number; // Changed to number to represent months
+  deadline: number;
 };
 
 export type ItemUpateInput = {
   name: string;
   pieces: number;
-  deadline: Date; // Changed to number to represent months
+  deadline: Date;
 };
 
 const CreateItemFormSchema = z.object({
@@ -81,9 +81,10 @@ export async function getItems(
   const items = await prisma.item.findMany({
     where: whereClause,
     orderBy: [
-      { updatedAt: "desc" },
       { createdAt: "desc" },
-      { deadline: "desc" },
+      { id: "desc" },
+      // { deadline: "desc" },
+      // { updatedAt: "desc" },
     ],
     take: limit,
     skip: (page - 1) * limit,
