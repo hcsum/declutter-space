@@ -106,7 +106,17 @@ export const updateCategory = async (
 
 export const deleteCategory = async (id: string) => {
   const { userId } = await verifySession();
-  return await prisma.category.delete({
+  const items = await prisma.item.findMany({
+    where: { categoryId: id },
+  });
+  if (items.length > 0) {
+    return {
+      errors: {
+        name: ["Category is used by items"],
+      },
+    };
+  }
+  await prisma.category.delete({
     where: { id, userId },
   });
 };

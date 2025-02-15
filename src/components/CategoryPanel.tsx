@@ -74,7 +74,11 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
     if (isConfirmed) {
       try {
         setIsDeleting(categoryId);
-        await deleteCategory(categoryId);
+        const result = await deleteCategory(categoryId);
+        if (result?.errors) {
+          setValidationErrors(result.errors);
+          return;
+        }
         router.refresh();
       } catch (error) {
         console.error("Error deleting category:", error);

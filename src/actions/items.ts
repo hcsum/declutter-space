@@ -16,10 +16,10 @@ export type ItemCreateInput = {
 };
 
 export type ItemUpdateInput = {
-  name?: string;
-  pieces?: number;
-  deadline?: Date;
-  categoryId?: string; // Optional category ID
+  name: string | null;
+  pieces: number | null;
+  deadline: Date | null;
+  categoryId: string | null;
 };
 
 const CreateItemFormSchema = z.object({
@@ -231,10 +231,10 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
   });
 
   const updateData: Prisma.ItemUpdateInput = {};
-  if (data.name !== undefined) updateData.name = data.name;
-  if (data.pieces !== undefined) updateData.pieces = data.pieces;
-  if (data.deadline !== undefined) updateData.deadline = data.deadline;
-  if (data.categoryId !== undefined) {
+  if (data.name !== null) updateData.name = data.name;
+  if (data.pieces !== null) updateData.pieces = data.pieces;
+  if (data.deadline !== null) updateData.deadline = data.deadline;
+  if (data.categoryId !== null) {
     updateData.category = data.categoryId
       ? { connect: { id: data.categoryId } }
       : { disconnect: true };
@@ -251,7 +251,4 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
     },
     data: updateData,
   });
-
-  revalidatePath("/dashboard");
-  return { success: true };
 }

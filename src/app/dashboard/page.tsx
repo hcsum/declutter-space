@@ -5,6 +5,7 @@ import CategoryPanel from "@/components/CategoryPanel";
 import AddItemPanel from "@/components/AddItemPanel";
 import { getUserInfo } from "@/actions/user";
 import NotVerified from "./user/notVerified";
+import "./styles.css";
 
 const Dashboard = async ({
   searchParams,
