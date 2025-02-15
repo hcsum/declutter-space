@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
+import { MEMBERSHIP_PRICE } from "@/lib/definitions";
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
@@ -214,7 +215,7 @@ const LandingPage = () => {
                 Membership
               </h3>
               <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-                $3/month
+                ${MEMBERSHIP_PRICE}/month
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
                 <li>Declutter up to 2000 items</li>
