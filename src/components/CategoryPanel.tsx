@@ -42,10 +42,8 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
     }));
   };
 
-  const [addCategoryActionState, addCategoryAction] = useActionState(
-    createCategory,
-    undefined,
-  );
+  const [addCategoryActionState, addCategoryAction, addingCategory] =
+    useActionState(createCategory, undefined);
 
   const handleSaveClick = async (categoryId: string) => {
     try {
@@ -118,14 +116,19 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
             />
             <button
               type="submit"
-              className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
+              disabled={addingCategory}
+              className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <AddIcon />
+              {addingCategory ? (
+                <div className="w-4 h-4 border-2 border-white-500 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <AddIcon />
+              )}
             </button>
           </form>
           <div className="space-y-4 mb-6">
             {categories.map((category) => (
-              <div
+              <form
                 key={category.id}
                 className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
               >
@@ -182,7 +185,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                     )}
                   </div>
                 </div>
-              </div>
+              </form>
             ))}
             {categories.length === 0 && (
               <div className="text-center text-gray-500">
