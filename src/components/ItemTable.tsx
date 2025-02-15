@@ -1,11 +1,11 @@
 "use client";
 
-import { deleteItem, updateItem } from "@/actions/items";
-import { Prisma } from "@prisma/client";
-import { useState } from "react";
+import { deleteItem, ItemUpdateInput, updateItem } from "@/actions/items";
+import { Prisma, Category } from "@prisma/client";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import { Pagination } from "@mui/material";
+import { MenuItem, Pagination, Select } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -15,24 +15,34 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 
+type Item = Prisma.ItemGetPayload<{
+  include: { category: true };
+}>;
+
+type EditingItem = ItemUpdateInput & {
+  id: string;
+};
+
 const ItemTable = ({
   items,
+  categories,
   totalPages,
   currentPage,
 }: {
-  items: Prisma.ItemGetPayload<null>[];
+  items: Item[];
+  categories: Category[];
   totalPages: number;
   currentPage: number;
 }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
-  const [editingItem, setEditingItem] =
-    useState<Prisma.ItemGetPayload<null> | null>(null);
+  const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
   }>({});
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -44,7 +54,6 @@ const ItemTable = ({
   };
 
   const handleSearchSubmit = () => {
-    // trigger client side navigation and trigger a revalidation
     router.push(`/dashboard?page=1&search=${searchQuery}`);
   };
 
@@ -54,12 +63,18 @@ const ItemTable = ({
     }
   };
 
-  const handleEditClick = (item: Prisma.ItemGetPayload<null>) => {
-    setEditingItem(item);
+  const handleEditClick = (item: Item) => {
+    setEditingItem({
+      id: item.id,
+      name: item.name,
+      pieces: item.pieces,
+      deadline: item.deadline,
+      categoryId: item.categoryId,
+    });
   };
 
   const handleInputChange = (
-    field: "name" | "pieces" | "deadline",
+    field: "name" | "pieces" | "deadline" | "categoryId",
     value: string | number | Date,
   ) => {
     setEditingItem((prev) => ({
@@ -72,15 +87,16 @@ const ItemTable = ({
     try {
       if (!editingItem) return;
       setIsUpdating(itemId);
+      console.log("editingItem", editingItem);
 
-      // Check if any values have changed
       const originalItem = items.find((item) => item.id === itemId);
       if (!originalItem) return;
 
       const hasChanges =
         originalItem.name !== editingItem.name ||
         originalItem.pieces !== editingItem.pieces ||
-        originalItem.deadline.getTime() !== editingItem.deadline.getTime();
+        originalItem.deadline.getTime() !== editingItem.deadline?.getTime() ||
+        originalItem.categoryId !== editingItem.categoryId;
 
       if (!hasChanges) {
         setEditingItem(null);
@@ -92,14 +108,21 @@ const ItemTable = ({
         name: editingItem.name,
         pieces: editingItem.pieces,
         deadline: editingItem.deadline,
+        categoryId: editingItem.categoryId ?? "",
       });
+
+      console.log("result", result);
 
       if (result?.errors) {
         setValidationErrors(result.errors);
         return;
       }
 
-      setEditingItem(null);
+      startTransition(async () => {
+        router.refresh();
+        setEditingItem(null);
+      });
+
       setValidationErrors({});
     } catch (error) {
       console.error("Error updating item:", error);
@@ -125,12 +148,6 @@ const ItemTable = ({
       }
     }
   };
-
-  // const calculateNewDeadline = (months: number): Date => {
-  //   const date = new Date();
-  //   date.setMonth(date.getMonth() + months);
-  //   return date;
-  // };
 
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
@@ -176,142 +193,168 @@ const ItemTable = ({
         onChange={handlePageChange}
       />
       <div className="space-y-4 mb-6">
-        {items.map((item) => (
-          <div
-            key={item.id}
-            className="p-4 md:p-8 border dark:border-gray-700 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-          >
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div className="flex-1">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Item:
-                </div>
-                {editingItem?.id === item.id ? (
-                  <TextField
-                    fullWidth
-                    value={editingItem?.name}
-                    onChange={(e) => handleInputChange("name", e.target.value)}
-                    error={!!validationErrors.name}
-                    helperText={validationErrors.name?.join(", ")}
-                    size="small"
-                    variant="outlined"
-                  />
-                ) : (
-                  <div className="text-gray-900 dark:text-gray-100 font-medium">
-                    {item.name}
+        {items.map((item) => {
+          return (
+            <div
+              key={item.id}
+              className={`p-4 md:p-8 border dark:border-gray-700 rounded-lg transition-colors ${
+                isPending && item.id === editingItem?.id
+                  ? "fade-animation"
+                  : "hover:bg-gray-50 dark:hover:bg-gray-800"
+              }`}
+            >
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <div className="flex-1">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Item:
                   </div>
-                )}
-              </div>
-
-              <div className="flex-1">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Pieces:
-                </div>
-                {editingItem?.id === item.id ? (
-                  <TextField
-                    fullWidth
-                    type="number"
-                    value={editingItem?.pieces}
-                    onChange={(e) =>
-                      handleInputChange("pieces", parseInt(e.target.value))
-                    }
-                    error={!!validationErrors.pieces}
-                    helperText={validationErrors.pieces?.join(", ")}
-                    size="small"
-                    variant="outlined"
-                  />
-                ) : (
-                  <div className="text-gray-900 dark:text-gray-100">
-                    {item.pieces}
-                  </div>
-                )}
-              </div>
-
-              <div className="flex-1">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Deadline:
-                </div>
-                {editingItem?.id === item.id ? (
-                  <LocalizationProvider dateAdapter={AdapterDateFns}>
-                    <DatePicker
-                      value={editingItem.deadline}
-                      onChange={(newValue) => {
-                        if (newValue) {
-                          handleInputChange("deadline", newValue);
-                        }
-                      }}
-                      disablePast
-                      format="MM/dd/yyyy"
-                      slotProps={{
-                        textField: {
-                          size: "small",
-                          fullWidth: true,
-                          error: !!validationErrors.deadline,
-                          helperText: validationErrors.deadline?.join(", "),
-                        },
-                      }}
+                  {editingItem?.id === item.id ? (
+                    <TextField
+                      fullWidth
+                      value={editingItem?.name}
+                      onChange={(e) =>
+                        handleInputChange("name", e.target.value)
+                      }
+                      error={!!validationErrors.name}
+                      helperText={validationErrors.name?.join(", ")}
+                      size="small"
+                      variant="outlined"
                     />
-                  </LocalizationProvider>
-                ) : (
-                  <div className="text-gray-900 dark:text-gray-100">
-                    {`${formatDistanceToNow(item.deadline, {
-                      addSuffix: true,
-                    })}`}
+                  ) : (
+                    <div className="text-gray-900 dark:text-gray-100 font-medium">
+                      {item.name}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-[0.5]">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Pieces:
                   </div>
-                )}
-              </div>
-
-              <div className="flex-1">
-                <div className="text-sm text-gray-500 dark:text-gray-400">
-                  Date Added:
-                </div>
-                <div className="text-gray-900 dark:text-gray-100">
-                  {item.createdAt.toLocaleDateString()}
-                </div>
-              </div>
-
-              <div className="flex gap-3">
-                {editingItem?.id === item.id ? (
-                  <>
-                    <button
-                      onClick={() => handleSaveClick(item.id)}
-                      disabled={
-                        isUpdating === item.id || isDeleting === item.id
+                  {editingItem?.id === item.id ? (
+                    <TextField
+                      type="number"
+                      value={editingItem?.pieces}
+                      onChange={(e) =>
+                        handleInputChange("pieces", parseInt(e.target.value))
                       }
-                      className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {isUpdating === item.id ? (
-                        <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <SaveIcon />
-                      )}
-                    </button>
-                    <button
-                      onClick={() => handleDelete(item.id)}
-                      disabled={
-                        isUpdating === item.id || isDeleting === item.id
+                      error={!!validationErrors.pieces}
+                      helperText={validationErrors.pieces?.join(", ")}
+                      size="small"
+                      variant="outlined"
+                    />
+                  ) : (
+                    <div className="text-gray-900 dark:text-gray-100">
+                      {item.pieces}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-[1.5]">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Category:
+                  </div>
+                  {editingItem?.id === item.id ? (
+                    <Select
+                      value={editingItem?.categoryId ?? ""}
+                      onChange={(e) =>
+                        handleInputChange("categoryId", e.target.value ?? "")
                       }
-                      className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                      size="small"
+                      variant="outlined"
+                      sx={{ width: "200px" }}
                     >
-                      {isDeleting === item.id ? (
-                        <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-                      ) : (
-                        <DeleteIcon />
-                      )}
+                      <MenuItem value="">None</MenuItem>
+                      {categories.map((category) => (
+                        <MenuItem key={category.id} value={category.id}>
+                          {category.name}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  ) : (
+                    <div className="text-gray-900 dark:text-gray-100">
+                      {item.category?.name ?? "-"}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex-1">
+                  <div className="text-sm text-gray-500 dark:text-gray-400">
+                    Deadline:
+                  </div>
+                  {editingItem?.id === item.id ? (
+                    <LocalizationProvider dateAdapter={AdapterDateFns}>
+                      <DatePicker
+                        value={editingItem.deadline}
+                        onChange={(newValue) => {
+                          if (newValue) {
+                            handleInputChange("deadline", newValue);
+                          }
+                        }}
+                        disablePast
+                        format="MM/dd/yyyy"
+                        slotProps={{
+                          textField: {
+                            size: "small",
+                            fullWidth: true,
+                            error: !!validationErrors.deadline,
+                            helperText: validationErrors.deadline?.join(", "),
+                          },
+                        }}
+                      />
+                    </LocalizationProvider>
+                  ) : (
+                    <div className="text-gray-900 dark:text-gray-100">
+                      {`${formatDistanceToNow(item.deadline, {
+                        addSuffix: true,
+                      })}`}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex gap-3">
+                  {editingItem?.id === item.id ? (
+                    <>
+                      <button
+                        onClick={() => handleSaveClick(item.id)}
+                        disabled={
+                          isUpdating === item.id || isDeleting === item.id
+                        }
+                        className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isUpdating === item.id ? (
+                          <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <SaveIcon />
+                        )}
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item.id)}
+                        disabled={
+                          isUpdating === item.id || isDeleting === item.id
+                        }
+                        className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                      >
+                        {isDeleting === item.id ? (
+                          <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <DeleteIcon />
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <button
+                      onClick={() => handleEditClick(item)}
+                      className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
+                    >
+                      <EditIcon />
                     </button>
-                  </>
-                ) : (
-                  <button
-                    onClick={() => handleEditClick(item)}
-                    className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
-                  >
-                    <EditIcon />
-                  </button>
-                )}
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
         {items.length === 0 && (
           <div className="text-center text-gray-500 dark:text-gray-400">
             <p>No items found. Get started by adding an item.</p>

@@ -1,0 +1,13 @@
+@keyframes fadeBackground {
+  0%,
+  100% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(255, 223, 0, 0.5);
+  }
+}
+
+.fade-animation {
+  animation: fadeBackground 3s infinite;
+}

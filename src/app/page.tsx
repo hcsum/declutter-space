@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
+import { MEMBERSHIP_PRICE } from "@/lib/definitions";
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
@@ -187,41 +188,56 @@ const LandingPage = () => {
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
             Pricing
           </h2>
-          <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
-            <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-              Early Access
-            </h3>
-            <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-              FREE
-              <span className="text-lg text-gray-600 dark:text-gray-400">
-                (Limited Time)
-              </span>
-              <div className="text-lg text-gray-600 dark:text-gray-400 mt-2">
-                $3/month after launch
+          <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8">
+            {/* Free Plan Container */}
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                Get Started for
+              </h3>
+              <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+                FREE
               </div>
-            </div>
-            <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-              <li>Declutter up to 5,000 items</li>
-              <li>5 photo analyses per month</li>
-              <li>Set deadlines and get email reminders</li>
-              <li>Categorize your items (coming soon)</li>
-              <li>Personalized decluttering insights (coming soon)</li>
-            </ul>
-            <div className="space-y-4 text-center">
+              <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
+                <li>Declutter up to 15 items</li>
+                <li>3 photo analyses per month</li>
+                <li>Set deadlines and get email reminders</li>
+              </ul>
               <Link href="/signup">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
-                  Get Early Access
+                  Get Started
                 </button>
               </Link>
-              <div>
-                <Link
-                  href="/login"
-                  className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
-                >
-                  Already have an account? Login
-                </Link>
-              </div>
             </div>
+
+            {/* Premium Plan Container */}
+            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
+              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                Membership
+              </h3>
+              <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+                ${MEMBERSHIP_PRICE}/month
+              </div>
+              <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
+                <li>Declutter up to 2000 items</li>
+                <li>10 photo analyses per month</li>
+                <li>Set deadlines and get email reminders</li>
+                <li>Categorize your items</li>
+                <li>Personalized decluttering insights</li>
+              </ul>
+              <Link href="/signup">
+                <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
+                  Get Started
+                </button>
+              </Link>
+            </div>
+          </div>
+          <div className="mt-8">
+            <Link
+              href="/login"
+              className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
+            >
+              Already have an account? Login
+            </Link>
           </div>
         </div>
       </section>

@@ -10,9 +10,11 @@ import {
   Select,
   InputLabel,
   FormControl,
+  FormHelperText,
 } from "@mui/material";
+import { Category } from "@prisma/client";
 
-const AddItemForm = () => {
+const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const [state, action, pending] = useActionState(createItem, undefined);
 
   return (
@@ -67,6 +69,25 @@ const AddItemForm = () => {
           <MenuItem value={18}>1 and a half year</MenuItem>
           <MenuItem value={24}>2 years</MenuItem>
         </Select>
+      </FormControl>
+
+      <FormControl fullWidth>
+        <InputLabel id="category-label">Category</InputLabel>
+        <Select
+          labelId="category-label"
+          id="category"
+          name="categoryId"
+          defaultValue=""
+          label="Category"
+        >
+          <MenuItem value="">None</MenuItem>
+          {categories.map((category) => (
+            <MenuItem key={category.id} value={category.id}>
+              {category.name}
+            </MenuItem>
+          ))}
+        </Select>
+        <FormHelperText>Optional</FormHelperText>
       </FormControl>
 
       <Button
