@@ -45,7 +45,7 @@ export async function createStripeSession() {
 
     const user = await prisma.user.findUniqueOrThrow({
       where: { id: userId },
-      select: { stripeCustomerId: true },
+      select: { stripeCustomerId: true, email: true },
     });
 
     let customerId = user.stripeCustomerId;
@@ -66,7 +66,10 @@ export async function createStripeSession() {
       customer: customerId,
       line_items: [
         {
-          price: process.env.STRIPE_PRICE_ID!,
+          price:
+            user.email === "sumtsui@outlook.com"
+              ? process.env.STRIPE_PRICE_ID_TEST!
+              : process.env.STRIPE_PRICE_ID!,
           quantity: 1,
         },
       ],
