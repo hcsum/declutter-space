@@ -211,7 +211,7 @@ const LandingPage = () => {
             {/* Premium Plan Container */}
             <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
               <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-                Premium Plan
+                Membership
               </h3>
               <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
                 $3/month
@@ -220,6 +220,7 @@ const LandingPage = () => {
                 <li>Declutter up to 2000 items</li>
                 <li>10 photo analyses per month</li>
                 <li>Set deadlines and get email reminders</li>
+                <li>Categorize your items</li>
                 <li>Personalized decluttering insights</li>
               </ul>
               <Link href="/signup">
