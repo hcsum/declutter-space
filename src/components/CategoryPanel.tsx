@@ -128,7 +128,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
           </form>
           <div className="space-y-4 mb-6">
             {categories.map((category) => (
-              <form
+              <div
                 key={category.id}
                 className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
               >
@@ -185,7 +185,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                     )}
                   </div>
                 </div>
-              </form>
+              </div>
             ))}
             {categories.length === 0 && (
               <div className="text-center text-gray-500">
