@@ -14,6 +14,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
+import ItemSkeleton from "./ItemSkeleton";
 
 type Item = Prisma.ItemGetPayload<{
   include: { category: true };
@@ -50,11 +51,15 @@ const ItemTable = ({
 
   const handleClearSearch = () => {
     setSearchQuery("");
-    router.push(`/dashboard?page=1`);
+    startTransition(() => {
+      router.push(`/dashboard?page=1`);
+    });
   };
 
   const handleSearchSubmit = () => {
-    router.push(`/dashboard?page=1&search=${searchQuery}`);
+    startTransition(() => {
+      router.push(`/dashboard?page=1&search=${searchQuery}`);
+    });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -153,7 +158,9 @@ const ItemTable = ({
     event: React.ChangeEvent<unknown>,
     page: number,
   ) => {
-    router.push(`/dashboard?page=${page}&search=${searchQuery}`);
+    startTransition(() => {
+      router.push(`/dashboard?page=${page}&search=${searchQuery}`);
+    });
   };
 
   return (
@@ -192,175 +199,179 @@ const ItemTable = ({
         page={currentPage}
         onChange={handlePageChange}
       />
-      <div className="space-y-4 mb-6">
-        {items.map((item) => {
-          return (
-            <div
-              key={item.id}
-              className={`p-4 md:p-8 border dark:border-gray-700 rounded-lg transition-colors ${
-                isPending && item.id === editingItem?.id
-                  ? "fade-animation"
-                  : "hover:bg-gray-50 dark:hover:bg-gray-800"
-              }`}
-            >
-              <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                <div className="flex-1">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Item:
-                  </div>
-                  {editingItem?.id === item.id ? (
-                    <TextField
-                      fullWidth
-                      value={editingItem?.name}
-                      onChange={(e) =>
-                        handleInputChange("name", e.target.value)
-                      }
-                      error={!!validationErrors.name}
-                      helperText={validationErrors.name?.join(", ")}
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : (
-                    <div className="text-gray-900 dark:text-gray-100 font-medium">
-                      {item.name}
+      {isPending ? (
+        <ItemSkeleton />
+      ) : (
+        <div className="space-y-4 mb-6">
+          {items.map((item) => {
+            return (
+              <div
+                key={item.id}
+                className={`p-4 md:p-8 border dark:border-gray-700 rounded-lg transition-colors ${
+                  isPending && item.id === editingItem?.id
+                    ? "fade-animation"
+                    : "hover:bg-gray-50 dark:hover:bg-gray-800"
+                }`}
+              >
+                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                  <div className="flex-1">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Item:
                     </div>
-                  )}
-                </div>
-
-                <div className="flex-[0.5]">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Pieces:
-                  </div>
-                  {editingItem?.id === item.id ? (
-                    <TextField
-                      type="number"
-                      value={editingItem?.pieces}
-                      onChange={(e) =>
-                        handleInputChange("pieces", parseInt(e.target.value))
-                      }
-                      error={!!validationErrors.pieces}
-                      helperText={validationErrors.pieces?.join(", ")}
-                      size="small"
-                      variant="outlined"
-                    />
-                  ) : (
-                    <div className="text-gray-900 dark:text-gray-100">
-                      {item.pieces}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-[1.5]">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Category:
-                  </div>
-                  {editingItem?.id === item.id ? (
-                    <Select
-                      value={editingItem?.categoryId ?? ""}
-                      onChange={(e) =>
-                        handleInputChange("categoryId", e.target.value ?? "")
-                      }
-                      size="small"
-                      variant="outlined"
-                      sx={{ width: "200px" }}
-                    >
-                      <MenuItem value="">None</MenuItem>
-                      {categories.map((category) => (
-                        <MenuItem key={category.id} value={category.id}>
-                          {category.name}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  ) : (
-                    <div className="text-gray-900 dark:text-gray-100">
-                      {item.category?.name ?? "-"}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex-1">
-                  <div className="text-sm text-gray-500 dark:text-gray-400">
-                    Deadline:
-                  </div>
-                  {editingItem?.id === item.id ? (
-                    <LocalizationProvider dateAdapter={AdapterDateFns}>
-                      <DatePicker
-                        value={editingItem.deadline}
-                        onChange={(newValue) => {
-                          if (newValue) {
-                            handleInputChange("deadline", newValue);
-                          }
-                        }}
-                        disablePast
-                        format="MM/dd/yyyy"
-                        slotProps={{
-                          textField: {
-                            size: "small",
-                            fullWidth: true,
-                            error: !!validationErrors.deadline,
-                            helperText: validationErrors.deadline?.join(", "),
-                          },
-                        }}
+                    {editingItem?.id === item.id ? (
+                      <TextField
+                        fullWidth
+                        value={editingItem?.name}
+                        onChange={(e) =>
+                          handleInputChange("name", e.target.value)
+                        }
+                        error={!!validationErrors.name}
+                        helperText={validationErrors.name?.join(", ")}
+                        size="small"
+                        variant="outlined"
                       />
-                    </LocalizationProvider>
-                  ) : (
-                    <div className="text-gray-900 dark:text-gray-100">
-                      {`${formatDistanceToNow(item.deadline, {
-                        addSuffix: true,
-                      })}`}
-                    </div>
-                  )}
-                </div>
+                    ) : (
+                      <div className="text-gray-900 dark:text-gray-100 font-medium">
+                        {item.name}
+                      </div>
+                    )}
+                  </div>
 
-                <div className="flex gap-3">
-                  {editingItem?.id === item.id ? (
-                    <>
-                      <button
-                        onClick={() => handleSaveClick(item.id)}
-                        disabled={
-                          isUpdating === item.id || isDeleting === item.id
+                  <div className="flex-[0.5]">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Pieces:
+                    </div>
+                    {editingItem?.id === item.id ? (
+                      <TextField
+                        type="number"
+                        value={editingItem?.pieces}
+                        onChange={(e) =>
+                          handleInputChange("pieces", parseInt(e.target.value))
                         }
-                        className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
-                      >
-                        {isUpdating === item.id ? (
-                          <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <SaveIcon />
-                        )}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(item.id)}
-                        disabled={
-                          isUpdating === item.id || isDeleting === item.id
+                        error={!!validationErrors.pieces}
+                        helperText={validationErrors.pieces?.join(", ")}
+                        size="small"
+                        variant="outlined"
+                      />
+                    ) : (
+                      <div className="text-gray-900 dark:text-gray-100">
+                        {item.pieces}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-[1.5]">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Category:
+                    </div>
+                    {editingItem?.id === item.id ? (
+                      <Select
+                        value={editingItem?.categoryId ?? ""}
+                        onChange={(e) =>
+                          handleInputChange("categoryId", e.target.value ?? "")
                         }
-                        className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        size="small"
+                        variant="outlined"
+                        sx={{ width: "200px" }}
                       >
-                        {isDeleting === item.id ? (
-                          <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-                        ) : (
-                          <DeleteIcon />
-                        )}
+                        <MenuItem value="">None</MenuItem>
+                        {categories.map((category) => (
+                          <MenuItem key={category.id} value={category.id}>
+                            {category.name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    ) : (
+                      <div className="text-gray-900 dark:text-gray-100">
+                        {item.category?.name ?? "-"}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex-1">
+                    <div className="text-sm text-gray-500 dark:text-gray-400">
+                      Deadline:
+                    </div>
+                    {editingItem?.id === item.id ? (
+                      <LocalizationProvider dateAdapter={AdapterDateFns}>
+                        <DatePicker
+                          value={editingItem.deadline}
+                          onChange={(newValue) => {
+                            if (newValue) {
+                              handleInputChange("deadline", newValue);
+                            }
+                          }}
+                          disablePast
+                          format="MM/dd/yyyy"
+                          slotProps={{
+                            textField: {
+                              size: "small",
+                              fullWidth: true,
+                              error: !!validationErrors.deadline,
+                              helperText: validationErrors.deadline?.join(", "),
+                            },
+                          }}
+                        />
+                      </LocalizationProvider>
+                    ) : (
+                      <div className="text-gray-900 dark:text-gray-100">
+                        {`${formatDistanceToNow(item.deadline, {
+                          addSuffix: true,
+                        })}`}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3">
+                    {editingItem?.id === item.id ? (
+                      <>
+                        <button
+                          onClick={() => handleSaveClick(item.id)}
+                          disabled={
+                            isUpdating === item.id || isDeleting === item.id
+                          }
+                          className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isUpdating === item.id ? (
+                            <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <SaveIcon />
+                          )}
+                        </button>
+                        <button
+                          onClick={() => handleDelete(item.id)}
+                          disabled={
+                            isUpdating === item.id || isDeleting === item.id
+                          }
+                          className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
+                        >
+                          {isDeleting === item.id ? (
+                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
+                          ) : (
+                            <DeleteIcon />
+                          )}
+                        </button>
+                      </>
+                    ) : (
+                      <button
+                        onClick={() => handleEditClick(item)}
+                        className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
+                      >
+                        <EditIcon />
                       </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => handleEditClick(item)}
-                      className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
-                    >
-                      <EditIcon />
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
+            );
+          })}
+          {items.length === 0 && (
+            <div className="text-center text-gray-500 dark:text-gray-400">
+              <p>No items found. Get started by adding an item.</p>
             </div>
-          );
-        })}
-        {items.length === 0 && (
-          <div className="text-center text-gray-500 dark:text-gray-400">
-            <p>No items found. Get started by adding an item.</p>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };
