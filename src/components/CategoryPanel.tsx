@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Collapse, IconButton, TextField } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -21,7 +20,6 @@ interface CategoryPanelProps {
 }
 
 const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
-  const router = useRouter();
   const [editingCategory, setEditingCategory] =
     useState<Prisma.CategoryGetPayload<null> | null>(null);
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
@@ -32,6 +30,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
   }>({});
 
   const handleEditClick = (category: Prisma.CategoryGetPayload<null>) => {
+    setValidationErrors({});
     setEditingCategory(category);
   };
 
@@ -57,7 +56,6 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
       }
       setEditingCategory(null);
       setValidationErrors({});
-      router.refresh();
     } catch (error) {
       console.error("Error updating category:", error);
     } finally {
@@ -77,7 +75,6 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
           setValidationErrors(result.errors);
           return;
         }
-        router.refresh();
       } catch (error) {
         console.error("Error deleting category:", error);
       } finally {

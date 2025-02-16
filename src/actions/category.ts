@@ -102,6 +102,7 @@ export const updateCategory = async (
     where: { id, userId },
     data: { name: validationResult.data.name },
   });
+  revalidatePath("/dashboard");
 };
 
 export const deleteCategory = async (id: string) => {
@@ -119,4 +120,5 @@ export const deleteCategory = async (id: string) => {
   await prisma.category.delete({
     where: { id, userId },
   });
+  revalidatePath("/dashboard");
 };

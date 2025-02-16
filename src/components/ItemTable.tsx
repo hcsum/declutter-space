@@ -123,11 +123,7 @@ const ItemTable = ({
         return;
       }
 
-      startTransition(async () => {
-        router.refresh();
-        setEditingItem(null);
-      });
-
+      setEditingItem(null);
       setValidationErrors({});
     } catch (error) {
       console.error("Error updating item:", error);
@@ -208,7 +204,7 @@ const ItemTable = ({
               <div
                 key={item.id}
                 className={`p-4 md:p-8 border dark:border-gray-700 rounded-lg transition-colors ${
-                  isPending && item.id === editingItem?.id
+                  isUpdating === item.id || isDeleting === item.id
                     ? "fade-animation"
                     : "hover:bg-gray-50 dark:hover:bg-gray-800"
                 }`}

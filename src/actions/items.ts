@@ -247,4 +247,6 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
     },
     data: updateData,
   });
+
+  revalidatePath("/dashboard");
 }
