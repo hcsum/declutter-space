@@ -5,7 +5,6 @@ import { bulkAddItemsByImage } from "@/actions/items";
 import { DetectedItemChatGPT } from "@/lib/upload-helper-chatgpt";
 import AddingItemDialog from "@/components/AddingItemDialog";
 import { resizeImageFile } from "@/client-lib/resize-image";
-import useSWRMutation from "swr/mutation";
 import { Tooltip } from "@mui/material";
 import InfoIcon from "@mui/icons-material/Info";
 import NextImage from "next/image";
@@ -14,7 +13,7 @@ import {
   MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH,
 } from "@/lib/definitions";
 import { getUserInfo } from "@/actions/user";
-import useSWR from "swr";
+import { useMutation, useQuery } from "@tanstack/react-query";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
@@ -22,19 +21,18 @@ export default function ImageUploadBox() {
   const [detectedItems, setDetectedItems] = useState<DetectedItemChatGPT[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
 
-  const { data: remainingQuota = "-", mutate } = useSWR(
-    "getUserInfo",
-    async () => {
+  const { data: remainingQuota = "-", refetch } = useQuery({
+    queryKey: ["getUserInfo"],
+    queryFn: async () => {
       const { imageAnalysisUsedCount } = await getUserInfo({
         imageAnalysisUsedCount: true,
       });
       return MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;
     },
-  );
+  });
 
-  const { trigger: processImage, isMutating } = useSWRMutation(
-    "bulkAddItemsByImage",
-    async (url: string, { arg }: { arg: File }) => {
+  const { mutate: processImage, isPending } = useMutation({
+    mutationFn: async (arg: File) => {
       try {
         const resizedImage = await resizeImageFile(arg);
         if (!resizedImage) return;
@@ -42,7 +40,7 @@ export default function ImageUploadBox() {
 
         const items = await bulkAddItemsByImage(resizedImage);
         if (items) {
-          mutate(Number(remainingQuota) - 1);
+          refetch();
           setDetectedItems(items);
           setShowConfirmDialog(true);
         }
@@ -54,7 +52,7 @@ export default function ImageUploadBox() {
         }
       }
     },
-  );
+  });
 
   const onItemsAdded = async (itemTotal: number) => {
     setShowConfirmDialog(false);
@@ -142,13 +140,13 @@ export default function ImageUploadBox() {
                 isDragging
                   ? "border-blue-500 dark:border-blue-400"
                   : "border-gray-300 dark:border-gray-600 dark:hover:border-gray-500"
-              } ${isMutating ? "opacity-50 cursor-wait" : ""}`}
+              } ${isPending ? "opacity-50 cursor-wait" : ""}`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              {isMutating ? (
+              {isPending ? (
                 <div className="flex flex-col items-center">
                   <p className="mb-2 text-md">Processing image...</p>
                   <div className="w-48 h-2 bg-gray-200 dark:bg-gray-600 rounded-full overflow-hidden">
@@ -172,7 +170,7 @@ export default function ImageUploadBox() {
               type="file"
               className="hidden"
               onChange={handleImageUpload}
-              disabled={isMutating}
+              disabled={isPending}
             />
           </label>
         </div>

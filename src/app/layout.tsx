@@ -3,8 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Signika } from "next/font/google";
 import "./globals.css";
 import LandingPageHeader from "@/components/Header";
-import UIProvider from "@/components/UIProvider";
-import { LightDarkModeProvider } from "@/components/LightDarkModeContext";
+import Providers from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -49,12 +48,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased`}
       >
         <div className="min-h-[80vh] bg-gray-50 dark:bg-gray-900 relative">
-          <LightDarkModeProvider>
-            <UIProvider>
-              <LandingPageHeader />
-              {children}
-            </UIProvider>
-          </LightDarkModeProvider>
+          <Providers>
+            <LandingPageHeader />
+            {children}
+          </Providers>
         </div>
         <footer className="bg-gray-800 py-6 text-white text-center">
           <div className="max-w-6xl mx-auto">

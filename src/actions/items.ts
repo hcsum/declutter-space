@@ -62,6 +62,7 @@ export type ItemFormState =
         deadline?: string[];
         categoryId?: string[];
       };
+      success?: boolean;
     }
   | undefined;
 
@@ -90,7 +91,7 @@ export async function getItems(
 
   const items = await prisma.item.findMany({
     where: whereClause,
-    orderBy: [{ id: "desc" }, { deadline: "desc" }, { createdAt: "desc" }],
+    orderBy: [{ createdAt: "desc" }, { deadline: "desc" }, { id: "desc" }],
     include: { category: true },
     take: limit,
     skip: (page - 1) * limit,
@@ -105,7 +106,6 @@ export async function getItems(
 }
 
 export async function createItem(
-  state: ItemFormState | undefined,
   formData: FormData,
 ): Promise<ItemFormState | undefined> {
   const { userId } = await verifySession();
@@ -138,6 +138,10 @@ export async function createItem(
     },
   });
   revalidatePath("/dashboard");
+
+  return {
+    success: true,
+  };
 }
 
 export async function createManyItems(
@@ -190,8 +194,6 @@ export async function bulkAddItemsByImage(imageData: string) {
       : `data:image/jpeg;base64,${imageData}`;
 
     const items = await uploadImageToWorker(base64WithPrefix);
-
-    console.log("items", items);
 
     await prisma.user.update({
       where: { id: userId },
