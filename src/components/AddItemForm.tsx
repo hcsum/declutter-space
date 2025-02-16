@@ -1,7 +1,6 @@
 "use client";
 
 import { createItem } from "@/actions/items";
-import { useActionState } from "react";
 import {
   TextField,
   Button,
@@ -13,14 +12,30 @@ import {
   FormHelperText,
 } from "@mui/material";
 import { Category } from "@prisma/client";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { useMutation } from "@tanstack/react-query";
 
 const AddItemForm = ({ categories }: { categories: Category[] }) => {
-  const [state, action, pending] = useActionState(createItem, undefined);
+  const router = useRouter();
+  const { mutate, isPending, data } = useMutation({
+    mutationFn: createItem,
+  });
+
+  useEffect(() => {
+    if (data?.success) {
+      router.push("/dashboard?page=1");
+    }
+  }, [data?.success, router]);
 
   return (
     <Box
+      onSubmit={(e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target as HTMLFormElement);
+        mutate(formData);
+      }}
       component="form"
-      action={action}
       sx={{ mb: 3, display: "flex", flexDirection: "column", gap: 2 }}
     >
       <TextField
@@ -29,8 +44,8 @@ const AddItemForm = ({ categories }: { categories: Category[] }) => {
         label="Item Name"
         required
         fullWidth
-        error={!!state?.errors?.name}
-        helperText={state?.errors?.name}
+        error={!!data?.errors?.name}
+        helperText={data?.errors?.name}
       />
 
       <TextField
@@ -47,8 +62,8 @@ const AddItemForm = ({ categories }: { categories: Category[] }) => {
             step: 1,
           },
         }}
-        error={!!state?.errors?.pieces}
-        helperText={state?.errors?.pieces}
+        error={!!data?.errors?.pieces}
+        helperText={data?.errors?.pieces}
       />
 
       <FormControl fullWidth>
@@ -93,10 +108,10 @@ const AddItemForm = ({ categories }: { categories: Category[] }) => {
       <Button
         type="submit"
         variant="contained"
-        disabled={pending}
+        disabled={isPending}
         sx={{ mt: 1 }}
       >
-        {pending ? "Adding..." : "Add Item"}
+        {isPending ? "Adding..." : "Add Item"}
       </Button>
     </Box>
   );

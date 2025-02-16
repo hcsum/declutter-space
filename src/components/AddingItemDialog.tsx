@@ -8,6 +8,7 @@ import {
   InputLabel,
   FormControl,
   TextField,
+  CircularProgress,
 } from "@mui/material";
 import { ItemPlan } from "@prisma/client";
 import { useActionState } from "react";
@@ -67,7 +68,6 @@ const AddingItemDialog = ({
         deadline: item.deadline,
         plan: ItemPlan.UNDECIDED,
       }));
-    console.log("confirmedItems", confirmedItems);
     action(confirmedItems);
     onConfirm(confirmedItems.length);
   };
@@ -219,7 +219,18 @@ const AddingItemDialog = ({
                   : "bg-blue-500"
               }`}
             >
-              {pending ? "Adding..." : "Confirm"}
+              {pending ? (
+                <span className="flex items-center">
+                  Adding{" "}
+                  <CircularProgress
+                    size={24}
+                    color="inherit"
+                    className="ml-2"
+                  />
+                </span>
+              ) : (
+                "Confirm"
+              )}
             </button>
           </form>
         </div>
