@@ -24,9 +24,7 @@ export default function ImageUploadBox() {
   const { data: remainingQuota = "-", refetch } = useQuery({
     queryKey: ["getUserInfo"],
     queryFn: async () => {
-      const { imageAnalysisUsedCount } = await getUserInfo({
-        imageAnalysisUsedCount: true,
-      });
+      const { imageAnalysisUsedCount } = await getUserInfo();
       return MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;
     },
   });
@@ -38,11 +36,14 @@ export default function ImageUploadBox() {
         if (!resizedImage) return;
         setUploadedImage(resizedImage);
 
-        const items = await bulkAddItemsByImage(resizedImage);
+        const { items, error } = await bulkAddItemsByImage(resizedImage);
         if (items) {
           refetch();
           setDetectedItems(items);
           setShowConfirmDialog(true);
+        }
+        if (error) {
+          alert(error);
         }
       } catch (error) {
         if (error instanceof Error) {

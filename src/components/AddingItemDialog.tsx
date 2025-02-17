@@ -1,4 +1,4 @@
-import { createManyItems, ItemCreateInput } from "@/actions/items";
+import { createManyItems } from "@/actions/items";
 import { DetectedItemChatGPT } from "@/lib/upload-helper-chatgpt";
 import {
   Dialog,
@@ -11,9 +11,10 @@ import {
   CircularProgress,
 } from "@mui/material";
 import { ItemPlan } from "@prisma/client";
-import { useActionState } from "react";
 import { useState, useEffect } from "react";
 import { CheckCircle, AddCircle } from "@mui/icons-material";
+import { useMutation } from "@tanstack/react-query";
+import { ERROR_FREE_TRAIL_ITEM_LIMIT } from "@/lib/definitions";
 
 interface AddingItemDialogProps {
   isOpen: boolean;
@@ -53,11 +54,14 @@ const AddingItemDialog = ({
     }
   }, [detectedItems]);
 
-  const [, action, pending] = useActionState(
-    (prevState: { errors?: string } | undefined, items: ItemCreateInput[]) =>
-      createManyItems(items),
-    undefined,
-  );
+  const { isPending, mutate } = useMutation({
+    mutationFn: createManyItems,
+    onSettled(data) {
+      if (data?.error === ERROR_FREE_TRAIL_ITEM_LIMIT) {
+        alert(ERROR_FREE_TRAIL_ITEM_LIMIT);
+      }
+    },
+  });
 
   const handleConfirm = () => {
     const confirmedItems = editableItems
@@ -68,7 +72,7 @@ const AddingItemDialog = ({
         deadline: item.deadline,
         plan: ItemPlan.UNDECIDED,
       }));
-    action(confirmedItems);
+    mutate(confirmedItems);
     onConfirm(confirmedItems.length);
   };
 
@@ -203,23 +207,23 @@ const AddingItemDialog = ({
           <form action={handleConfirm} className="flex justify-end space-x-4">
             <button
               onClick={onCancel}
-              disabled={pending}
+              disabled={isPending}
               className={`px-4 py-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded ${
-                pending ? "opacity-50 cursor-not-allowed" : ""
+                isPending ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={pending}
+              disabled={isPending}
               className={`px-4 py-2 rounded text-white hover:bg-blue-600 ${
-                pending
+                isPending
                   ? "bg-gray-500 text-gray-200 hover:bg-gray-500"
                   : "bg-blue-500"
               }`}
             >
-              {pending ? (
+              {isPending ? (
                 <span className="flex items-center">
                   Adding{" "}
                   <CircularProgress

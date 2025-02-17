@@ -64,6 +64,8 @@ model Category {
   items     Item[]
   userId    String
   user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, name])
 }
 
 // not in use yet

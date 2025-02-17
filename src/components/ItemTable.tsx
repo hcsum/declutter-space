@@ -2,7 +2,7 @@
 
 import { deleteItem, ItemUpdateInput, updateItem } from "@/actions/items";
 import { Prisma, Category } from "@prisma/client";
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import { MenuItem, Pagination, Select } from "@mui/material";
@@ -44,6 +44,12 @@ const ItemTable = ({
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+
+  const [page, setPage] = useState(currentPage);
+
+  useEffect(() => {
+    setPage(currentPage);
+  }, [currentPage]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -154,6 +160,7 @@ const ItemTable = ({
     event: React.ChangeEvent<unknown>,
     page: number,
   ) => {
+    setPage(page);
     startTransition(() => {
       router.push(`/dashboard?page=${page}&search=${searchQuery}`);
     });
@@ -192,7 +199,7 @@ const ItemTable = ({
       <Pagination
         className="my-4"
         count={totalPages}
-        page={currentPage}
+        page={page}
         onChange={handlePageChange}
       />
       {isPending ? (

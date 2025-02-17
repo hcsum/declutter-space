@@ -73,10 +73,27 @@ export const createCategory = async (
     };
   }
 
-  await prisma.category.create({
-    data: { name: validationResult.data.name, userId },
-  });
-  revalidatePath("/dashboard");
+  try {
+    await prisma.category.create({
+      data: { name: validationResult.data.name.toLocaleLowerCase(), userId },
+    });
+    revalidatePath("/dashboard");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes(
+        "Unique constraint failed on the fields: (`userId`,`name`)",
+      )
+    ) {
+      return {
+        errors: {
+          name: ["This category already exists"],
+        },
+      };
+    } else {
+      console.log("error", error);
+    }
+  }
 };
 
 export const createPresetCategories = async (userId: string) => {
@@ -98,11 +115,28 @@ export const updateCategory = async (
     };
   }
 
-  await prisma.category.update({
-    where: { id, userId },
-    data: { name: validationResult.data.name },
-  });
-  revalidatePath("/dashboard");
+  try {
+    await prisma.category.update({
+      where: { id, userId },
+      data: { name: validationResult.data.name.toLocaleLowerCase() },
+    });
+    revalidatePath("/dashboard");
+  } catch (error) {
+    if (
+      error instanceof Error &&
+      error.message.includes(
+        "Unique constraint failed on the fields: (`userId`,`name`)",
+      )
+    ) {
+      return {
+        errors: {
+          name: ["This category already exists"],
+        },
+      };
+    } else {
+      console.log("error", error);
+    }
+  }
 };
 
 export const deleteCategory = async (id: string) => {

@@ -16,7 +16,7 @@ const Dashboard = async ({
   const currentPage = Number(page);
   const { items, totalPages, total } = await getItems(currentPage, 10, search);
   const categories = await getCategories();
-  const userInfo = await getUserInfo({ isVerified: true });
+  const userInfo = await getUserInfo();
 
   if (!userInfo.isVerified) {
     return <NotVerified />;
@@ -40,7 +40,7 @@ const Dashboard = async ({
           </div>
 
           {/* Right column - Forms */}
-          <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-0">
+          <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-32">
             <AddItemPanel itemCount={items.length} categories={categories} />
             <CategoryPanel categories={categories} />
           </div>
