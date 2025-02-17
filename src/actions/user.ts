@@ -6,7 +6,6 @@ import { checkMembershipStatus } from "./membership";
 import { createPresetCategories } from "./category";
 import Stripe from "stripe";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 
 export async function createUser(data: Prisma.UserCreateInput) {
   const user = await prisma.user.create({
@@ -42,8 +41,10 @@ export async function getUserInfo<T extends Prisma.UserSelect>(
   })) as Prisma.UserGetPayload<{ select: T }> | null;
 
   if (!result) {
-    (await cookies()).delete("session");
-    redirect("/login");
+    // (await cookies()).delete("session"); // won't work, nextjs complains: Cookies can only be modified in a Server Action or Route Handler.
+    // so this is not a freaking server action, just a server function, wtf
+    // heck: redirect to a path call /logout, and modify cookie there, then redirect to login page.
+    redirect("/logout");
   }
 
   const membership = await checkMembershipStatus();

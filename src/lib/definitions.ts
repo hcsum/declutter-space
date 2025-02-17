@@ -93,4 +93,5 @@ export const MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH = 3;
 export const MEMBERSHIP_PRICE = 2;
 export const FREE_TRAIL_ITEMS_LIMIT = 15;
 
-export const ERROR_FREE_TRAIL_ITEM_LIMIT = "Reached free trail items limit.";
+export const ERROR_FREE_TRAIL_ITEM_LIMIT =
+  "Free trail items limit reached. To add more items, please consider joining membership.";
