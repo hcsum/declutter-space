@@ -16,7 +16,7 @@ const Dashboard = async ({
   const currentPage = Number(page);
   const { items, totalPages, total } = await getItems(currentPage, 10, search);
   const categories = await getCategories();
-  const userInfo = await getUserInfo({ isVerified: true });
+  const userInfo = await getUserInfo();
 
   if (!userInfo.isVerified) {
     return <NotVerified />;

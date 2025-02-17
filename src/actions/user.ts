@@ -35,6 +35,8 @@ export async function getUserInfo<T extends Prisma.UserSelect>(
       id: true,
       name: true,
       email: true,
+      imageAnalysisUsedCount: true,
+      isVerified: true,
       ...select,
     },
   })) as Prisma.UserGetPayload<{ select: T }> | null;

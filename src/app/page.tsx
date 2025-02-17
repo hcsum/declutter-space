@@ -2,7 +2,7 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
-import { MEMBERSHIP_PRICE } from "@/lib/definitions";
+import { FREE_TRAIL_ITEMS_LIMIT, MEMBERSHIP_PRICE } from "@/lib/definitions";
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
@@ -198,7 +198,7 @@ const LandingPage = () => {
                 FREE
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Declutter up to 15 items</li>
+                <li>Declutter up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
                 <li>3 photo analyses per month</li>
                 <li>Set deadlines and get email reminders</li>
               </ul>

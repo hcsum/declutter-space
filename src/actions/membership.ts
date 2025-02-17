@@ -8,9 +8,9 @@ import { prisma } from "@/lib/prisma";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
 
-export type MembershipStatus = Stripe.Subscription.Status;
-
-export async function checkMembershipStatus(): Promise<Stripe.Subscription | null> {
+export async function checkMembershipStatus(): Promise<
+  (Stripe.Subscription & { isActive: boolean }) | null
+> {
   try {
     const { userId } = await verifySession();
     const membership = await prisma.membership.findUnique({
@@ -28,6 +28,7 @@ export async function checkMembershipStatus(): Promise<Stripe.Subscription | nul
 
     return {
       ...sub,
+      isActive: sub.status === "active",
       current_period_end: sub.current_period_end * 1000,
       current_period_start: sub.current_period_start * 1000,
       cancel_at: sub.cancel_at ? sub.cancel_at * 1000 : null,

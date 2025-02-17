@@ -68,6 +68,7 @@ export async function deleteSession() {
   cookieStore.delete("session");
 }
 
+// todo: cache doesn't seem working (still calling multiple times within single request cycle), need to check how it should be used.
 export const verifySession = cache(async () => {
   console.log("verifySession");
   const cookie = (await cookies()).get("session")?.value;

@@ -7,6 +7,11 @@ import { validateImageAnalysisUsage } from "@/lib/utils";
 import { ItemPlan, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { checkMembershipStatus } from "./membership";
+import {
+  ERROR_FREE_TRAIL_ITEM_LIMIT,
+  FREE_TRAIL_ITEMS_LIMIT,
+} from "@/lib/definitions";
 
 export type ItemCreateInput = {
   name: string;
@@ -109,6 +114,7 @@ export async function createItem(
   formData: FormData,
 ): Promise<ItemFormState | undefined> {
   const { userId } = await verifySession();
+  await verifyFreeTrialLimit();
 
   const validationResult = CreateItemFormSchema.safeParse(
     Object.fromEntries(formData),
@@ -149,6 +155,8 @@ export async function createManyItems(
 ): Promise<{ errors?: string } | undefined> {
   const { userId } = await verifySession();
 
+  await verifyFreeTrialLimit();
+
   const validationResult = z.array(CreateItemFormSchema).safeParse(items);
 
   if (!validationResult.success) {
@@ -180,6 +188,8 @@ export async function deleteItem(id: string) {
 }
 
 export async function bulkAddItemsByImage(imageData: string) {
+  await verifyFreeTrialLimit();
+
   const { userId } = await verifySession();
 
   const user = await prisma.user.findUniqueOrThrow({
@@ -251,4 +261,15 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
   });
 
   revalidatePath("/dashboard");
+}
+
+async function verifyFreeTrialLimit() {
+  const [membership, { total }] = await Promise.all([
+    checkMembershipStatus(),
+    getItems(),
+  ]);
+
+  if (!membership?.isActive && total >= FREE_TRAIL_ITEMS_LIMIT) {
+    throw new Error(ERROR_FREE_TRAIL_ITEM_LIMIT);
+  }
 }

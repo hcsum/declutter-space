@@ -20,6 +20,9 @@ const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
   const { mutate, isPending, data } = useMutation({
     mutationFn: createItem,
+    onError(err) {
+      alert(err.message);
+    },
   });
 
   useEffect(() => {

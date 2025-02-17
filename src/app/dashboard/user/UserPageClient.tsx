@@ -83,7 +83,7 @@ const UserPageClient = ({
               )}
               {membership?.cancel_at && (
                 <div className="text-gray-600 dark:text-gray-400">
-                  Cancel at:{" "}
+                  Membership valid till:{" "}
                   {new Date(membership?.cancel_at).toLocaleDateString()}
                 </div>
               )}
