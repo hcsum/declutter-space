@@ -2,7 +2,10 @@
 
 import { prisma } from "@/lib/prisma";
 import { verifySession } from "@/lib/session";
-import { uploadImageToWorker } from "@/lib/upload-helper-chatgpt";
+import {
+  DetectedItemChatGPT,
+  uploadImageToWorker,
+} from "@/lib/upload-helper-chatgpt";
 import { validateImageAnalysisUsage } from "@/lib/utils";
 import { ItemPlan, Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
@@ -66,6 +69,7 @@ export type ItemFormState =
         pieces?: string[];
         deadline?: string[];
         categoryId?: string[];
+        freeTrailLimitReached?: boolean;
       };
       success?: boolean;
     }
@@ -114,7 +118,16 @@ export async function createItem(
   formData: FormData,
 ): Promise<ItemFormState | undefined> {
   const { userId } = await verifySession();
-  await verifyFreeTrialLimit();
+
+  try {
+    await verifyFreeTrialLimit();
+  } catch {
+    return {
+      errors: {
+        freeTrailLimitReached: true,
+      },
+    };
+  }
 
   const validationResult = CreateItemFormSchema.safeParse(
     Object.fromEntries(formData),
@@ -152,16 +165,22 @@ export async function createItem(
 
 export async function createManyItems(
   items: ItemCreateInput[],
-): Promise<{ errors?: string } | undefined> {
+): Promise<{ error?: string } | undefined> {
   const { userId } = await verifySession();
 
-  await verifyFreeTrialLimit();
+  try {
+    await verifyFreeTrialLimit();
+  } catch {
+    return {
+      error: ERROR_FREE_TRAIL_ITEM_LIMIT,
+    };
+  }
 
   const validationResult = z.array(CreateItemFormSchema).safeParse(items);
 
   if (!validationResult.success) {
     return {
-      errors: "invalid items",
+      error: "invalid items",
     };
   }
   console.log("items", items);
@@ -187,8 +206,17 @@ export async function deleteItem(id: string) {
   });
 }
 
-export async function bulkAddItemsByImage(imageData: string) {
-  await verifyFreeTrialLimit();
+export async function bulkAddItemsByImage(imageData: string): Promise<{
+  error?: string;
+  items?: DetectedItemChatGPT[];
+}> {
+  try {
+    await verifyFreeTrialLimit();
+  } catch {
+    return {
+      error: ERROR_FREE_TRAIL_ITEM_LIMIT,
+    };
+  }
 
   const { userId } = await verifySession();
 
@@ -213,7 +241,7 @@ export async function bulkAddItemsByImage(imageData: string) {
       },
     });
 
-    return items;
+    return { items };
   } catch (error) {
     console.error("Error processing image:", error);
     throw new Error("Failed to process image");

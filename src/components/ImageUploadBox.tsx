@@ -36,11 +36,14 @@ export default function ImageUploadBox() {
         if (!resizedImage) return;
         setUploadedImage(resizedImage);
 
-        const items = await bulkAddItemsByImage(resizedImage);
+        const { items, error } = await bulkAddItemsByImage(resizedImage);
         if (items) {
           refetch();
           setDetectedItems(items);
           setShowConfirmDialog(true);
+        }
+        if (error) {
+          alert(error);
         }
       } catch (error) {
         if (error instanceof Error) {

@@ -15,22 +15,22 @@ import { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
+import { ERROR_FREE_TRAIL_ITEM_LIMIT } from "@/lib/definitions";
 
 const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
   const { mutate, isPending, data } = useMutation({
     mutationFn: createItem,
-    onError(err) {
-      console.log("err", err);
-      alert(err.message);
-    },
   });
 
   useEffect(() => {
     if (data?.success) {
       router.push("/dashboard?page=1");
     }
-  }, [data?.success, router]);
+    if (data?.errors?.freeTrailLimitReached) {
+      alert(ERROR_FREE_TRAIL_ITEM_LIMIT);
+    }
+  }, [data, router]);
 
   return (
     <Box
