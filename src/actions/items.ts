@@ -270,6 +270,6 @@ async function verifyFreeTrialLimit() {
   ]);
 
   if (!membership?.isActive && total >= FREE_TRAIL_ITEMS_LIMIT) {
-    throw new Error(ERROR_FREE_TRAIL_ITEM_LIMIT);
+    throw ERROR_FREE_TRAIL_ITEM_LIMIT;
   }
 }
