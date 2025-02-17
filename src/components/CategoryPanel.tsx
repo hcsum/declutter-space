@@ -35,6 +35,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
   };
 
   const handleInputChange = (value: string) => {
+    setValidationErrors({});
     setEditingCategory((prev) => ({
       ...prev!,
       name: value,
