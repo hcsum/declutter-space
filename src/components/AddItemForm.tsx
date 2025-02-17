@@ -21,6 +21,7 @@ const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const { mutate, isPending, data } = useMutation({
     mutationFn: createItem,
     onError(err) {
+      console.log("err", err);
       alert(err.message);
     },
   });
