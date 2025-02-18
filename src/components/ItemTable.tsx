@@ -72,8 +72,11 @@ const ItemTable = ({
 
   const handleClearSearch = () => {
     setSearchQuery("");
+    const updatedParams = new URLSearchParams(queryObject);
+    updatedParams.set("page", "1");
+    updatedParams.delete("search");
     startTransition(() => {
-      router.push(`/dashboard?page=1`);
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
