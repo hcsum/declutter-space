@@ -108,7 +108,7 @@ export async function getItems(
 
   const items = await prisma.item.findMany({
     where: whereClause,
-    orderBy: [{ createdAt: "desc" }, { deadline: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: "desc" }, { deadline: "asc" }, { id: "desc" }],
     include: { category: true },
     take: limit,
     skip: (page - 1) * limit,

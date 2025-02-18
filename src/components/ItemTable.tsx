@@ -269,7 +269,7 @@ const ItemTable = ({
                 }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div className="flex-1">
+                  <div className="flex-[1.5]">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Item:
                     </div>
@@ -315,7 +315,7 @@ const ItemTable = ({
                     )}
                   </div>
 
-                  <div className="flex-[1.5]">
+                  <div className="flex-1">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Category:
                     </div>
@@ -327,7 +327,6 @@ const ItemTable = ({
                         }
                         size="small"
                         variant="outlined"
-                        sx={{ width: "200px" }}
                       >
                         <MenuItem value="">None</MenuItem>
                         {categories.map((category) => (
