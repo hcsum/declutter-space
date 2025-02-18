@@ -20,18 +20,18 @@ import { z } from "zod";
 //   "Hobby & Craft (Sewing, Painting, Musical Instruments)",
 // ];
 const presetCategories = [
-  "Wardrobe",
-  "Kitchen",
-  "Electronics",
-  "Furniture",
-  "Books & Stationery",
-  "Toys & Games",
-  "Decor & Collectibles",
-  "Personal Care",
-  "Garage & Tools",
-  "Sports & Fitness",
-  "Outdoor & Camping",
-  "Hobby & Craft",
+  "wardrobe",
+  "kitchen",
+  "electronics",
+  "furniture",
+  "books & stationery",
+  "toys & games",
+  "decor & collectibles",
+  "personal care",
+  "garage & tools",
+  "sports & fitness",
+  "outdoor & camping",
+  "hobby & craft",
 ];
 
 const CategorySchema = z.object({
@@ -51,10 +51,15 @@ export type CategoryFormState =
 
 export const getCategories = async () => {
   const { userId } = await verifySession();
-  return await prisma.category.findMany({
-    where: { userId },
-    orderBy: { updatedAt: "desc" },
-  });
+  return (
+    await prisma.category.findMany({
+      where: { userId },
+      orderBy: { updatedAt: "desc" },
+    })
+  ).map((cat) => ({
+    ...cat,
+    name: cat.name.charAt(0).toUpperCase() + cat.name.slice(1),
+  }));
 };
 
 export const createCategory = async (

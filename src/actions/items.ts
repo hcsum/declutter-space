@@ -79,6 +79,7 @@ export async function getItems(
   page: number = 1,
   limit: number = 10,
   search?: string,
+  category?: string,
 ) {
   const { userId } = await verifySession();
 
@@ -89,6 +90,13 @@ export async function getItems(
           name: {
             contains: search,
             mode: "insensitive" as const,
+          },
+        }
+      : {}),
+    ...(category
+      ? {
+          category: {
+            id: category,
           },
         }
       : {}),

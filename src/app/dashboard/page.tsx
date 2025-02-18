@@ -10,11 +10,16 @@ import "./styles.css";
 const Dashboard = async ({
   searchParams,
 }: {
-  searchParams: Promise<{ page?: string; search?: string }>;
+  searchParams: Promise<{ page?: string; search?: string; category?: string }>;
 }) => {
-  const { page = "1", search = "" } = await searchParams;
+  const { page = "1", search = "", category = "" } = await searchParams;
   const currentPage = Number(page);
-  const { items, totalPages, total } = await getItems(currentPage, 10, search);
+  const { items, totalPages, total } = await getItems(
+    currentPage,
+    10,
+    search,
+    category,
+  );
   const categories = await getCategories();
   const userInfo = await getUserInfo();
 
@@ -36,6 +41,8 @@ const Dashboard = async ({
               categories={categories}
               totalPages={totalPages}
               currentPage={currentPage}
+              category={category}
+              search={search}
             />
           </div>
 
