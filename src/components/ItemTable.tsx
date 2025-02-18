@@ -79,7 +79,9 @@ const ItemTable = ({
 
   const handleSearchSubmit = () => {
     startTransition(() => {
-      router.push(`/dashboard?page=1&search=${searchQuery}`);
+      const updatedParams = new URLSearchParams(queryObject);
+      updatedParams.set("page", "1");
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
@@ -176,8 +178,10 @@ const ItemTable = ({
     page: number,
   ) => {
     setPage(page);
+    const updatedParams = new URLSearchParams(queryObject);
+    updatedParams.set("page", page.toString());
     startTransition(() => {
-      router.push(`/dashboard?page=${page}&search=${searchQuery}`);
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
