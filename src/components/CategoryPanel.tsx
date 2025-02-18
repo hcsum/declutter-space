@@ -128,7 +128,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
             {categories.map((category) => (
               <div
                 key={category.id}
-                className="p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+                className="p-4 border rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <div className="flex items-center justify-between gap-4">
                   {editingCategory?.id === category.id ? (
@@ -150,7 +150,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                         <button
                           onClick={() => handleSaveClick(category.id)}
                           disabled={isUpdating === category.id}
-                          className="p-2 text-green-500 hover:bg-green-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 text-green-500 hover:bg-green-100 dark:hover:bg-green-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isUpdating === category.id ? (
                             <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
@@ -164,7 +164,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                             isUpdating === category.id ||
                             isDeleting === category.id
                           }
-                          className="p-2 text-red-500 hover:bg-red-100 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
+                          className="p-2 text-red-500 hover:bg-red-100 dark:hover:bg-red-900 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isDeleting === category.id ? (
                             <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
@@ -176,7 +176,7 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
                     ) : (
                       <button
                         onClick={() => handleEditClick(category)}
-                        className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg"
+                        className="p-2 text-blue-500 hover:bg-blue-100 dark:hover:bg-blue-900 rounded-lg"
                       >
                         <EditIcon />
                       </button>
