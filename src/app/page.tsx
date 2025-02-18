@@ -2,7 +2,13 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
-import { FREE_TRAIL_ITEMS_LIMIT, MEMBERSHIP_PRICE } from "@/lib/definitions";
+import {
+  FREE_TRAIL_ITEMS_LIMIT,
+  MEMBERSHIP_ITEMS_LIMIT,
+  MEMBERSHIP_PRICE,
+  FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH,
+  MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH,
+} from "@/lib/definitions";
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
@@ -30,7 +36,7 @@ const LandingPage = () => {
           <div className="space-y-4 text-center">
             <Link href="/signup">
               <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
-                Get Early Access
+                Get Started
               </button>
             </Link>
             <div>
@@ -199,7 +205,10 @@ const LandingPage = () => {
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
                 <li>Declutter up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
-                <li>3 photo analyses per month</li>
+                <li>
+                  {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
+                  month
+                </li>
                 <li>Set deadlines and get email reminders</li>
               </ul>
               <Link href="/signup">
@@ -218,8 +227,11 @@ const LandingPage = () => {
                 ${MEMBERSHIP_PRICE}/month
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Declutter up to 2000 items</li>
-                <li>10 photo analyses per month</li>
+                <li>Declutter up to {MEMBERSHIP_ITEMS_LIMIT} items</li>
+                <li>
+                  {MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
+                  month
+                </li>
                 <li>Set deadlines and get email reminders</li>
                 <li>Categorize your items</li>
                 <li>Personalized decluttering insights</li>

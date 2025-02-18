@@ -79,6 +79,7 @@ export async function getItems(
   page: number = 1,
   limit: number = 10,
   search?: string,
+  category?: string,
 ) {
   const { userId } = await verifySession();
 
@@ -92,6 +93,13 @@ export async function getItems(
           },
         }
       : {}),
+    ...(category
+      ? {
+          category: {
+            id: category,
+          },
+        }
+      : {}),
   };
 
   const total = await prisma.item.count({
@@ -100,7 +108,7 @@ export async function getItems(
 
   const items = await prisma.item.findMany({
     where: whereClause,
-    orderBy: [{ createdAt: "desc" }, { deadline: "desc" }, { id: "desc" }],
+    orderBy: [{ createdAt: "desc" }, { deadline: "asc" }, { id: "desc" }],
     include: { category: true },
     take: limit,
     skip: (page - 1) * limit,

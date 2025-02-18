@@ -10,7 +10,7 @@ import InfoIcon from "@mui/icons-material/Info";
 import NextImage from "next/image";
 import {
   MAX_FILE_SIZE_ALLOWED_MB,
-  MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH,
+  FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH,
 } from "@/lib/definitions";
 import { getUserInfo } from "@/actions/user";
 import { useMutation, useQuery } from "@tanstack/react-query";
@@ -25,7 +25,7 @@ export default function ImageUploadBox() {
     queryKey: ["getUserInfo"],
     queryFn: async () => {
       const { imageAnalysisUsedCount } = await getUserInfo();
-      return MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;
+      return FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH - imageAnalysisUsedCount;
     },
   });
 

@@ -1,12 +1,12 @@
 import { Prisma } from "@prisma/client";
-import { MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH } from "./definitions";
+import { FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH } from "./definitions";
 
 export function validateImageAnalysisUsage(user: Prisma.UserGetPayload<null>) {
   if (user.email === "sumtsui@outlook.com") {
     return;
   }
 
-  const limit = MAX_IMAGE_ANALYSIS_COUNT_PER_MONTH;
+  const limit = FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH;
   const now = new Date();
   const usedAt = user.imageAnalysisUsedAt;
 

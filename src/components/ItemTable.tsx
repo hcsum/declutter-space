@@ -2,10 +2,10 @@
 
 import { deleteItem, ItemUpdateInput, updateItem } from "@/actions/items";
 import { Prisma, Category } from "@prisma/client";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import { MenuItem, Pagination, Select } from "@mui/material";
+import { MenuItem, Pagination, Select, Chip } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
@@ -29,11 +29,15 @@ const ItemTable = ({
   categories,
   totalPages,
   currentPage,
+  category,
+  search,
 }: {
   items: Item[];
   categories: Category[];
   totalPages: number;
   currentPage: number;
+  category: string;
+  search: string;
 }) => {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -44,12 +48,23 @@ const ItemTable = ({
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   const [page, setPage] = useState(currentPage);
 
+  const queryObject = useMemo(() => {
+    const params = new URLSearchParams();
+    params.set("page", page.toString());
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedCategory) params.set("category", selectedCategory);
+    return params;
+  }, [searchQuery, selectedCategory, page]);
+
   useEffect(() => {
     setPage(currentPage);
-  }, [currentPage]);
+    setSelectedCategory(category);
+    setSearchQuery(search);
+  }, [currentPage, category, search]);
 
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -57,14 +72,19 @@ const ItemTable = ({
 
   const handleClearSearch = () => {
     setSearchQuery("");
+    const updatedParams = new URLSearchParams(queryObject);
+    updatedParams.set("page", "1");
+    updatedParams.delete("search");
     startTransition(() => {
-      router.push(`/dashboard?page=1`);
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
   const handleSearchSubmit = () => {
     startTransition(() => {
-      router.push(`/dashboard?page=1&search=${searchQuery}`);
+      const updatedParams = new URLSearchParams(queryObject);
+      updatedParams.set("page", "1");
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
@@ -161,13 +181,45 @@ const ItemTable = ({
     page: number,
   ) => {
     setPage(page);
+    const updatedParams = new URLSearchParams(queryObject);
+    updatedParams.set("page", page.toString());
     startTransition(() => {
-      router.push(`/dashboard?page=${page}&search=${searchQuery}`);
+      router.push(`/dashboard?${updatedParams.toString()}`);
+    });
+  };
+
+  const handleCategoryChange = (categoryId: string) => {
+    const updatedParams = new URLSearchParams(queryObject);
+    if (selectedCategory === categoryId) {
+      updatedParams.delete("category");
+      setSelectedCategory("");
+    } else {
+      updatedParams.set("category", categoryId);
+      setSelectedCategory(categoryId);
+    }
+
+    updatedParams.set("page", "1");
+    startTransition(() => {
+      router.push(`/dashboard?${updatedParams.toString()}`);
     });
   };
 
   return (
     <div className="mb-6">
+      {/* Category Filter */}
+      <div className="flex flex-wrap items-center mb-4 md:w-[50%] gap-2 p-2">
+        {categories.map((category) => (
+          <Chip
+            key={category.id}
+            label={category.name}
+            clickable
+            disabled={isPending}
+            color={selectedCategory === category.id ? "primary" : "default"}
+            onClick={() => handleCategoryChange(category.id)}
+            className="m-1"
+          />
+        ))}
+      </div>
       {/* Search Box */}
       <div className="flex items-center mb-4 md:w-[50%]">
         <div className="relative flex-1">
@@ -217,7 +269,7 @@ const ItemTable = ({
                 }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-                  <div className="flex-1">
+                  <div className="flex-[1.5]">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Item:
                     </div>
@@ -263,7 +315,7 @@ const ItemTable = ({
                     )}
                   </div>
 
-                  <div className="flex-[1.5]">
+                  <div className="flex-1">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Category:
                     </div>
@@ -275,7 +327,6 @@ const ItemTable = ({
                         }
                         size="small"
                         variant="outlined"
-                        sx={{ width: "200px" }}
                       >
                         <MenuItem value="">None</MenuItem>
                         {categories.map((category) => (
