@@ -204,6 +204,18 @@ const ItemTable = ({
     });
   };
 
+  const isExpiringSoon = (deadline: Date) => {
+    const now = new Date();
+    const oneWeekFromNow = new Date(now);
+    oneWeekFromNow.setDate(now.getDate() + 7);
+    return deadline <= oneWeekFromNow && deadline >= now;
+  };
+
+  const isExpired = (deadline: Date) => {
+    const now = new Date();
+    return deadline < now;
+  };
+
   return (
     <div className="mb-6">
       {/* Category Filter */}
@@ -259,13 +271,21 @@ const ItemTable = ({
       ) : (
         <div className="space-y-4 mb-6">
           {items.map((item) => {
+            const expiringSoon = isExpiringSoon(item.deadline);
+            const expired = isExpired(item.deadline);
             return (
               <div
                 key={item.id}
-                className={`p-4 md:p-8 border dark:border-gray-700 rounded-lg transition-colors ${
+                className={`p-4 md:p-8 border rounded-lg transition-colors ${
                   isUpdating === item.id || isDeleting === item.id
                     ? "fade-animation"
                     : "hover:bg-gray-50 dark:hover:bg-gray-800"
+                } ${
+                  expired
+                    ? "border-red-500 bg-red-100 dark:border-red-400 dark:bg-gray-900 opacity-75"
+                    : expiringSoon
+                      ? "border-orange-500 bg-orange-100 dark:border-orange-400 dark:bg-gray-900 opacity-75"
+                      : "dark:border-gray-700"
                 }`}
               >
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -286,9 +306,9 @@ const ItemTable = ({
                         variant="outlined"
                       />
                     ) : (
-                      <div className="text-gray-900 dark:text-gray-100 font-medium">
+                      <h3 className="text-gray-900 dark:text-gray-100 max-w-[200px] break-words">
                         {item.name}
-                      </div>
+                      </h3>
                     )}
                   </div>
 
@@ -369,6 +389,7 @@ const ItemTable = ({
                       </LocalizationProvider>
                     ) : (
                       <div className="text-gray-900 dark:text-gray-100">
+                        {expired ? "Expired " : ""}
                         {`${formatDistanceToNow(item.deadline, {
                           addSuffix: true,
                         })}`}
@@ -421,7 +442,7 @@ const ItemTable = ({
           })}
           {items.length === 0 && (
             <div className="text-center text-gray-500 dark:text-gray-400">
-              <p>No items found. Get started by adding an item.</p>
+              <p>No items found. Add an item or change the filters.</p>
             </div>
           )}
         </div>

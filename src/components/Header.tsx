@@ -91,7 +91,7 @@ const Header: React.FC = () => {
 
   return (
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
-      <div className="mx-auto flex justify-between items-center">
+      <div className="mx-auto lg:max-w-[90%] flex justify-between items-center">
         <Link href={logoLink}>
           <p className="text-2xl font-bold text-black dark:text-white font-signika">
             DeclutterSpace
