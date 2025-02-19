@@ -204,7 +204,7 @@ const LandingPage = () => {
                 FREE
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Declutter up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
+                <li>Keep track of up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
                 <li>
                   {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
                   month
@@ -227,14 +227,15 @@ const LandingPage = () => {
                 ${MEMBERSHIP_PRICE}/month
               </div>
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Declutter up to {MEMBERSHIP_ITEMS_LIMIT} items</li>
+                <li>Keep track of up to {MEMBERSHIP_ITEMS_LIMIT} items</li>
                 <li>
                   {MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
                   month
                 </li>
                 <li>Set deadlines and get email reminders</li>
                 <li>Categorize your items</li>
-                <li>Personalized decluttering insights</li>
+                <li>Personalized decluttering insights (coming soon)</li>
+                <li>Export your items data (coming soon)</li>
               </ul>
               <Link href="/signup">
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">

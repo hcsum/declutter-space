@@ -68,7 +68,7 @@ export async function signup(state: AuthFormState, formData: FormData) {
 
   const token = await createUser1HToken(user.id);
 
-  await brevo.sendVerificationEmail(parsedEmail, token);
+  void brevo.sendVerificationEmail(parsedEmail, token);
 
   return {
     message:

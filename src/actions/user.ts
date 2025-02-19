@@ -13,8 +13,12 @@ export async function createUser(data: Prisma.UserCreateInput) {
     data,
   });
 
-  void createPresetCategories(user.id);
-  void createDemoItems();
+  await Promise.all([
+    createPresetCategories(user.id),
+    createDemoItems(user.id),
+  ]).catch((err) => {
+    console.error("Error creating demo items", err);
+  });
 
   return user;
 }

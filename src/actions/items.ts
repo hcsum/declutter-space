@@ -319,8 +319,7 @@ async function verifyFreeTrialLimit() {
   }
 }
 
-export async function createDemoItems() {
-  const { userId } = await verifySession();
+export async function createDemoItems(userId: string) {
   await prisma.item.createMany({
     data: [
       {
