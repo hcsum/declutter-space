@@ -6,13 +6,15 @@ import { checkMembershipStatus } from "./membership";
 import { createPresetCategories } from "./category";
 import Stripe from "stripe";
 import { redirect } from "next/navigation";
+import { createDemoItems } from "./items";
 
 export async function createUser(data: Prisma.UserCreateInput) {
   const user = await prisma.user.create({
     data,
   });
 
-  await createPresetCategories(user.id);
+  void createPresetCategories(user.id);
+  void createDemoItems();
 
   return user;
 }

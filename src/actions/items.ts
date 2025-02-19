@@ -318,3 +318,35 @@ async function verifyFreeTrialLimit() {
     throw ERROR_FREE_TRAIL_ITEM_LIMIT;
   }
 }
+
+export async function createDemoItems() {
+  const { userId } = await verifySession();
+  await prisma.item.createMany({
+    data: [
+      {
+        userId,
+        name: "That one thing",
+        pieces: 1,
+        startDate: new Date(),
+        deadline: new Date(new Date().setMonth(new Date().getMonth() + 3)),
+        plan: ItemPlan.UNDECIDED,
+      },
+      {
+        userId,
+        name: "That other thing",
+        pieces: 1,
+        startDate: new Date(),
+        deadline: new Date(new Date().setDate(new Date().getDate() + 6)),
+        plan: ItemPlan.UNDECIDED,
+      },
+      {
+        userId,
+        name: "That one thing that I never used",
+        pieces: 1,
+        startDate: new Date(),
+        deadline: new Date(new Date().setDate(new Date().getDate() - 1)),
+        plan: ItemPlan.UNDECIDED,
+      },
+    ],
+  });
+}
