@@ -5,33 +5,12 @@ import { verifySession } from "@/lib/session";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
-// const presetCategories = [
-//   "Wardrobe (Clothes, Shoes, Accessories)",
-//   "Kitchen (Utensils, Appliances, Pantry Items)",
-//   "Electronics (Gadgets, Cables, Old Devices)",
-//   "Furniture (Chairs, Tables, Storage Units)",
-//   "Books & Stationery (Books, Notebooks, Office Supplies)",
-//   "Toys & Games (Kids' Toys, Board Games, Video Games)",
-//   "Decor & Collectibles (Wall Art, Figurines, Seasonal Decor)",
-//   "Personal Care (Cosmetics, Skincare, Grooming Items)",
-//   "Garage & Tools (Hardware, DIY Tools, Car Accessories)",
-//   "Sports & Fitness (Workout Equipment, Sports Gear)",
-//   "Outdoor & Camping (Tents, Travel Gear, Gardening Tools)",
-//   "Hobby & Craft (Sewing, Painting, Musical Instruments)",
-// ];
 const presetCategories = [
   "wardrobe",
   "kitchen",
   "sentimental",
   "electronics",
-  "furniture",
-  "books & stationery",
-  "toys & games",
   "decor & collectibles",
-  "personal care",
-  "garage & tools",
-  "sports & fitness",
-  "outdoor & camping",
   "hobby & craft",
 ];
 
