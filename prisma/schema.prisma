@@ -44,6 +44,7 @@ model Item {
   plan       ItemPlan
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
+  archivedAt DateTime?
   image      String?
   reminders  ItemReminder[]
   category   Category?      @relation(fields: [categoryId], references: [id])

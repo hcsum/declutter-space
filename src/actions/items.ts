@@ -52,12 +52,12 @@ const UpdateItemFormSchema = z.object({
     .optional(),
   deadline: z.coerce
     .date()
-    .refine(
-      (date) => date.getTime() > new Date().getTime() - 1000 * 60 * 60 * 24,
-      {
-        message: "Deadline must be in the future.",
-      },
-    )
+    // .refine(
+    //   (date) => date.getTime() > new Date().getTime() - 1000 * 60 * 60 * 24,
+    //   {
+    //     message: "Deadline must be in the future.",
+    //   },
+    // )
     .optional(),
   categoryId: z.string().optional(), // Validate as optional string
 });
@@ -80,6 +80,7 @@ export async function getItems(
   limit: number = 10,
   search?: string,
   category?: string,
+  archived?: boolean,
 ) {
   const { userId } = await verifySession();
 
@@ -100,6 +101,7 @@ export async function getItems(
           },
         }
       : {}),
+    ...(archived ? { archivedAt: { not: null } } : { archivedAt: null }),
   };
 
   const total = await prisma.item.count({
@@ -297,6 +299,13 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
   });
 
   revalidatePath("/dashboard");
+}
+
+export async function archiveItem(id: string) {
+  await prisma.item.update({
+    where: { id },
+    data: { archivedAt: new Date() },
+  });
 }
 
 async function verifyFreeTrialLimit() {
