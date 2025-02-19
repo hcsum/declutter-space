@@ -412,7 +412,11 @@ const ItemTable = ({
                               handleInputChange("deadline", newValue);
                             }
                           }}
-                          disablePast
+                          shouldDisableDate={(date) => {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            return date <= today;
+                          }}
                           format="MM/dd/yyyy"
                           slotProps={{
                             textField: {
