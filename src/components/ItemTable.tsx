@@ -473,6 +473,7 @@ const ItemTable = ({
                         {expired ? (
                           <Button
                             variant="contained"
+                            color="primary"
                             onClick={() => handleLetGo(item)}
                           >
                             Ready to let go?
@@ -499,12 +500,6 @@ const ItemTable = ({
           )}
         </div>
       )}
-      <Pagination
-        className="my-4"
-        count={totalPages}
-        page={page}
-        onChange={handlePageChange}
-      />
       <LetGoDialog
         open={isLetGoDialogOpen}
         onClose={handleLetGoClose}

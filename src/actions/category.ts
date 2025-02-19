@@ -22,6 +22,7 @@ import { z } from "zod";
 const presetCategories = [
   "wardrobe",
   "kitchen",
+  "sentimental",
   "electronics",
   "furniture",
   "books & stationery",
@@ -54,7 +55,7 @@ export const getCategories = async () => {
   return (
     await prisma.category.findMany({
       where: { userId },
-      orderBy: { updatedAt: "desc" },
+      orderBy: { name: "asc" },
     })
   ).map((cat) => ({
     ...cat,
