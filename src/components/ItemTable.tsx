@@ -470,7 +470,6 @@ const ItemTable = ({
                           <Button
                             variant="contained"
                             onClick={() => handleLetGo(item)}
-                            className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900"
                           >
                             Ready to let go?
                           </Button>
