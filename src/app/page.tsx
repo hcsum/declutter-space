@@ -14,6 +14,8 @@ import {
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
 // key word: app for decluttering
 // himym S6E3
+// A deadline-based decluttering app that helps you track items, set reminders, and make informed decisions. Use photo regonition to help bulk upload items, simplify your space with ease.
+// https://chatgpt.com/c/67b693cc-0450-800c-a50a-9f3e0757e8ce
 
 const LandingPage = () => {
   return (

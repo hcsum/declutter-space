@@ -27,9 +27,9 @@ export const metadata: Metadata = {
   keywords: [
     "decluttering tips",
     "app for decluttering",
+    "declutter app",
     "declutter your home",
     "how to declutter your home",
-    "declutterspace",
   ],
   metadataBase: new URL("https://declutterspace.net"),
   alternates: {
