@@ -2,22 +2,33 @@
 
 import { sendContactEmail } from "@/actions/contact";
 import { useActionState, useEffect } from "react";
+import { useSnackbarState } from "./SnackbarProvider";
 
 const ContactForm = () => {
   const [state, formAction, pending] = useActionState(sendContactEmail, {
     status: "",
   });
+  const { setSnackBarContent } = useSnackbarState();
 
   useEffect(() => {
     const { status } = state;
     if (status === "SUCCESS") {
-      alert("Email sent successfully");
+      setSnackBarContent({
+        message: "Email sent successfully",
+        level: "success",
+      });
     } else if (status === "ERROR") {
-      alert("Email failed to send");
+      setSnackBarContent({
+        message: "Email failed to send",
+        level: "error",
+      });
     } else if (status === "SUBMITTED") {
-      alert("You have already submitted the form");
+      setSnackBarContent({
+        message: "You have already submitted the form",
+        level: "info",
+      });
     }
-  }, [state]);
+  }, [state, setSnackBarContent]);
 
   return (
     <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900" id="contact">

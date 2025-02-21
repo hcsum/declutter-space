@@ -14,12 +14,14 @@ import {
 } from "@/lib/definitions";
 import { getUserInfo } from "@/actions/user";
 import { useMutation, useQuery } from "@tanstack/react-query";
+import { useSnackbarState } from "./SnackbarProvider";
 
 export default function ImageUploadBox() {
   const [isDragging, setIsDragging] = useState(false);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [detectedItems, setDetectedItems] = useState<DetectedItemChatGPT[]>([]);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const { setSnackBarContent } = useSnackbarState();
 
   const { data: remainingQuota = "-", refetch } = useQuery({
     queryKey: ["getUserInfo"],
@@ -43,14 +45,14 @@ export default function ImageUploadBox() {
           setShowConfirmDialog(true);
         }
         if (error) {
-          alert(error);
+          throw new Error(error);
         }
       } catch (error) {
-        if (error instanceof Error) {
-          alert(error.message);
-        } else {
-          alert("An unknown error occurred");
-        }
+        console.error("Error processing image:", error);
+        setSnackBarContent({
+          message: (error as Error).message,
+          level: "error",
+        });
       }
     },
   });

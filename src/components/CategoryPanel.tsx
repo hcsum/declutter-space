@@ -14,6 +14,7 @@ import {
   deleteCategory,
 } from "@/actions/category";
 import { useActionState } from "react";
+import { useDialogState } from "./DialogProvider";
 
 interface CategoryPanelProps {
   categories: Prisma.CategoryGetPayload<null>[];
@@ -22,6 +23,7 @@ interface CategoryPanelProps {
 const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
   const [editingCategory, setEditingCategory] =
     useState<Prisma.CategoryGetPayload<null> | null>(null);
+  const { setDialogContent } = useDialogState();
   const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isExpanded, setIsExpanded] = useState<boolean>(false);
@@ -65,23 +67,27 @@ const CategoryPanel: React.FC<CategoryPanelProps> = ({ categories }) => {
   };
 
   const handleDelete = async (categoryId: string) => {
-    const isConfirmed = window.confirm(
-      "Are you sure you want to delete this category?",
-    );
-    if (isConfirmed) {
-      try {
-        setIsDeleting(categoryId);
-        const result = await deleteCategory(categoryId);
-        if (result?.errors) {
-          setValidationErrors(result.errors);
-          return;
+    setDialogContent({
+      title: "Delete Category",
+      content: "Are you sure you want to delete this category?",
+      onConfirm: async () => {
+        try {
+          setIsDeleting(categoryId);
+          const result = await deleteCategory(categoryId);
+          if (result?.errors) {
+            setValidationErrors(result.errors);
+            return;
+          }
+        } catch (error) {
+          console.error("Error deleting category:", error);
+        } finally {
+          setIsDeleting(null);
         }
-      } catch (error) {
-        console.error("Error deleting category:", error);
-      } finally {
-        setIsDeleting(null);
-      }
-    }
+      },
+      onCancel: () => {
+        setEditingCategory(null);
+      },
+    });
   };
 
   return (

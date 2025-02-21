@@ -15,6 +15,7 @@ import { useState, useEffect } from "react";
 import { CheckCircle, AddCircle } from "@mui/icons-material";
 import { useMutation } from "@tanstack/react-query";
 import { ERROR_FREE_TRAIL_ITEM_LIMIT } from "@/lib/definitions";
+import { useSnackbarState } from "./SnackbarProvider";
 
 interface AddingItemDialogProps {
   isOpen: boolean;
@@ -40,6 +41,7 @@ const AddingItemDialog = ({
   const [editableItems, setEditableItems] = useState<DetectedItemWithChecked[]>(
     [],
   );
+  const { setSnackBarContent } = useSnackbarState();
 
   useEffect(() => {
     if (detectedItems.length > 0) {
@@ -58,7 +60,10 @@ const AddingItemDialog = ({
     mutationFn: createManyItems,
     onSettled(data) {
       if (data?.error === ERROR_FREE_TRAIL_ITEM_LIMIT) {
-        alert(ERROR_FREE_TRAIL_ITEM_LIMIT);
+        setSnackBarContent({
+          message: ERROR_FREE_TRAIL_ITEM_LIMIT,
+          level: "error",
+        });
       }
     },
   });

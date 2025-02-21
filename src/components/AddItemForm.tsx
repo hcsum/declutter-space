@@ -13,24 +13,27 @@ import {
 } from "@mui/material";
 import { Category } from "@prisma/client";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { ERROR_FREE_TRAIL_ITEM_LIMIT } from "@/lib/definitions";
+import { useSnackbarState } from "./SnackbarProvider";
 
 const AddItemForm = ({ categories }: { categories: Category[] }) => {
   const router = useRouter();
+  const { setSnackBarContent } = useSnackbarState();
   const { mutate, isPending, data } = useMutation({
     mutationFn: createItem,
+    onSettled(data) {
+      if (data?.success) {
+        router.push("/dashboard?page=1");
+      }
+      if (data?.errors?.freeTrailLimitReached) {
+        setSnackBarContent({
+          message: ERROR_FREE_TRAIL_ITEM_LIMIT,
+          level: "error",
+        });
+      }
+    },
   });
-
-  useEffect(() => {
-    if (data?.success) {
-      router.push("/dashboard?page=1");
-    }
-    if (data?.errors?.freeTrailLimitReached) {
-      alert(ERROR_FREE_TRAIL_ITEM_LIMIT);
-    }
-  }, [data, router]);
 
   return (
     <Box

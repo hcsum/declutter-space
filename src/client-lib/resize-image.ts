@@ -6,8 +6,7 @@ import imageCompression from "browser-image-compression";
 
 export async function resizeImageFile(file: File): Promise<string | null> {
   if (file.size > MAX_FILE_SIZE_ALLOWED_MB * 1024 * 1024) {
-    alert(`Choose image smaller than ${MAX_FILE_SIZE_ALLOWED_MB}MB`);
-    return null;
+    throw new Error(`Choose image smaller than ${MAX_FILE_SIZE_ALLOWED_MB}MB`);
   }
   console.log(
     "Original file size:",

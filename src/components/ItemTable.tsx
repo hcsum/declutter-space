@@ -21,6 +21,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
 import ItemSkeleton from "./ItemSkeleton";
 import LetGoDialog from "./LetGoDialog";
+import { useDialogState } from "./DialogProvider";
 
 type Item = Prisma.ItemGetPayload<{
   include: { category: true };
@@ -58,6 +59,7 @@ const ItemTable = ({
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isLetGoDialogOpen, setIsLetGoDialogOpen] = useState(false);
   const [page, setPage] = useState(currentPage);
+  const { setDialogContent } = useDialogState();
 
   const queryObject = useMemo(() => {
     const params = new URLSearchParams();
@@ -168,21 +170,22 @@ const ItemTable = ({
   const handleDelete = async () => {
     setIsLetGoDialogOpen(false);
     const itemId = editingItem!.id;
-    const isConfirmed = window.confirm(
-      `Are you sure you want to delete ${editingItem!.name}?`,
-    );
 
-    if (isConfirmed) {
-      try {
-        setIsDeleting(itemId);
-        await deleteItem(itemId);
-        router.refresh();
-      } catch (error) {
-        console.error("Error deleting item:", error);
-      } finally {
-        setIsDeleting(null);
-      }
-    }
+    setDialogContent({
+      title: "Confirm Deletion",
+      content: `Are you sure you want to delete ${editingItem!.name}?`,
+      onConfirm: async () => {
+        try {
+          setIsDeleting(itemId);
+          await deleteItem(itemId);
+          router.refresh();
+        } catch (error) {
+          console.error("Error deleting item:", error);
+        } finally {
+          setIsDeleting(null);
+        }
+      },
+    });
   };
 
   const handlePageChange = (
@@ -236,15 +239,17 @@ const ItemTable = ({
   };
 
   const handleArchive = async () => {
-    if (
-      window.confirm(`Are you sure you want to archive ${editingItem!.name}?`)
-    ) {
-      setIsLetGoDialogOpen(false);
-      setIsArchiving(editingItem!.id);
-      await archiveItem(editingItem!.id);
-      router.refresh();
-      setIsArchiving(null);
-    }
+    setDialogContent({
+      title: "Confirm Archiving",
+      content: `Are you sure you want to archive ${editingItem!.name}?`,
+      onConfirm: async () => {
+        setIsLetGoDialogOpen(false);
+        setIsArchiving(editingItem!.id);
+        await archiveItem(editingItem!.id);
+        router.refresh();
+        setIsArchiving(null);
+      },
+    });
   };
 
   const handleNotYet = () => {
