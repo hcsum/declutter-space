@@ -68,7 +68,15 @@ export async function signup(state: AuthFormState, formData: FormData) {
 
   const token = await createUser1HToken(user.id);
 
-  void brevo.sendVerificationEmail(parsedEmail, token);
+  try {
+    await brevo.sendVerificationEmail(parsedEmail, token);
+  } catch (error) {
+    console.error("Failed to send verification email", parsedEmail, error);
+    return {
+      errmsg:
+        "Failed to send verification email. Please contact us for assistance.",
+    };
+  }
 
   return {
     message:
