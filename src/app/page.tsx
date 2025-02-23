@@ -26,14 +26,13 @@ const LandingPage = () => {
         className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
       >
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
-            Wondering How to Declutter Your Home? Try Our Deadline-based App
+          <h1 className="text-3xl md:text-5xl font-bold mb-12 leading-tight font-signika">
+            Try our deadline-based declutter app to simplify your space
           </h1>
-          <p className="text-lg md:text-xl mb-8 text-gray-700 dark:text-gray-400">
-            Clutter isn&apos;t just stuff—it&apos;s stress. Our app for
-            decluttering helps you keep track of the items you thought you might
-            need someday. Set deadlines for them, when the day comes, you can
-            decide what goes and what stays.
+          <p className="text-lg md:text-xl mb-12 text-gray-700 dark:text-gray-400">
+            Keep track of the items you thought you might need someday. Set
+            deadlines for them, when the day comes, you can decide what goes and
+            what stays.
           </p>
           <div className="space-y-4 text-center">
             <Link href="/signup">
@@ -66,8 +65,8 @@ const LandingPage = () => {
       <section className="py-16 px-6 bg-gray-50 dark:bg-gray-900">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-xl md:text-2xl font-semibold mb-6 text-gray-800 dark:text-gray-200">
-            Every item in your space shapes your mindset. Create a clutter-free
-            environment to unlock a calmer, more focused you.
+            It&apos;s about consciously keeping items that genuinely enhance
+            your life.
           </h2>
         </div>
       </section>
@@ -143,14 +142,14 @@ const LandingPage = () => {
       {/* Features Section */}
       <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900" id="features">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-            How Decluttering Works
+          <h2 className="text-3xl md:text-4xl font-bold mb-12 text-gray-800 dark:text-gray-200">
+            How this app works
           </h2>
-          <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
+          {/* <p className="text-gray-600 dark:text-gray-400 text-lg mb-12">
             Discover how to declutter your home with our intuitive app that
             makes simplifying your space easy and actionable. Get started with
             the most intuitive app for decluttering your home.
-          </p>
+          </p> */}
         </div>
         <div className="space-y-12 max-w-3xl mx-auto">
           {/* Feature 1 */}
@@ -245,14 +244,6 @@ const LandingPage = () => {
                 </button>
               </Link>
             </div>
-          </div>
-          <div className="mt-8">
-            <Link
-              href="/login"
-              className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
-            >
-              Already have an account? Login
-            </Link>
           </div>
         </div>
       </section>
