@@ -204,8 +204,7 @@ const LandingPage = () => {
               <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
                 <li>Keep track of up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
                 <li>
-                  {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
-                  month
+                  {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses
                 </li>
                 <li>Set deadlines and get email reminders</li>
               </ul>
