@@ -134,9 +134,6 @@ const LandingPage = () => {
             </div>
           </div>
         </div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg mt-8 italic border-t border-gray-200 dark:border-gray-700 pt-6">
-          - Inspired by the Minimalist Movement
-        </p>
       </div>
 
       {/* Features Section */}
