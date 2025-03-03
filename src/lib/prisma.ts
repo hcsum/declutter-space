@@ -12,8 +12,19 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
 
-export const prisma = globalForPrisma.prisma || new PrismaClient();
+export const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient().$extends({
+    query: {
+      $allModels: {
+        async $allOperations({ args, query }) {
+          // Introduce a delay before executing any query
+          if (process.env.NODE_ENV === "development")
+            await new Promise((resolve) => setTimeout(resolve, 500)); // 2 seconds delay
+          return query(args);
+        },
+      },
+    },
+  });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
-
-export default prisma;

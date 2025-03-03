@@ -9,7 +9,7 @@ import {
   ForgotPasswordFormSchema,
   ResetPasswordFormSchema,
 } from "@/lib/definitions";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { redirect } from "next/navigation";
 import { BrevoAdapter } from "@/lib/brevo";
