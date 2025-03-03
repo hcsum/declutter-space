@@ -2,7 +2,7 @@ import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import { stripe } from "@/lib/stripe";
 import Stripe from "stripe";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
 

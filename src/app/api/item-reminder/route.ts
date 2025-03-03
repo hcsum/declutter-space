@@ -1,5 +1,5 @@
 import { BrevoAdapter } from "@/lib/brevo";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 import { groupBy } from "lodash";
 
 // todo: add secret
