@@ -35,6 +35,29 @@ type Item = Prisma.ItemGetPayload<{
 
 type EditingItem = ItemUpdateInput & {
   id: string;
+  updating?: boolean;
+};
+
+type ItemReducerAction =
+  | { type: "update"; item: EditingItem }
+  | { type: "delete"; item: { id: string } };
+
+const itemReducer = (
+  state: (Item & { updating?: boolean })[],
+  action: ItemReducerAction,
+) => {
+  switch (action.type) {
+    case "update":
+      return state.map((item) =>
+        item.id === action.item.id
+          ? { ...item, ...action.item, updating: true }
+          : item,
+      );
+    case "delete":
+      return state.filter((item) => item.id !== action.item.id);
+    default:
+      return state;
+  }
 };
 
 const ItemTable = ({
@@ -58,21 +81,17 @@ const ItemTable = ({
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
   }>({});
-  const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isArchiving, setIsArchiving] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
+  const [, startDeleteTransition] = useTransition();
   const [selectedCategory, setSelectedCategory] = useState<string>("");
   const [isLetGoDialogOpen, setIsLetGoDialogOpen] = useState(false);
   const [page, setPage] = useState(currentPage);
   const { setDialogContent } = useDialogState();
   const [optimisticItems, updateOptimisticItems] = useOptimistic<
     (Item & { updating?: boolean })[],
-    EditingItem & { updating: boolean }
-  >(items, (currentItems, updatedItem) => {
-    return currentItems.map((item) =>
-      item.id === updatedItem.id ? { ...item, ...updatedItem } : item,
-    );
-  });
+    ItemReducerAction
+  >(items, itemReducer);
 
   const queryObject = useMemo(() => {
     const params = new URLSearchParams();
@@ -121,9 +140,25 @@ const ItemTable = ({
   };
 
   const handleSaveClick = async (formData: FormData) => {
+    const action = formData.get("action") as string;
+    const itemId = formData.get("itemId") as string;
+
+    if (action === "delete") {
+      setDialogContent({
+        title: "Confirm Deletion",
+        content: `Are you sure you want to delete ${editingItem!.name}?`,
+        onConfirm: async () => {
+          startDeleteTransition(() => {
+            updateOptimisticItems({ type: "delete", item: { id: itemId } });
+          });
+          deleteItem(itemId);
+          router.refresh();
+        },
+      });
+      return;
+    }
     try {
       setEditingItem(null);
-      const itemId = formData.get("itemId") as string;
 
       const data = {
         id: itemId,
@@ -133,7 +168,7 @@ const ItemTable = ({
         categoryId: formData.get("categoryId") as string,
       };
 
-      updateOptimisticItems({ ...data, updating: true });
+      updateOptimisticItems({ type: "update", item: data });
 
       const result = await updateItem(itemId, data);
 
@@ -156,13 +191,10 @@ const ItemTable = ({
       content: `Are you sure you want to delete ${editingItem!.name}?`,
       onConfirm: async () => {
         try {
-          setIsDeleting(itemId);
           await deleteItem(itemId);
           router.refresh();
         } catch (error) {
           console.error("Error deleting item:", error);
-        } finally {
-          setIsDeleting(null);
         }
       },
     });
@@ -297,11 +329,9 @@ const ItemTable = ({
               <div
                 key={item.id}
                 className={`p-4 md:p-8 border rounded-lg transition-colors ${
-                  item.updating ||
-                  isDeleting === item.id ||
-                  isArchiving === item.id
+                  item.updating || isArchiving === item.id
                     ? "fade-animation"
-                    : "hover:bg-gray-50 dark:hover:bg-gray-800"
+                    : ""
                 } ${
                   expired
                     ? "border-red-500 bg-red-100 dark:border-red-400 dark:bg-gray-900 opacity-75"
@@ -418,30 +448,25 @@ const ItemTable = ({
                   </div>
 
                   <div className="flex gap-3">
-                    {editingItem?.id === item.id ? (
+                    {editingItem?.id === item.id && !item.updating ? (
                       <>
                         <button
+                          name="action"
+                          value="update"
                           type="submit"
-                          disabled={item.updating || isDeleting === item.id}
+                          disabled={item.updating}
                           className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {item.updating ? (
-                            <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <SaveIcon />
-                          )}
+                          <SaveIcon />
                         </button>
                         <button
-                          type="button"
-                          onClick={handleDelete}
-                          disabled={item.updating || isDeleting === item.id}
+                          name="action"
+                          value="delete"
+                          type="submit"
+                          disabled={item.updating}
                           className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isDeleting === item.id ? (
-                            <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <DeleteIcon />
-                          )}
+                          <DeleteIcon />
                         </button>
                       </>
                     ) : (
@@ -458,6 +483,7 @@ const ItemTable = ({
                         ) : (
                           <button
                             type="button"
+                            disabled={item.updating}
                             className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
                             onClick={(event) => {
                               event.preventDefault();
