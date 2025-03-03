@@ -24,10 +24,10 @@ export type ItemCreateInput = {
 };
 
 export type ItemUpdateInput = {
-  name: string | null;
-  pieces: number | null;
-  deadline: Date | null;
-  categoryId: string | null;
+  name?: string;
+  pieces?: number;
+  deadline?: Date;
+  categoryId?: string | null;
 };
 
 const CreateItemFormSchema = z.object({
@@ -259,6 +259,7 @@ export async function bulkAddItemsByImage(imageData: string): Promise<{
 }
 
 export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
+  console.log("updateItem data", data);
   const { userId } = await verifySession();
 
   const validationResult = UpdateItemFormSchema.safeParse(data);

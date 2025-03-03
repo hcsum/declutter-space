@@ -7,7 +7,13 @@ import {
   archiveItem,
 } from "@/actions/items";
 import { Prisma, Category } from "@prisma/client";
-import { useEffect, useState, useTransition, useMemo } from "react";
+import {
+  useEffect,
+  useState,
+  useTransition,
+  useMemo,
+  useOptimistic,
+} from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import { MenuItem, Pagination, Select, Chip, Button } from "@mui/material";
@@ -52,7 +58,6 @@ const ItemTable = ({
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
   }>({});
-  const [isUpdating, setIsUpdating] = useState<string | null>(null);
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isArchiving, setIsArchiving] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -60,6 +65,14 @@ const ItemTable = ({
   const [isLetGoDialogOpen, setIsLetGoDialogOpen] = useState(false);
   const [page, setPage] = useState(currentPage);
   const { setDialogContent } = useDialogState();
+  const [optimisticItems, updateOptimisticItems] = useOptimistic<
+    (Item & { updating?: boolean })[],
+    EditingItem & { updating: boolean }
+  >(items, (currentItems, updatedItem) => {
+    return currentItems.map((item) =>
+      item.id === updatedItem.id ? { ...item, ...updatedItem } : item,
+    );
+  });
 
   const queryObject = useMemo(() => {
     const params = new URLSearchParams();
@@ -104,66 +117,33 @@ const ItemTable = ({
   };
 
   const handleEditClick = (item: Item) => {
-    setEditingItem({
-      id: item.id,
-      name: item.name,
-      pieces: item.pieces,
-      deadline: item.deadline,
-      categoryId: item.categoryId,
-    });
+    setEditingItem(item);
   };
 
-  const handleInputChange = (
-    field: "name" | "pieces" | "deadline" | "categoryId",
-    value: string | number | Date,
-  ) => {
-    setEditingItem((prev) => ({
-      ...prev!,
-      [field]: value,
-    }));
-  };
-
-  const handleSaveClick = async (itemId: string) => {
+  const handleSaveClick = async (formData: FormData) => {
     try {
-      if (!editingItem) return;
-      setIsUpdating(itemId);
-      console.log("editingItem", editingItem);
+      setEditingItem(null);
+      const itemId = formData.get("itemId") as string;
 
-      const originalItem = items.find((item) => item.id === itemId);
-      if (!originalItem) return;
+      const data = {
+        id: itemId,
+        name: formData.get("name") as string,
+        pieces: parseInt(formData.get("pieces") as string),
+        deadline: new Date(formData.get("deadline") as string),
+        categoryId: formData.get("categoryId") as string,
+      };
 
-      const hasChanges =
-        originalItem.name !== editingItem.name ||
-        originalItem.pieces !== editingItem.pieces ||
-        originalItem.deadline.getTime() !== editingItem.deadline?.getTime() ||
-        originalItem.categoryId !== editingItem.categoryId;
+      updateOptimisticItems({ ...data, updating: true });
 
-      if (!hasChanges) {
-        setEditingItem(null);
-        setValidationErrors({});
-        return;
-      }
-
-      const result = await updateItem(itemId, {
-        name: editingItem.name,
-        pieces: editingItem.pieces,
-        deadline: editingItem.deadline,
-        categoryId: editingItem.categoryId ?? "",
-      });
-
-      console.log("result", result);
+      const result = await updateItem(itemId, data);
 
       if (result?.errors) {
         setValidationErrors(result.errors);
         return;
       }
-
-      setEditingItem(null);
       setValidationErrors({});
     } catch (error) {
       console.error("Error updating item:", error);
-    } finally {
-      setIsUpdating(null);
     }
   };
 
@@ -310,14 +290,14 @@ const ItemTable = ({
         <ItemSkeleton />
       ) : (
         <div className="space-y-4 mb-6">
-          {items.map((item) => {
+          {optimisticItems.map((item) => {
             const expiringSoon = isExpiringSoon(item.deadline);
             const expired = isExpired(item.deadline);
             return (
               <div
                 key={item.id}
                 className={`p-4 md:p-8 border rounded-lg transition-colors ${
-                  isUpdating === item.id ||
+                  item.updating ||
                   isDeleting === item.id ||
                   isArchiving === item.id
                     ? "fade-animation"
@@ -330,18 +310,20 @@ const ItemTable = ({
                       : "dark:border-gray-700"
                 }`}
               >
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                <form
+                  action={handleSaveClick}
+                  className="flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                >
+                  <input type="hidden" name="itemId" value={item.id} />
                   <div className="flex-[1.5]">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Item:
                     </div>
-                    {editingItem?.id === item.id ? (
+                    {editingItem?.id === item.id && !item.updating ? (
                       <TextField
                         fullWidth
-                        value={editingItem?.name}
-                        onChange={(e) =>
-                          handleInputChange("name", e.target.value)
-                        }
+                        defaultValue={editingItem?.name}
+                        name="name"
                         error={!!validationErrors.name}
                         helperText={validationErrors.name?.join(", ")}
                         size="small"
@@ -358,13 +340,11 @@ const ItemTable = ({
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Pieces:
                     </div>
-                    {editingItem?.id === item.id ? (
+                    {editingItem?.id === item.id && !item.updating ? (
                       <TextField
                         type="number"
-                        value={editingItem?.pieces}
-                        onChange={(e) =>
-                          handleInputChange("pieces", parseInt(e.target.value))
-                        }
+                        defaultValue={item.pieces}
+                        name="pieces"
                         error={!!validationErrors.pieces}
                         helperText={validationErrors.pieces?.join(", ")}
                         size="small"
@@ -381,12 +361,10 @@ const ItemTable = ({
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Category:
                     </div>
-                    {editingItem?.id === item.id ? (
+                    {editingItem?.id === item.id && !item.updating ? (
                       <Select
-                        value={editingItem?.categoryId ?? ""}
-                        onChange={(e) =>
-                          handleInputChange("categoryId", e.target.value ?? "")
-                        }
+                        defaultValue={item.category?.id ?? ""}
+                        name="categoryId"
                         size="small"
                         variant="outlined"
                       >
@@ -408,15 +386,11 @@ const ItemTable = ({
                     <div className="text-sm text-gray-500 dark:text-gray-400">
                       Deadline:
                     </div>
-                    {editingItem?.id === item.id ? (
+                    {editingItem?.id === item.id && !item.updating ? (
                       <LocalizationProvider dateAdapter={AdapterDateFns}>
                         <DatePicker
-                          value={editingItem.deadline}
-                          onChange={(newValue) => {
-                            if (newValue) {
-                              handleInputChange("deadline", newValue);
-                            }
-                          }}
+                          name="deadline"
+                          defaultValue={item.deadline}
                           shouldDisableDate={(date) => {
                             const today = new Date();
                             today.setHours(0, 0, 0, 0);
@@ -447,23 +421,20 @@ const ItemTable = ({
                     {editingItem?.id === item.id ? (
                       <>
                         <button
-                          onClick={() => handleSaveClick(item.id)}
-                          disabled={
-                            isUpdating === item.id || isDeleting === item.id
-                          }
+                          type="submit"
+                          disabled={item.updating || isDeleting === item.id}
                           className="p-2 text-green-500 hover:bg-green-100 rounded-lg dark:hover:bg-green-900 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
-                          {isUpdating === item.id ? (
+                          {item.updating ? (
                             <div className="w-4 h-4 border-2 border-green-500 border-t-transparent rounded-full animate-spin" />
                           ) : (
                             <SaveIcon />
                           )}
                         </button>
                         <button
+                          type="button"
                           onClick={handleDelete}
-                          disabled={
-                            isUpdating === item.id || isDeleting === item.id
-                          }
+                          disabled={item.updating || isDeleting === item.id}
                           className="p-2 text-red-500 hover:bg-red-100 rounded-lg dark:hover:bg-red-900 disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isDeleting === item.id ? (
@@ -477,6 +448,7 @@ const ItemTable = ({
                       <>
                         {expired ? (
                           <Button
+                            type="button"
                             variant="contained"
                             color="primary"
                             onClick={() => handleLetGo(item)}
@@ -485,8 +457,12 @@ const ItemTable = ({
                           </Button>
                         ) : (
                           <button
-                            onClick={() => handleEditClick(item)}
+                            type="button"
                             className="p-2 text-blue-500 hover:bg-blue-100 rounded-lg dark:hover:bg-blue-900"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              handleEditClick(item);
+                            }}
                           >
                             <EditIcon />
                           </button>
@@ -494,7 +470,7 @@ const ItemTable = ({
                       </>
                     )}
                   </div>
-                </div>
+                </form>
               </div>
             );
           })}
