@@ -329,7 +329,8 @@ const ItemTable = ({
               <div
                 key={item.id}
                 className={`p-4 md:p-8 border rounded-lg transition-colors ${
-                  item.updating || isArchiving === item.id
+                  new Date().getTime() - new Date(item.updatedAt).getTime() <
+                    1000 * 10 || isArchiving === item.id
                     ? "fade-animation"
                     : ""
                 } ${
