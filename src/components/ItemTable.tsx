@@ -29,9 +29,7 @@ import ItemSkeleton from "./ItemSkeleton";
 import LetGoDialog from "./LetGoDialog";
 import { useDialogState } from "./DialogProvider";
 
-type Item = Prisma.ItemGetPayload<{
-  include: { category: true };
-}>;
+type Item = Prisma.ItemGetPayload<null>;
 
 type EditingItem = ItemUpdateInput & {
   id: string;
@@ -40,7 +38,8 @@ type EditingItem = ItemUpdateInput & {
 
 type ItemReducerAction =
   | { type: "update"; item: EditingItem }
-  | { type: "delete"; item: { id: string } };
+  | { type: "delete"; item: { id: string } }
+  | { type: "add"; item: Item };
 
 const itemReducer = (
   state: (Item & { updating?: boolean })[],
@@ -55,6 +54,8 @@ const itemReducer = (
       );
     case "delete":
       return state.filter((item) => item.id !== action.item.id);
+    case "add":
+      return [...state, action.item];
     default:
       return state;
   }
@@ -76,6 +77,15 @@ const ItemTable = ({
   search: string;
 }) => {
   const router = useRouter();
+  const categoryMap = useMemo(() => {
+    return categories.reduce(
+      (acc, category) => {
+        acc[category.id] = category;
+        return acc;
+      },
+      {} as Record<string, Category>,
+    );
+  }, [categories]);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
@@ -394,7 +404,7 @@ const ItemTable = ({
                     </div>
                     {editingItem?.id === item.id && !item.updating ? (
                       <Select
-                        defaultValue={item.category?.id ?? ""}
+                        defaultValue={item.categoryId ?? ""}
                         name="categoryId"
                         size="small"
                         variant="outlined"
@@ -408,7 +418,7 @@ const ItemTable = ({
                       </Select>
                     ) : (
                       <div className="text-gray-900 dark:text-gray-100">
-                        {item.category?.name ?? "-"}
+                        {categoryMap[item.categoryId ?? ""]?.name ?? "-"}
                       </div>
                     )}
                   </div>

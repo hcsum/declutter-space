@@ -20,7 +20,7 @@ export const prisma =
         async $allOperations({ args, query }) {
           // Introduce a delay before executing any query
           if (process.env.NODE_ENV === "development")
-            await new Promise((resolve) => setTimeout(resolve, 500)); // 2 seconds delay
+            await new Promise((resolve) => setTimeout(resolve, 300));
           return query(args);
         },
       },
