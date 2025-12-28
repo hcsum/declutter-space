@@ -6,6 +6,9 @@ import bcrypt from "bcryptjs";
 import { createSession } from "@/lib/session";
 import { createUser } from "@/actions/user";
 
+// Ensure Node runtime for Prisma/bcrypt compatibility
+export const runtime = "nodejs";
+
 // After a successful OAuth login with NextAuth, we land here to
 // map the NextAuth user to our own User record and set our app session cookie.
 export async function GET(request: Request) {
@@ -46,4 +49,3 @@ export async function GET(request: Request) {
 
   return NextResponse.redirect(new URL("/dashboard", url));
 }
-

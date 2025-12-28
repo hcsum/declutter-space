@@ -5,6 +5,10 @@ import type { GoogleProfile } from "next-auth/providers/google";
 // Centralized NextAuth options so both the NextAuth route and any
 // server routes (e.g. post-login) can import the same config.
 export const authOptions: NextAuthOptions = {
+  // Ensure we use the configured secret explicitly in case env detection fails
+  secret: process.env.NEXTAUTH_SECRET,
+  // Trust proxy headers for detecting host on platforms like Vercel
+  trustHost: true,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
