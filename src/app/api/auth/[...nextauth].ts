@@ -1,13 +1,6 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import { authOptions } from "@/lib/authOptions";
 
-// not in use
-export const authOptions = {
-  providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-  ],
-};
+// NextAuth is used only for the Google OAuth flow. After successful Google sign-in,
+// we redirect to /api/auth/post-login where we create our own app session cookie.
 export default NextAuth(authOptions);
