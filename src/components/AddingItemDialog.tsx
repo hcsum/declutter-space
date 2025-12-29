@@ -139,6 +139,7 @@ const AddingItemDialog = ({
       <div className="bg-white dark:bg-gray-800 rounded-lg p-6 h-auto md:h-auto flex flex-col md:rounded-lg">
         <div className="relative">
           {uploadedImage && (
+            // eslint-disable-next-line @next/next/no-img-element
             <img src={uploadedImage} alt="Uploaded" className="w-full h-auto" />
           )}
         </div>
