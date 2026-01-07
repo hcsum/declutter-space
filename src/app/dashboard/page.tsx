@@ -1,7 +1,7 @@
 import { getItems } from "@/actions/items";
 import { getCategories } from "@/actions/category";
 import ItemTable from "@/components/ItemTable";
-import CategoryPanel from "@/components/CategoryPanel";
+import CategoriesPills from "@/components/CategoriesPills";
 import QuickAddItem from "@/components/QuickAddItem";
 import { getUserInfo } from "@/actions/user";
 import NotVerified from "./user/notVerified";
@@ -35,7 +35,9 @@ const Dashboard = async ({
           <div className="lg:w-2/3 order-2 lg:order-1">
             <QuickAddItem />
             <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold">Your Items ({total} items)</h2>
+              <h2 className="text-2xl font-bold">
+                You can take a second look later ({total} items)
+              </h2>
             </div>
             <ItemTable
               items={items}
@@ -47,9 +49,12 @@ const Dashboard = async ({
             />
           </div>
 
-          {/* Right column - Category management */}
+          {/* Right column - Category pills */}
           <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-32">
-            <CategoryPanel categories={categories} />
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-4">
+              <h3 className="text-lg font-semibold mb-3">Categories</h3>
+              <CategoriesPills categories={categories} />
+            </div>
           </div>
         </div>
       </div>
