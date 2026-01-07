@@ -2,17 +2,22 @@
 
 import { AuthFormState } from "@/lib/definitions";
 import { useActionState } from "react";
+import { signIn } from "next-auth/react";
 
 interface AuthFormProps {
   formType: "login" | "signup";
-  action: (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
+  action?: (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
+  disableEmail?: boolean;
 }
 
-export default function AuthForm({ formType, action }: AuthFormProps) {
-  const [state, formAction, pending] = useActionState(action, undefined);
+export default function AuthForm({ formType, action, disableEmail = true }: AuthFormProps) {
+  // Keep the classic dialog UI, but optionally disable email/password.
   const isSignup = formType === "signup";
+  // Always call hook with a safe fallback when email is disabled.
+  const noop = async (state: any) => state as AuthFormState;
+  const [state, formAction, pending] = useActionState(action ?? (noop as any), undefined);
 
-  const formData = state?.formData || {};
+  const formData = (state as any)?.formData || {};
 
   return (
     <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
@@ -23,8 +28,9 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
 
         {/* OAuth */}
         <div className="space-y-3">
-          <a
-            href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
+          <button
+            type="button"
+            onClick={() => signIn("google", { callbackUrl: "/api/auth/post-login", redirect: true })}
             className="w-full inline-flex items-center justify-center gap-2 px-4 py-2 font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 dark:bg-gray-700 dark:text-gray-100 dark:border-gray-600 dark:hover:bg-gray-600"
           >
             {/* Simple G icon */}
@@ -35,7 +41,7 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
               <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303c-1.31 3.659-5.689 7-11.303 7-5.207 0-9.574-3.321-11.176-7.91l-6.54 5.034C9.583 39.479 16.167 43 24 43c11.045 0 20-8.955 20-20 0-1.341-.138-2.651-.389-3.917z"/>
             </svg>
             Continue with Google
-          </a>
+          </button>
           <div className="flex items-center gap-2">
             <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
             <span className="text-xs text-gray-400">or</span>
@@ -43,112 +49,110 @@ export default function AuthForm({ formType, action }: AuthFormProps) {
           </div>
         </div>
 
-        {state?.message && (
-          <p className="text-sm text-green-500 text-center mb-4">
-            {state.message}
-          </p>
-        )}
-        {state?.errmsg && (
-          <p className="text-sm text-red-500 text-center mb-4">
-            {state.errmsg}
+        {disableEmail && (
+          <p className="text-xs text-center text-gray-500 dark:text-gray-400 my-4">
+            Email sign-in is temporarily disabled. Please use Google.
           </p>
         )}
 
+        {/* Classic email/password form, optionally disabled */}
         <form action={formAction} className="space-y-4">
-          {isSignup && (
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-              >
-                Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                placeholder="Name"
-                defaultValue={formData.name}
-                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-              />
-              {state?.errors?.name && (
-                <p className="text-sm text-red-500 mt-1">{state.errors.name}</p>
-              )}
-            </div>
-          )}
-
-          <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Email
-            </label>
-            <input
-              id="email"
-              name="email"
-              placeholder="Email"
-              defaultValue={formData.email}
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-            />
-            {state?.errors?.email && (
-              <p className="text-sm text-red-500 mt-1">{state.errors.email}</p>
-            )}
-          </div>
-
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700 dark:text-gray-300"
-            >
-              Password
-            </label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              placeholder="Password"
-              className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
-            />
-            {state?.errors?.password && (
-              <div className="mt-2">
-                <p className="text-sm text-red-500">Password must:</p>
-                <ul className="list-disc list-inside text-sm text-red-500">
-                  {state.errors.password.map((error) => (
-                    <li key={error}>- {error}</li>
-                  ))}
-                </ul>
+          <fieldset disabled={disableEmail} aria-disabled={disableEmail} className={disableEmail ? 'opacity-60 cursor-not-allowed' : ''}>
+            {isSignup && (
+              <div>
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+                >
+                  Name
+                </label>
+                <input
+                  id="name"
+                  name="name"
+                  placeholder="Name"
+                  defaultValue={formData.name}
+                  className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+                />
+                {(state as any)?.errors?.name && (
+                  <p className="text-sm text-red-500 mt-1">{(state as any).errors.name}</p>
+                )}
               </div>
             )}
-          </div>
 
-          {!isSignup && (
-            <div className="text-right">
-              <a
-                href="/forgot-password"
-                className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+            <div>
+              <label
+                htmlFor="email"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
               >
-                Forgot Password?
-              </a>
+                Email
+              </label>
+              <input
+                id="email"
+                name="email"
+                placeholder="Email"
+                defaultValue={formData.email}
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              />
+              {(state as any)?.errors?.email && (
+                <p className="text-sm text-red-500 mt-1">{(state as any).errors.email}</p>
+              )}
             </div>
-          )}
 
-          <button
-            disabled={pending}
-            type="submit"
-            className={`w-full px-4 py-2 font-bold text-white rounded-lg transition ${
-              pending
-                ? "bg-blue-300 cursor-not-allowed"
-                : "bg-blue-500 hover:bg-blue-600"
-            }`}
-          >
-            {pending
-              ? isSignup
-                ? "Signing Up..."
-                : "Logging In..."
-              : isSignup
-                ? "Sign Up"
-                : "Log In"}
-          </button>
+            <div>
+              <label
+                htmlFor="password"
+                className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+              >
+                Password
+              </label>
+              <input
+                id="password"
+                name="password"
+                type="password"
+                placeholder="Password"
+                className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
+              />
+              {(state as any)?.errors?.password && (
+                <div className="mt-2">
+                  <p className="text-sm text-red-500">Password must:</p>
+                  <ul className="list-disc list-inside text-sm text-red-500">
+                    {(state as any).errors.password.map((error: string) => (
+                      <li key={error}>- {error}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+            </div>
+
+            {!isSignup && (
+              <div className="text-right">
+                <a
+                  href="/forgot-password"
+                  className="text-sm text-blue-500 hover:underline dark:text-blue-400"
+                >
+                  Forgot Password?
+                </a>
+              </div>
+            )}
+
+            <button
+              disabled={pending || disableEmail}
+              type="submit"
+              className={`w-full px-4 py-2 font-bold text-white rounded-lg transition ${
+                pending || disableEmail
+                  ? "bg-blue-300 cursor-not-allowed"
+                  : "bg-blue-500 hover:bg-blue-600"
+              }`}
+            >
+              {pending
+                ? isSignup
+                  ? "Signing Up..."
+                  : "Logging In..."
+                : isSignup
+                  ? "Sign Up"
+                  : "Log In"}
+            </button>
+          </fieldset>
         </form>
 
         <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">

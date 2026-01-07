@@ -23,15 +23,16 @@ const Item = forwardRef<HTMLButtonElement, ItemProps>(
           'py-3 md:py-4 pl-[2px]',
           'origin-left',
           // Keep color consistent regardless of active; only scale when active
-          'opacity-50 hover:opacity-100',
+          'opacity-60 hover:opacity-100',
           active && 'scale-[1.02]'
         )}
       >
         <span
           className={cn(
             'text-xl sm:text-2xl md:text-3xl leading-snug transition-colors',
-            'group-hover:text-neutral-900 group-hover:opacity-100',
-            done ? 'line-through opacity-40' : 'no-underline'
+            'text-neutral-900 dark:text-neutral-100',
+            'group-hover:text-neutral-900 dark:group-hover:text-neutral-100 group-hover:opacity-100',
+            done ? 'line-through opacity-40 dark:opacity-50' : 'no-underline'
           )}
         >
           {text}

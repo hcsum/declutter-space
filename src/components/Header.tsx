@@ -111,6 +111,12 @@ const Header: React.FC = () => {
             </button>
           )}
           {navContent}
+          <Link
+            href="/declutter-checklist"
+            className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition"
+          >
+            Declutter Checklist
+          </Link>
           <button
             onClick={toggleMode}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"

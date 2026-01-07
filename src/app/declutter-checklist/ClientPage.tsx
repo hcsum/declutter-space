@@ -74,19 +74,19 @@ export default function ClientPage() {
               <button
                 type="button"
                 onClick={() => router.push(pathname, { scroll: false })}
-                className="text-sm sm:text-base text-neutral-500 hover:opacity-80 underline underline-offset-4"
+                className="text-sm sm:text-base text-neutral-500 dark:text-neutral-300 hover:opacity-80 underline underline-offset-4"
                 aria-label="Back to all categories"
               >
                 Back
               </button>
               <h1
-                className="text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05] cursor-pointer hover:opacity-80"
+                className="text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05] cursor-pointer hover:opacity-80 text-neutral-900 dark:text-neutral-100"
                 onClick={() => router.push(pathname, { scroll: false })}
                 title="Back to all categories"
               >
                 {activeCategory.category}
               </h1>
-              <p className="mt-6 text-neutral-600 text-base sm:text-lg">
+              <p className="mt-6 text-neutral-600 dark:text-neutral-300 text-base sm:text-lg">
                 {doneForActive.size} of {activeCategory.items.length} done
               </p>
             </div>
@@ -104,4 +104,3 @@ export default function ClientPage() {
     </main>
   )
 }
-

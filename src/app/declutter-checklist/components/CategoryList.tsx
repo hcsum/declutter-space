@@ -15,10 +15,10 @@ export default function CategoryList({
     // Full-height column: header stays fixed; list scrolls
     <div className="flex flex-col h-full overflow-hidden">
       <header className="pb-10 flex-none">
-        <h1 className="text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05]">
+        <h1 className="text-4xl sm:text-6xl md:text-7xl tracking-tight leading-[1.05] text-neutral-900 dark:text-neutral-100">
           Declutter Checklist
         </h1>
-        <p className="mt-6 text-lg sm:text-xl text-neutral-600 max-w-2xl">
+        <p className="mt-6 text-lg sm:text-xl text-neutral-600 dark:text-neutral-300 max-w-2xl">
           Declutter your home, one space at a time. Choose a category to begin.
         </p>
       </header>
@@ -30,7 +30,7 @@ export default function CategoryList({
             <li key={idx} className="py-6 sm:py-8">
             <button
               onClick={() => onSelect(c, idx)}
-              className="block text-left w-full text-3xl sm:text-4xl md:text-5xl font-medium outline-none text-neutral-900"
+              className="block text-left w-full text-3xl sm:text-4xl md:text-5xl font-medium outline-none text-neutral-900 dark:text-neutral-100 hover:opacity-90 dark:hover:opacity-100"
             >
               <span className="align-baseline">{c.category}</span>
             </button>

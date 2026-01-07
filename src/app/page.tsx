@@ -208,11 +208,11 @@ const LandingPage = () => {
                 </li>
                 <li>Set deadlines and get email reminders</li>
               </ul>
-              <Link href="/signup">
+              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                   Get Started
                 </button>
-              </Link>
+              </a>
             </div>
 
             {/* Premium Plan Container */}
@@ -234,11 +234,11 @@ const LandingPage = () => {
                 <li>Personalized decluttering insights (coming soon)</li>
                 <li>Export your items data (coming soon)</li>
               </ul>
-              <Link href="/signup">
+              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                   Get Started
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
