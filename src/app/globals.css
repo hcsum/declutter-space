@@ -143,3 +143,5 @@ body.no-scroll #app-view {
 @media (min-width: 1024px) { /* lg */
   .edge-fade-bottom { --edge-fade-size: 112px; }
 }
+
+/* Removed overlay variant; using mask-based fade */

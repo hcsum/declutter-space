@@ -22,8 +22,8 @@ const Item = forwardRef<HTMLButtonElement, ItemProps>(
           'transition duration-300 ease-out',
           'py-3 md:py-4 pl-[2px]',
           'origin-left',
-          // Keep color consistent regardless of active; only scale when active
-          'opacity-60 hover:opacity-100',
+          // Match category list hover behavior; no base opacity reduction
+          'hover:opacity-90 dark:hover:opacity-100',
           active && 'scale-[1.02]'
         )}
       >

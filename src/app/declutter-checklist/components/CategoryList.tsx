@@ -23,8 +23,8 @@ export default function CategoryList({
         </p>
       </header>
 
-      {/* Edge fade as a scroll hint */}
-      <div className="flex-1 pr-2 min-h-0 scrollbar-stable scroll-area edge-fade">
+      {/* Bottom-only fade as a scroll hint */}
+      <div className="flex-1 pr-2 min-h-0 scrollbar-stable scroll-area edge-fade-bottom">
         <ul className="divide-y divide-transparent">
           {checklist.map((c, idx) => (
             <li key={idx} className="py-6 sm:py-8">
