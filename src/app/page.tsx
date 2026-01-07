@@ -186,7 +186,8 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section (hidden for now) */}
+      {false && (
       <section className="py-20 px-6 bg-white dark:bg-gray-800" id="pricing">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
@@ -243,6 +244,7 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+      )}
 
       {/* FAQ Section */}
       <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900">

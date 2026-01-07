@@ -1,14 +1,25 @@
 "use client";
 
 import Link from "next/link";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLightDarkMode } from "./LightDarkModeContext";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
   const { mode, toggleMode } = useLightDarkMode();
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/auth/status', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setLoggedIn(Boolean(d?.loggedIn)); })
+      .catch(() => { if (!cancelled) setLoggedIn(false); });
+    return () => { cancelled = true };
+  }, [pathname]);
   const logoLink = pathname.startsWith("/dashboard") ? "/dashboard" : "/";
 
   return (
@@ -37,6 +48,11 @@ const Header: React.FC = () => {
               <MoonIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
             )}
           </button>
+          {loggedIn && (
+            <Link href="/dashboard/user" className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Account">
+              <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+            </Link>
+          )}
         </div>
       </div>
     </header>
