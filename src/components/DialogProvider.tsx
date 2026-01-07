@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Dialog,
   DialogTitle,
@@ -16,7 +18,7 @@ import {
 
 type DialogValue = {
   title: string;
-  content: string;
+  content: ReactNode;
   actions?: ReactNode;
   onConfirm?: () => void;
   onCancel?: () => void;
@@ -55,10 +57,17 @@ const DialogProvider = ({ children }: { children?: ReactNode }) => {
       <Dialog
         open={Boolean(dialogContent)}
         onClose={() => setDialogContent(undefined)}
+        fullWidth
+        maxWidth="sm"
+        PaperProps={{ className: "rounded-2xl shadow-xl" }}
       >
-        <DialogTitle>{dialogContent?.title}</DialogTitle>
-        <DialogContent>{dialogContent?.content}</DialogContent>
-        <DialogActions>
+        <DialogTitle className="px-6 pt-6 pb-2 sm:px-8 sm:pt-8 sm:pb-3 text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
+          {dialogContent?.title}
+        </DialogTitle>
+        <DialogContent className="px-6 py-4 sm:px-8 sm:py-6 text-neutral-700 dark:text-neutral-300">
+          {dialogContent?.content}
+        </DialogContent>
+        <DialogActions className="px-6 py-4 sm:px-8 sm:py-6">
           {dialogContent?.actions || (
             <>
               <Button onClick={handleCancel}>Cancel</Button>

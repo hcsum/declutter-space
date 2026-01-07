@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import Link from "next/link";
 import ContactForm from "@/components/ContactForm";
+import HomeCtas from "@/components/HomeCtas";
 import {
   FREE_TRAIL_ITEMS_LIMIT,
   MEMBERSHIP_ITEMS_LIMIT,
@@ -18,6 +18,8 @@ import {
 // https://chatgpt.com/c/67b693cc-0450-800c-a50a-9f3e0757e8ce
 
 const LandingPage = () => {
+  // Client CTAs render buttons and handle the dialog
+
   return (
     <div className="bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans">
       {/* Hero Section */}
@@ -26,28 +28,19 @@ const LandingPage = () => {
         className="bg-white dark:bg-gray-800 py-16 px-6 text-center"
       >
         <div className="max-w-3xl mx-auto">
-          <h1 className="text-3xl md:text-5xl font-bold mb-12 leading-tight font-signika">
-            Try our deadline-based declutter app to simplify your space
+          <h1 className="text-3xl md:text-5xl font-bold mb-6 leading-tight font-signika">
+            Let&apos;s declutter your home today
           </h1>
+          <div className="mb-6 text-center">
+            <HomeCtas showChecklistLink={false} />
+          </div>
           <p className="text-lg md:text-xl mb-12 text-gray-700 dark:text-gray-400">
-            Keep track of the items you thought you might need someday. Set
-            deadlines for them, when the day comes, you can decide what goes and
-            what stays.
+            What you keep shapes how you live. When you take the time to revisit
+            your belongings, you’re not just organizing objects — you’re
+            redefining what deserves space in your life.”
           </p>
           <div className="space-y-4 text-center">
-            <Link href="/signup">
-              <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
-                Get Started
-              </button>
-            </Link>
-            <div>
-              <Link
-                href="/login"
-                className="text-blue-500 hover:text-blue-600 text-lg transition-colors duration-200"
-              >
-                Already have an account? Login
-              </Link>
-            </div>
+            <HomeCtas showTaskButton={false} />
           </div>
         </div>
         <div className="mt-10">
@@ -188,62 +181,66 @@ const LandingPage = () => {
 
       {/* Pricing Section (hidden for now) */}
       {false && (
-      <section className="py-20 px-6 bg-white dark:bg-gray-800" id="pricing">
-        <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
-            Pricing
-          </h2>
-          <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8">
-            {/* Free Plan Container */}
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-                Get Started for
-              </h3>
-              <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-                FREE
+        <section className="py-20 px-6 bg-white dark:bg-gray-800" id="pricing">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
+              Pricing
+            </h2>
+            <div className="flex flex-col md:flex-row justify-center space-y-8 md:space-y-0 md:space-x-8">
+              {/* Free Plan Container */}
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                  Get Started for
+                </h3>
+                <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+                  FREE
+                </div>
+                <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
+                  <li>Keep track of up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
+                  <li>
+                    {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses
+                  </li>
+                  <li>Set deadlines and get email reminders</li>
+                </ul>
+                <a
+                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
+                >
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
+                    Get Started
+                  </button>
+                </a>
               </div>
-              <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Keep track of up to {FREE_TRAIL_ITEMS_LIMIT} items</li>
-                <li>
-                  {FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses
-                </li>
-                <li>Set deadlines and get email reminders</li>
-              </ul>
-              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
-                  Get Started
-                </button>
-              </a>
-            </div>
 
-            {/* Premium Plan Container */}
-            <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
-              <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
-                Membership
-              </h3>
-              <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
-                ${MEMBERSHIP_PRICE}/month
+              {/* Premium Plan Container */}
+              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg shadow-xl p-8 border">
+                <h3 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+                  Membership
+                </h3>
+                <div className="text-4xl font-bold text-gray-800 dark:text-gray-200 mb-6">
+                  ${MEMBERSHIP_PRICE}/month
+                </div>
+                <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
+                  <li>Keep track of up to {MEMBERSHIP_ITEMS_LIMIT} items</li>
+                  <li>
+                    {MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses
+                    per month
+                  </li>
+                  <li>Set deadlines and get email reminders</li>
+                  <li>Categorize your items</li>
+                  <li>Personalized decluttering insights (coming soon)</li>
+                  <li>Export your items data (coming soon)</li>
+                </ul>
+                <a
+                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
+                >
+                  <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
+                    Get Started
+                  </button>
+                </a>
               </div>
-              <ul className="space-y-4 mb-8 text-gray-600 dark:text-gray-400">
-                <li>Keep track of up to {MEMBERSHIP_ITEMS_LIMIT} items</li>
-                <li>
-                  {MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH} photo analyses per
-                  month
-                </li>
-                <li>Set deadlines and get email reminders</li>
-                <li>Categorize your items</li>
-                <li>Personalized decluttering insights (coming soon)</li>
-                <li>Export your items data (coming soon)</li>
-              </ul>
-              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
-                <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
-                  Get Started
-                </button>
-              </a>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
       )}
 
       {/* FAQ Section */}
