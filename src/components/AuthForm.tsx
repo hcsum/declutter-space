@@ -44,20 +44,17 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
             </svg>
             Continue with Google
           </button>
-          <div className="flex items-center gap-2">
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-            <span className="text-xs text-gray-400">or</span>
-            <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-          </div>
+          {!disableEmail && (
+            <div className="flex items-center gap-2">
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+              <span className="text-xs text-gray-400">or</span>
+              <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
+            </div>
+          )}
         </div>
 
-        {disableEmail && (
-          <p className="text-xs text-center text-gray-500 dark:text-gray-400 my-4">
-            Email sign-in is temporarily disabled. Please use Google.
-          </p>
-        )}
-
-        {/* Classic email/password form, optionally disabled */}
+        {/* Classic email/password form is hidden when disabled */}
+        {!disableEmail && (
         <form action={formAction} className="space-y-4">
           <fieldset disabled={disableEmail} aria-disabled={disableEmail} className={disableEmail ? 'opacity-60 cursor-not-allowed' : ''}>
             {isSignup && (
@@ -156,18 +153,21 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
             </button>
           </fieldset>
         </form>
+        )}
 
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
-          {isSignup
-            ? "Already have an account? "
-            : "Don't have an account yet? "}
-          <a
-            href={isSignup ? "/login" : "/signup"}
-            className="text-blue-500 hover:underline dark:text-blue-400"
-          >
-            {isSignup ? "Log in" : "Sign up"}
-          </a>
-        </p>
+        {!disableEmail && (
+          <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
+            {isSignup
+              ? "Already have an account? "
+              : "Don't have an account yet? "}
+            <a
+              href={isSignup ? "/login" : "/signup"}
+              className="text-blue-500 hover:underline dark:text-blue-400"
+            >
+              {isSignup ? "Log in" : "Sign up"}
+            </a>
+          </p>
+        )}
       </div>
     </div>
   );
