@@ -6,7 +6,6 @@ import { checkMembershipStatus } from "./membership";
 import { createPresetCategories } from "./category";
 import Stripe from "stripe";
 import { redirect } from "next/navigation";
-import { createDemoItems } from "./items";
 
 export async function createUser(data: Prisma.UserCreateInput) {
   const user = await prisma.user.create({
@@ -15,7 +14,6 @@ export async function createUser(data: Prisma.UserCreateInput) {
 
   await Promise.all([
     createPresetCategories(user.id),
-    createDemoItems(user.id),
   ]).catch((err) => {
     console.error("Error creating demo items", err);
   });

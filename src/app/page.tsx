@@ -285,7 +285,7 @@ const LandingPage = () => {
                 persists, please contact us for further assistance.
               </p>
             </div>
-            <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
+            {/* <div className="bg-white dark:bg-gray-800 rounded-lg p-6 shadow-sm">
               <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
                 What if I&apos;m not satisfied?
               </h3>
@@ -294,7 +294,7 @@ const LandingPage = () => {
                 completely satisfied, just let us know and we&apos;ll refund
                 your subscription fee.
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       </section>

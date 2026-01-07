@@ -2,7 +2,7 @@ import { getItems } from "@/actions/items";
 import { getCategories } from "@/actions/category";
 import ItemTable from "@/components/ItemTable";
 import CategoryPanel from "@/components/CategoryPanel";
-import AddItemPanel from "@/components/AddItemPanel";
+import QuickAddItem from "@/components/QuickAddItem";
 import { getUserInfo } from "@/actions/user";
 import NotVerified from "./user/notVerified";
 import "./styles.css";
@@ -31,8 +31,9 @@ const Dashboard = async ({
     <div className="flex justify-center px-6 w-full pb-12 min-h-[120vh] bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
       <div className="w-full lg:max-w-[90%] mt-4 md:mt-8">
         <div className="flex flex-col lg:flex-row lg:gap-8">
-          {/* Left column - Table */}
+          {/* Left column - Quick add and Table */}
           <div className="lg:w-2/3 order-2 lg:order-1">
+            <QuickAddItem />
             <div className="flex justify-between items-center mb-6">
               <h2 className="text-2xl font-bold">Your Items ({total} items)</h2>
             </div>
@@ -46,9 +47,8 @@ const Dashboard = async ({
             />
           </div>
 
-          {/* Right column - Forms */}
+          {/* Right column - Category management */}
           <div className="lg:w-1/3 order-1 lg:order-2 mb-8 lg:mb-32">
-            <AddItemPanel itemCount={items.length} categories={categories} />
             <CategoryPanel categories={categories} />
           </div>
         </div>

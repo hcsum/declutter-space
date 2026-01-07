@@ -14,7 +14,7 @@ const AddItemPanel = ({
   itemCount: number;
   categories: Category[];
 }) => {
-  const [isExpanded, setIsExpanded] = useState(itemCount < 1);
+  const [isExpanded, setIsExpanded] = useState(false);
 
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
@@ -35,13 +35,15 @@ const AddItemPanel = ({
       </div>
       <Collapse in={isExpanded}>
         <div className="p-4">
-          <ImageUploadBox />
-          <div className="flex items-center my-6">
+          {/* AI image feature temporarily removed from UI */}
+          {/* <ImageUploadBox /> */}
+          {/* <div className="flex items-center my-6">
             <div className="flex-grow border-t border-gray-300"></div>
             <span className="mx-4 text-gray-500">OR</span>
             <div className="flex-grow border-t border-gray-300"></div>
-          </div>
-          <AddItemForm categories={categories} />
+          </div> */}
+          {/* Keep legacy form available if needed in the future */}
+          {/* <AddItemForm categories={categories} /> */}
         </div>
       </Collapse>
     </div>
