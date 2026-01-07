@@ -19,3 +19,107 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Route-scoped scroll lock: apply `no-scroll` class on declutter page only */
+html.no-scroll,
+body.no-scroll {
+  /* Keep the document from scrolling when a route opts in */
+  height: 100dvh; /* modern viewport unit to avoid mobile chrome bars issues */
+  overflow: hidden;
+}
+
+/* When the body is locked, also prevent the app content wrapper from scrolling.
+   This avoids a second scroll container and lets inner lists own scrolling. */
+body.no-scroll #app-content {
+  overflow: hidden;
+}
+
+/* Ensure the app view fills the viewport while locked so child `h-full` works */
+body.no-scroll #app-view {
+  height: 100dvh;
+}
+
+/* Stable, always visible scrollbar styles (where supported) */
+.scrollbar-stable {
+  /* Reserve gutter where supported to avoid layout shift */
+  scrollbar-gutter: stable;
+}
+
+/* WebKit-based browsers */
+.scrollbar-stable::-webkit-scrollbar {
+  width: 10px;
+}
+.scrollbar-stable::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.05);
+}
+.scrollbar-stable::-webkit-scrollbar-thumb {
+  background: rgba(0,0,0,0.25);
+}
+.scrollbar-stable::-webkit-scrollbar-thumb:hover {
+  background: rgba(0,0,0,0.35);
+}
+
+/* Firefox */
+.scrollbar-stable {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0,0,0,0.35) rgba(0,0,0,0.05);
+}
+
+/* Cross-browser scroll area that works when page is locked */
+.scroll-area {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch; /* iOS momentum */
+  overscroll-behavior: contain;      /* prevent parent capture */
+  touch-action: pan-y;               /* allow vertical touch scroll */
+}
+
+/* Subtle edge fade to suggest scrollability */
+.edge-fade {
+  /* Larger fade offsets so first/last item edges are visibly masked */
+  --edge-fade-size: 72px;
+  /* Fade top/bottom edges so content visually hints continuation */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0,
+    rgba(0,0,0,1) var(--edge-fade-size),
+    rgba(0,0,0,1) calc(100% - var(--edge-fade-size)),
+    rgba(0,0,0,0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0) 0,
+    rgba(0,0,0,1) var(--edge-fade-size),
+    rgba(0,0,0,1) calc(100% - var(--edge-fade-size)),
+    rgba(0,0,0,0) 100%
+  );
+}
+
+@media (min-width: 640px) { /* sm */
+  .edge-fade { --edge-fade-size: 88px; }
+}
+@media (min-width: 1024px) { /* lg */
+  .edge-fade { --edge-fade-size: 112px; }
+}
+
+/* Bottom-only edge fade for lists where top should remain crisp */
+.edge-fade-bottom {
+  --edge-fade-size: 72px;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,1) 0,
+    rgba(0,0,0,1) calc(100% - var(--edge-fade-size)),
+    rgba(0,0,0,0) 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    rgba(0,0,0,1) 0,
+    rgba(0,0,0,1) calc(100% - var(--edge-fade-size)),
+    rgba(0,0,0,0) 100%
+  );
+}
+@media (min-width: 640px) { /* sm */
+  .edge-fade-bottom { --edge-fade-size: 88px; }
+}
+@media (min-width: 1024px) { /* lg */
+  .edge-fade-bottom { --edge-fade-size: 112px; }
+}

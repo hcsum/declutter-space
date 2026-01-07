@@ -1,10 +1,8 @@
 [
   {
-    "category": "Entrance Hall (玄关断舍离)",
+    "category": "Entrance Hall",
     "items": [
-      "Shoes not worn for a year",
-      "Shoes that don't fit well",
-      "Damaged shoes/slippers",
+      "Shoes not worn for a year / Shoes that don't fit well / Damaged shoes/slippers",
       "Guest slippers (replace with disposable ones)",
       "Shoe boxes (unless for special maintenance shoes)",
       "Non-woven bags that come with shoe purchases",
@@ -31,7 +29,7 @@
     ]
   },
   {
-    "category": "Bedroom (卧室断舍离)",
+    "category": "Bedroom",
     "items": [
       "Beds or pillows that affect sleep quality",
       "Items in the nightstand unused for three months",
@@ -72,7 +70,7 @@
     ]
   },
   {
-    "category": "Kitchen (厨房断舍离)",
+    "category": "Kitchen",
     "items": [
       "Chipped bowls, plates, and other tableware",
       "Worn-out rags and dishcloths",
@@ -106,7 +104,7 @@
     ]
   },
   {
-    "category": "Living Room (客厅断舍离)",
+    "category": "Living Room",
     "items": [
       "Broken plush toys and dolls",
       "Dust-collecting travel souvenirs",
@@ -137,7 +135,7 @@
     ]
   },
   {
-    "category": "Balcony (阳台断舍离)",
+    "category": "Balcony",
     "items": [
       "Withered potted plants",
       "Expired fertilizer",
@@ -152,7 +150,7 @@
     ]
   },
   {
-    "category": "Smartphone (手机断舍离)",
+    "category": "Smartphone",
     "items": [
       "Useless chat histories",
       "Unsubscribe from all promotional emails",
@@ -171,7 +169,7 @@
     ]
   },
   {
-    "category": "Life Philosophy (人生断舍离)",
+    "category": "Life Philosophy",
     "items": [
       "Excessively long hair with split ends",
       "Someone who truly does not love you",
@@ -186,7 +184,7 @@
     ]
   },
   {
-    "category": "Bathroom & Laundry (卫浴及洗衣区断舍离)",
+    "category": "Bathroom & Laundry",
     "items": [
       "Old sunscreen from previous seasons",
       "Half-used or dried-up makeup",
@@ -204,7 +202,7 @@
     ]
   },
   {
-    "category": "Home Office (书房/办公区断舍离)",
+    "category": "Home Office",
     "items": [
       "Used-up pens and dried-out markers",
       "Excessive office supplies (binder clips, rubber bands)",
@@ -216,7 +214,7 @@
     ]
   },
   {
-    "category": "Kids' Items (儿童用品断舍离)",
+    "category": "Kids' Items",
     "items": [
       "Art supplies that are dried up (markers, glue sticks)",
       "Kids' artwork that hasn't been photographed for archiving",
