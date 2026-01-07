@@ -186,7 +186,8 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Pricing Section */}
+      {/* Pricing Section (hidden for now) */}
+      {false && (
       <section className="py-20 px-6 bg-white dark:bg-gray-800" id="pricing">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-6 text-gray-800 dark:text-gray-200">
@@ -208,11 +209,11 @@ const LandingPage = () => {
                 </li>
                 <li>Set deadlines and get email reminders</li>
               </ul>
-              <Link href="/signup">
+              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                   Get Started
                 </button>
-              </Link>
+              </a>
             </div>
 
             {/* Premium Plan Container */}
@@ -234,15 +235,16 @@ const LandingPage = () => {
                 <li>Personalized decluttering insights (coming soon)</li>
                 <li>Export your items data (coming soon)</li>
               </ul>
-              <Link href="/signup">
+              <a href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}>
                 <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                   Get Started
                 </button>
-              </Link>
+              </a>
             </div>
           </div>
         </div>
       </section>
+      )}
 
       {/* FAQ Section */}
       <section className="py-20 px-6 bg-gray-50 dark:bg-gray-900">

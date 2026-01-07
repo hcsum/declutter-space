@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono, Signika } from "next/font/google";
 import "./globals.css";
 import LandingPageHeader from "@/components/Header";
+import AppFooter from "@/components/AppFooter";
 import Providers from "@/components/Providers";
 
 const geistSans = Geist({
@@ -45,45 +46,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased min-h-screen flex flex-col`}
       >
-        <div className="min-h-[80vh] bg-gray-50 dark:bg-gray-900 relative">
+        <div id="app-view" className="flex-1 bg-gray-50 dark:bg-gray-900 relative flex flex-col">
           <Providers>
             <LandingPageHeader />
-            {children}
+            {/* App content area. Default: allow page scroll. Feature routes can opt-out via body.no-scroll. */}
+            <div id="app-content" className="flex-1 overflow-auto min-h-0">
+              {children}
+            </div>
+            <AppFooter />
           </Providers>
         </div>
-        <footer className="bg-gray-800 py-6 text-white text-center">
-          <div className="max-w-6xl mx-auto">
-            <p className="text-sm">
-              &copy; {new Date().getFullYear()} declutterspace.net. All rights
-              reserved.
-            </p>
-            <p className="text-sm mt-2">
-              Built with love to help you simplify your life.
-            </p>
-            <div className="mt-4 flex flex-col sm:flex-row justify-center sm:space-x-4">
-              <a
-                href="/customer-service-policy"
-                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
-              >
-                Customer Service Policy
-              </a>
-              <a
-                href="/privacy-policy"
-                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="/posts"
-                className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
-              >
-                Blog
-              </a>
-            </div>
-          </div>
-        </footer>
       </body>
       <GoogleAnalytics gaId="G-LT4QGDFCR2" />
     </html>

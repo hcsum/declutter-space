@@ -1,7 +1,6 @@
 "use client";
 
 import { forgotPassword, resetPassword } from "@/actions/auth";
-import Link from "next/link";
 import { useActionState } from "react";
 
 export function ForgotPasswordForm({ token }: { token?: string }) {
@@ -34,12 +33,12 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                 You can now{" "}
-                <Link
-                  href="/login"
+                <a
+                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
                   className="text-blue-500 hover:underline dark:text-blue-400"
                 >
                   login
-                </Link>{" "}
+                </a>{" "}
                 with your new password.
               </p>
             </>
@@ -165,7 +164,7 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
         <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
           Remember your password?{" "}
           <a
-            href="/login"
+            href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
             className="text-blue-500 hover:underline dark:text-blue-400"
           >
             Back to login

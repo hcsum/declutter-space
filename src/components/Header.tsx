@@ -3,90 +3,23 @@
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
-import {
-  UserCircleIcon,
-  MoonIcon,
-  SunIcon,
-  Bars3Icon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
 import { useLightDarkMode } from "./LightDarkModeContext";
+import { MoonIcon, SunIcon } from "@heroicons/react/24/outline";
+import { UserCircleIcon } from "@heroicons/react/24/solid";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
   const { mode, toggleMode } = useLightDarkMode();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
 
   useEffect(() => {
-    if (mode === "dark") {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, [mode]);
-
-  let navContent = null;
-
-  if (pathname === "/") {
-    navContent = (
-      <ul
-        className={`md:flex md:space-x-6 text-gray-700 dark:text-gray-300 ${
-          isMobileMenuOpen
-            ? "absolute top-16 left-0 right-0 bg-white dark:bg-gray-800 p-4 space-y-4 shadow-lg md:space-y-0 md:shadow-none"
-            : "hidden md:flex"
-        }`}
-      >
-        <li>
-          <button
-            onClick={() => {
-              document
-                .getElementById("features")
-                ?.scrollIntoView({ behavior: "smooth" });
-              setIsMobileMenuOpen(false);
-            }}
-            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
-          >
-            Features
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={() => {
-              document
-                .getElementById("pricing")
-                ?.scrollIntoView({ behavior: "smooth" });
-              setIsMobileMenuOpen(false);
-            }}
-            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
-          >
-            Pricing
-          </button>
-        </li>
-        <li>
-          <button
-            onClick={() => {
-              document
-                .getElementById("contact")
-                ?.scrollIntoView({ behavior: "smooth" });
-              setIsMobileMenuOpen(false);
-            }}
-            className="hover:text-blue-500 dark:hover:text-blue-400 transition w-full text-left"
-          >
-            Contact
-          </button>
-        </li>
-      </ul>
-    );
-  } else if (pathname.startsWith("/dashboard")) {
-    navContent = (
-      <Link href="/dashboard/user">
-        <button className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700">
-          <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-        </button>
-      </Link>
-    );
-  }
-
+    let cancelled = false;
+    fetch('/api/auth/status', { cache: 'no-store' })
+      .then(r => r.json())
+      .then(d => { if (!cancelled) setLoggedIn(Boolean(d?.loggedIn)); })
+      .catch(() => { if (!cancelled) setLoggedIn(false); });
+    return () => { cancelled = true };
+  }, [pathname]);
   const logoLink = pathname.startsWith("/dashboard") ? "/dashboard" : "/";
 
   return (
@@ -98,22 +31,16 @@ const Header: React.FC = () => {
           </p>
         </Link>
         <div className="flex items-center space-x-6">
-          {pathname === "/" && (
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
-            >
-              {isMobileMenuOpen ? (
-                <XMarkIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-              ) : (
-                <Bars3Icon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
-              )}
-            </button>
-          )}
-          {navContent}
+          <Link
+            href="/declutter-checklist"
+            className="text-gray-700 dark:text-gray-300 hover:text-blue-500 dark:hover:text-blue-400 transition"
+          >
+            Declutter Checklist
+          </Link>
           <button
             onClick={toggleMode}
             className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            aria-label="Toggle theme"
           >
             {mode === "dark" ? (
               <SunIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
@@ -121,6 +48,11 @@ const Header: React.FC = () => {
               <MoonIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
             )}
           </button>
+          {loggedIn && (
+            <Link href="/dashboard/user" className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700" aria-label="Account">
+              <UserCircleIcon className="h-6 w-6 text-gray-600 dark:text-gray-300" />
+            </Link>
+          )}
         </div>
       </div>
     </header>
