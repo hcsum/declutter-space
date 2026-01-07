@@ -1,7 +1,6 @@
 "use client";
 
 import { forgotPassword, resetPassword } from "@/actions/auth";
-import Link from "next/link";
 import { useActionState } from "react";
 
 export function ForgotPasswordForm({ token }: { token?: string }) {
