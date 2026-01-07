@@ -14,10 +14,12 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
   // Keep the classic dialog UI, but optionally disable email/password.
   const isSignup = formType === "signup";
   // Always call hook with a safe fallback when email is disabled.
-  const noop = async (state: any) => state as AuthFormState;
-  const [state, formAction, pending] = useActionState(action ?? (noop as any), undefined);
+  type ActionFn = (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
+  const noopAction: ActionFn = async (s) => s;
+  const typedAction: ActionFn = action ?? noopAction;
+  const [state, formAction, pending] = useActionState<AuthFormState, FormData>(typedAction, undefined);
 
-  const formData = (state as any)?.formData || {};
+  const formData = state?.formData || {};
 
   return (
     <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
@@ -73,8 +75,8 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
                   defaultValue={formData.name}
                   className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
-                {(state as any)?.errors?.name && (
-                  <p className="text-sm text-red-500 mt-1">{(state as any).errors.name}</p>
+                {state?.errors?.name && (
+                  <p className="text-sm text-red-500 mt-1">{state.errors.name}</p>
                 )}
               </div>
             )}
@@ -93,8 +95,8 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
                 defaultValue={formData.email}
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
-              {(state as any)?.errors?.email && (
-                <p className="text-sm text-red-500 mt-1">{(state as any).errors.email}</p>
+              {state?.errors?.email && (
+                <p className="text-sm text-red-500 mt-1">{state.errors.email}</p>
               )}
             </div>
 
@@ -112,11 +114,11 @@ export default function AuthForm({ formType, action, disableEmail = true }: Auth
                 placeholder="Password"
                 className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
               />
-              {(state as any)?.errors?.password && (
+              {state?.errors?.password && (
                 <div className="mt-2">
                   <p className="text-sm text-red-500">Password must:</p>
                   <ul className="list-disc list-inside text-sm text-red-500">
-                    {(state as any).errors.password.map((error: string) => (
+                    {state.errors.password.map((error) => (
                       <li key={error}>- {error}</li>
                     ))}
                   </ul>
