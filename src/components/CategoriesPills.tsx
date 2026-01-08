@@ -33,7 +33,7 @@ export default function CategoriesPills({ categories }: { categories: CategoryLi
 
   const delMutation = useMutation({
     mutationFn: async (id: string) => deleteCategory(id),
-    onSuccess: (res: any) => {
+    onSuccess: (res: { errors?: { name?: string[] } } | undefined) => {
       if (res?.errors?.name?.length) {
         setErrmsg(res.errors.name.join(", "));
         return;
@@ -110,4 +110,3 @@ export default function CategoriesPills({ categories }: { categories: CategoryLi
     </div>
   );
 }
-
