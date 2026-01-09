@@ -32,6 +32,10 @@ export default function QuickAddItem() {
 
   return (
     <div className="mb-4 sm:mb-6">
+      {/* Use the old prompt as a heading above the input for clarity */}
+      <h1 className="text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100 mb-8 font-signika">
+        {"What's something you're unsure about decluttering?"}
+      </h1>
       <div className="flex items-center gap-2">
         <input
           type="text"
@@ -43,9 +47,9 @@ export default function QuickAddItem() {
               submit();
             }
           }}
-          placeholder={"What's something you're unsure about keeping?"}
           className="flex-1 text-lg sm:text-xl md:text-2xl px-4 py-3 rounded-md border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          aria-label="Quick add item"
+          placeholder="Enter the item in your mind"
+          aria-label="Enter the item in your mind"
         />
         <button
           onClick={submit}
@@ -63,4 +67,3 @@ export default function QuickAddItem() {
     </div>
   );
 }
-

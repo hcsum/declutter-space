@@ -26,6 +26,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Use the same display font as the home page h1 for all h1/h2 */
+h1, h2 {
+  font-family: var(--font-signika), Arial, Helvetica, sans-serif;
+}
+
 /* Route-scoped scroll lock: apply `no-scroll` class on declutter page only */
 html.no-scroll,
 body.no-scroll {

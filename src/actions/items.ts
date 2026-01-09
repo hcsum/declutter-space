@@ -79,7 +79,7 @@ export async function getItems(
   page: number = 1,
   limit: number = 10,
   search?: string,
-  category?: string,
+  _category?: string, // deprecated
   archived?: boolean,
 ) {
   const { userId } = await verifySession();
@@ -94,13 +94,7 @@ export async function getItems(
           },
         }
       : {}),
-    ...(category
-      ? {
-          category: {
-            id: category,
-          },
-        }
-      : {}),
+    // category filtering removed
     ...(archived ? { archivedAt: { not: null } } : { archivedAt: null }),
   };
 
@@ -111,7 +105,7 @@ export async function getItems(
   const items = await prisma.item.findMany({
     where: whereClause,
     orderBy: [{ deadline: "asc" }, { createdAt: "desc" }, { id: "desc" }],
-    include: { category: true },
+    // category include removed
     take: limit,
     skip: (page - 1) * limit,
   });
@@ -280,11 +274,7 @@ export async function updateItem(id: string, data: Partial<ItemUpdateInput>) {
   if (data.name !== null) updateData.name = data.name;
   if (data.pieces !== null) updateData.pieces = data.pieces;
   if (data.deadline !== null) updateData.deadline = data.deadline;
-  if (data.categoryId !== null) {
-    updateData.category = data.categoryId
-      ? { connect: { id: data.categoryId } }
-      : { disconnect: true };
-  }
+  // category updates removed
 
   if (updateData.deadline && updateData.deadline !== item.deadline) {
     updateData.startDate = new Date();

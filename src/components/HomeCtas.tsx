@@ -42,7 +42,8 @@ export default function HomeCtas({
         <div className="pt-2 text-left">
           {choice ? (
             <div className="space-y-3">
-              <div className="text-sm uppercase tracking-wide text-blue-600 dark:text-blue-400 font-semibold">
+              {/* Category label: remove ALL CAPS and switch to a friendlier font for readability */}
+              <div className="text-xl tracking-normal text-black dark:text-white font-medium font-geist">
                 {choice.category}
               </div>
               <h3 className="text-2xl sm:text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100">
@@ -86,7 +87,7 @@ export default function HomeCtas({
           onClick={onGiveMeTask}
           className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 mt-6 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
         >
-          Give me a Declutter task
+          Get a Declutter task
         </button>
       )}
       {showChecklistLink && (
@@ -94,7 +95,7 @@ export default function HomeCtas({
           href="/declutter-checklist"
           className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
         >
-          Or check the declutter checklist
+          Check the full Declutter Checklist
         </a>
       )}
     </div>

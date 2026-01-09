@@ -1,21 +1,15 @@
 "use client";
 
-import {
-  deleteItem,
-  ItemUpdateInput,
-  updateItem,
-  archiveItem,
-} from "@/actions/items";
-import { Prisma, Category } from "@prisma/client";
+import { deleteItem, updateItem, archiveItem } from "@/actions/items";
+import { Prisma } from "@prisma/client";
 import { useEffect, useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
-import { MenuItem, Pagination, Select, Chip, Button } from "@mui/material";
+import { Pagination, Button } from "@mui/material";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFnsV3";
 import { formatDistanceToNow } from "date-fns";
-import SearchIcon from "@mui/icons-material/Search";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import SaveIcon from "@mui/icons-material/Save";
@@ -23,31 +17,28 @@ import ItemSkeleton from "./ItemSkeleton";
 import LetGoDialog from "./LetGoDialog";
 import { useDialogState } from "./DialogProvider";
 
-type Item = Prisma.ItemGetPayload<{
-  include: { category: true };
-}>;
+type Item = Prisma.ItemGetPayload<{}>;
 
-type EditingItem = ItemUpdateInput & {
+// Local editing shape without category handling
+type EditingItem = {
   id: string;
+  name: string | null;
+  pieces: number | null;
+  deadline: Date | null;
 };
 
 const ItemTable = ({
   items,
-  categories,
   totalPages,
   currentPage,
-  category,
   search,
 }: {
   items: Item[];
-  categories: Category[];
   totalPages: number;
   currentPage: number;
-  category: string;
   search: string;
 }) => {
   const router = useRouter();
-  const [searchQuery, setSearchQuery] = useState<string>("");
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
@@ -56,7 +47,7 @@ const ItemTable = ({
   const [isDeleting, setIsDeleting] = useState<string | null>(null);
   const [isArchiving, setIsArchiving] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
+  // Category feature removed
   const [isLetGoDialogOpen, setIsLetGoDialogOpen] = useState(false);
   const [page, setPage] = useState(currentPage);
   const { setDialogContent } = useDialogState();
@@ -64,44 +55,15 @@ const ItemTable = ({
   const queryObject = useMemo(() => {
     const params = new URLSearchParams();
     params.set("page", page.toString());
-    if (searchQuery) params.set("search", searchQuery);
-    if (selectedCategory) params.set("category", selectedCategory);
+    if (search) params.set("search", search);
     return params;
-  }, [searchQuery, selectedCategory, page]);
+  }, [search, page]);
 
   useEffect(() => {
     setPage(currentPage);
-    setSelectedCategory(category);
-    setSearchQuery(search);
-  }, [currentPage, category, search]);
+  }, [currentPage]);
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleClearSearch = () => {
-    setSearchQuery("");
-    const updatedParams = new URLSearchParams(queryObject);
-    updatedParams.set("page", "1");
-    updatedParams.delete("search");
-    startTransition(() => {
-      router.push(`/dashboard?${updatedParams.toString()}`);
-    });
-  };
-
-  const handleSearchSubmit = () => {
-    startTransition(() => {
-      const updatedParams = new URLSearchParams(queryObject);
-      updatedParams.set("page", "1");
-      router.push(`/dashboard?${updatedParams.toString()}`);
-    });
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === "Enter") {
-      handleSearchSubmit();
-    }
-  };
+  // Search UI removed
 
   const handleEditClick = (item: Item) => {
     setEditingItem({
@@ -109,12 +71,11 @@ const ItemTable = ({
       name: item.name,
       pieces: item.pieces,
       deadline: item.deadline,
-      categoryId: item.categoryId,
     });
   };
 
   const handleInputChange = (
-    field: "name" | "pieces" | "deadline" | "categoryId",
+    field: "name" | "pieces" | "deadline",
     value: string | number | Date,
   ) => {
     setEditingItem((prev) => ({
@@ -135,8 +96,7 @@ const ItemTable = ({
       const hasChanges =
         originalItem.name !== editingItem.name ||
         originalItem.pieces !== editingItem.pieces ||
-        originalItem.deadline.getTime() !== editingItem.deadline?.getTime() ||
-        originalItem.categoryId !== editingItem.categoryId;
+        originalItem.deadline.getTime() !== editingItem.deadline?.getTime();
 
       if (!hasChanges) {
         setEditingItem(null);
@@ -148,7 +108,6 @@ const ItemTable = ({
         name: editingItem.name,
         pieces: editingItem.pieces,
         deadline: editingItem.deadline,
-        categoryId: editingItem.categoryId ?? "",
       });
 
       console.log("result", result);
@@ -200,21 +159,7 @@ const ItemTable = ({
     });
   };
 
-  const handleCategoryChange = (categoryId: string) => {
-    const updatedParams = new URLSearchParams(queryObject);
-    if (selectedCategory === categoryId) {
-      updatedParams.delete("category");
-      setSelectedCategory("");
-    } else {
-      updatedParams.set("category", categoryId);
-      setSelectedCategory(categoryId);
-    }
-
-    updatedParams.set("page", "1");
-    startTransition(() => {
-      router.push(`/dashboard?${updatedParams.toString()}`);
-    });
-  };
+  // Category handling removed
 
   const handleLetGo = (item: Item) => {
     setEditingItem(item);
@@ -258,48 +203,7 @@ const ItemTable = ({
 
   return (
     <div className="mb-6">
-      {/* Category Filter */}
-      <div className="flex flex-wrap items-center mb-4 md:w-[50%] gap-2 p-2">
-        {categories.map((category) => (
-          <Chip
-            key={category.id}
-            label={category.name}
-            clickable
-            disabled={isPending}
-            color={selectedCategory === category.id ? "primary" : "default"}
-            onClick={() => handleCategoryChange(category.id)}
-            className="m-1"
-          />
-        ))}
-      </div>
-      {/* Search Box */}
-      <div className="flex items-center mb-4 md:w-[50%]">
-        <div className="relative flex-1">
-          <TextField
-            fullWidth
-            placeholder="Search items"
-            value={searchQuery}
-            onChange={handleSearchChange}
-            onKeyDown={handleKeyPress}
-            size="small"
-            variant="outlined"
-          />
-          {searchQuery && (
-            <button
-              onClick={handleClearSearch}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
-            >
-              ×
-            </button>
-          )}
-        </div>
-        <button
-          onClick={handleSearchSubmit}
-          className="ml-2 p-2 rounded-md bg-blue-500 text-white hover:bg-blue-600"
-        >
-          <SearchIcon />
-        </button>
-      </div>
+      {/* Search removed */}
       <Pagination
         className="my-4"
         count={totalPages}
@@ -377,32 +281,7 @@ const ItemTable = ({
                     )}
                   </div>
 
-                  <div className="flex-1">
-                    <div className="text-sm text-gray-500 dark:text-gray-400">
-                      Category:
-                    </div>
-                    {editingItem?.id === item.id ? (
-                      <Select
-                        value={editingItem?.categoryId ?? ""}
-                        onChange={(e) =>
-                          handleInputChange("categoryId", e.target.value ?? "")
-                        }
-                        size="small"
-                        variant="outlined"
-                      >
-                        <MenuItem value="">None</MenuItem>
-                        {categories.map((category) => (
-                          <MenuItem key={category.id} value={category.id}>
-                            {category.name}
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    ) : (
-                      <div className="text-gray-900 dark:text-gray-100">
-                        {item.category?.name ?? "-"}
-                      </div>
-                    )}
-                  </div>
+                  {/* Category field removed from item UI */}
 
                   <div className="flex-1">
                     <div className="text-sm text-gray-500 dark:text-gray-400">
