@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteItem, updateItem, archiveItem } from "@/actions/items";
-import { Prisma } from "@prisma/client";
+import type { Item } from "@prisma/client";
 import { useEffect, useState, useTransition, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
@@ -17,7 +17,9 @@ import ItemSkeleton from "./ItemSkeleton";
 import LetGoDialog from "./LetGoDialog";
 import { useDialogState } from "./DialogProvider";
 
-type Item = Prisma.ItemGetPayload<{}>;
+// Use the concrete Prisma model type instead of `Prisma.ItemGetPayload<{}>`
+// to avoid the no-empty-object-type lint error and reflect the full row shape.
+// Note: `Item` comes from `@prisma/client` types.
 
 // Local editing shape without category handling
 type EditingItem = {
