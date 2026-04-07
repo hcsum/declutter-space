@@ -34,6 +34,8 @@ const Header: React.FC = () => {
   }, [pathname]);
   const logoLink = "/";
 
+  if (pathname.startsWith("/declutter-checklist")) return null;
+
   return (
     <header className="bg-white shadow py-4 px-6 dark:bg-gray-800 relative">
       <div className="mx-auto lg:max-w-[90%] flex justify-between items-center">
