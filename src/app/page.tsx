@@ -1,4 +1,5 @@
 import React from "react";
+import type { Metadata } from "next";
 import Image from "next/image";
 import ContactForm from "@/components/ContactForm";
 import HomeCtas from "@/components/HomeCtas";
@@ -10,6 +11,12 @@ import {
   FREE_TRAIL_IMAGE_ANALYSIS_COUNT_PER_MONTH,
   MEMBERSHIP_IMAGE_ANALYSIS_COUNT_PER_MONTH,
 } from "@/lib/definitions";
+
+export const metadata: Metadata = {
+  title: "How to Declutter Your Home | DeclutterSpace",
+  description:
+    "Learn how to declutter your home with our step-by-step guide. Get practical tips to declutter room-by-room and build habits that keep your space organized.",
+};
 
 // https://www.livelifeorganised.com.au/blog/5-reasons-we-hold-on#:~:text=Fear%20is%20another%20reason%20we,are%20old%20cords%20and%20cables.
 // https://practicalfamily.org/declutter-deadline-use-it-or-lose-it/
@@ -33,7 +40,7 @@ const LandingPage = () => {
             Let&apos;s declutter your home today
           </h1>
           <div className="mb-6 text-center">
-            <HomeCtas showChecklistLink={false} />
+            <HomeCtas showChecklistLink={false} showTaskButton={false} />
           </div>
           <p className="text-lg md:text-xl mb-12 text-gray-700 dark:text-gray-400">
             What you keep shapes how you live. When you take the time to revisit
@@ -176,6 +183,185 @@ const LandingPage = () => {
               leading app for decluttering, we help you celebrate your steps
               toward a clutter-free home.
             </p>
+          </div>
+        </div>
+      </section>
+
+      {/* How to Declutter Your Home Section */}
+      <section
+        className="py-20 px-6 bg-white dark:bg-gray-800"
+        id="how-to-declutter"
+      >
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">
+            How to Declutter Your Home in 5 Simple Steps
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-12 text-center">
+            Learning how to declutter your home doesn&apos;t have to be
+            overwhelming. Follow these five steps to transform your space
+            systematically and create a home that supports the life you want to
+            live.
+          </p>
+          <div className="space-y-8">
+            <div className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">
+                1
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                  Start with a Vision
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Before you touch anything, decide what kind of home you want.
+                  How to declutter your home starts in your mind, not with your
+                  hands. Visualize the peaceful, functional space you deserve.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">
+                2
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                  Tackle One Room at a Time
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  When you declutter your home room by room, you see real
+                  progress and stay motivated. Start small—begin with a single
+                  closet or one corner of a room. Master that space before
+                  moving on.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">
+                3
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                  Sort Items into Three Piles
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Create keep, donate/sell, and discard piles. Be honest with
+                  yourself—when you declutter your home, ask: &ldquo;Does this
+                  item serve a purpose or bring me joy?&rdquo; If not, it goes.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">
+                4
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                  Set Decluttering Deadlines
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Give yourself a timeframe to decide. When you declutter your
+                  home with deadlines, you avoid decision fatigue. Use our app
+                  to set reminders and track when it&apos;s time to revisit
+                  unsure items.
+                </p>
+              </div>
+            </div>
+            <div className="flex gap-6 items-start">
+              <div className="flex-shrink-0 w-12 h-12 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xl">
+                5
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200">
+                  Maintain Your Progress
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400">
+                  The final step in how to declutter your home is keeping it
+                  that way. Adopt a one-in, one-out rule: for every new item
+                  that enters your home, let one leave. Regularly review your
+                  belongings to prevent clutter from rebuilding.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Room-by-Room Decluttering Section */}
+      <section
+        className="py-20 px-6 bg-gray-50 dark:bg-gray-900"
+        id="room-by-room"
+      >
+        <div className="max-w-3xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800 dark:text-gray-200">
+            How to Declutter Your Home Room by Room
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400 text-lg mb-12 text-center">
+            The most effective way to declutter your home is to focus on one
+            room at a time. Here&apos;s how to approach each major area of your
+            home for maximum impact.
+          </p>
+          <div className="grid gap-8 md:grid-cols-2">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Living Room
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Remove excess throw pillows, organize media cabinets, and clear
+                surfaces. When you declutter your living room, focus on creating
+                a relaxing space that invites conversation and rest.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Bedroom
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Declutter your bedroom by clearing under the bed, limiting
+                clothing to what you actually wear, and removing items that
+                don&apos;t belong in a restful space. Your bedroom should be a
+                sanctuary.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Kitchen
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                When you declutter your kitchen, start with cabinets and drawers
+                you rarely open. Donate duplicates (two can openers?) and toss
+                expired spices. A organized kitchen makes cooking a joy.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Bathroom
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Dispose of expired medications and products. Declutter your
+                bathroom by keeping only what you use daily. Limit backup
+                toiletries to a small bin—you can always restock when needed.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Home Office
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Paper clutter piles up fast. To declutter your home office, sort
+                papers into action, reference, and recycle. Organize cables and
+                donate old electronics you no longer use.
+              </p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <h3 className="text-xl font-semibold mb-3 text-gray-800 dark:text-gray-200">
+                Closets
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                When you declutter your closets, use the &ldquo;hang it if you
+                wore it&rdquo; rule—if you didn&apos;t wear it in the past year,
+                donate it. Seasonal rotation helps maintain closet clarity
+                year-round.
+              </p>
+            </div>
           </div>
         </div>
       </section>

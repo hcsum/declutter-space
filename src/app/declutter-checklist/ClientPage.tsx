@@ -329,9 +329,11 @@ export default function ClientPage() {
     <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
       <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
-          <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
-            DeclutterSpace
-          </h1>
+          <Link href="/">
+            <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
+              DeclutterSpace
+            </span>
+          </Link>
           <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
             Let&apos;s declutter your home today
           </p>
@@ -378,12 +380,12 @@ export default function ClientPage() {
       <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
+            <h1 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
               Declutter Checklist
-            </p>
-            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
+            </h1>
+            <p className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
               What you keep shapes how you live
-            </h2>
+            </p>
           </div>
 
           <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-bold text-[#2b694d]">
@@ -401,11 +403,11 @@ export default function ClientPage() {
             <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  Declutter is an ongoing progress
+                  Track Your Declutter Progress
                 </h2>
                 <p className="mt-1 text-sm font-medium text-[#5e6662]">
-                  Your checklist resets each day, while your daily progress
-                  stays part of the bigger picture.
+                  Your declutter checklist resets each day, while your daily
+                  progress stays part of the bigger picture.
                 </p>
               </div>
 
@@ -538,7 +540,10 @@ export default function ClientPage() {
             </section>
           )}
 
-          <div className="flex items-center justify-end">
+          <div className="flex items-center justify-between">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
+              Your Daily Declutter Tasks
+            </h2>
             <button
               type="button"
               onClick={() => setIsEditMode((prev) => !prev)}

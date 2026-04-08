@@ -93,7 +93,7 @@ export default function HomeCtas({
       {showChecklistLink && (
         <a
           href="/declutter-checklist"
-          className="inline-flex items-center justify-center bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-100 border border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
+          className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
         >
           Check the full Declutter Checklist
         </a>
