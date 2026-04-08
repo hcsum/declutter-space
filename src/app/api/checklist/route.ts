@@ -31,13 +31,19 @@ export async function GET() {
 }
 
 export async function PUT(request: Request) {
-  const userId = await getUserIdFromSession();
-  if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  try {
+    const userId = await getUserIdFromSession();
+    if (!userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const payload = normalizeChecklistState(await request.json());
+    await saveChecklistState(userId, payload);
+
+    return NextResponse.json({ ok: true });
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "Unknown error";
+    console.error("checklist put failed", error);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  const payload = normalizeChecklistState(await request.json());
-  await saveChecklistState(userId, payload);
-
-  return NextResponse.json({ ok: true });
 }

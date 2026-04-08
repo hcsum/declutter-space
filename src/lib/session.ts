@@ -9,6 +9,7 @@ import { SessionPayload } from "./definitions";
 
 const secretKey = process.env.SESSION_SECRET;
 const encodedKey = new TextEncoder().encode(secretKey);
+const isSecureCookie = process.env.NODE_ENV === "production";
 
 export async function encrypt(payload: SessionPayload) {
   return new SignJWT(payload)
@@ -36,7 +37,7 @@ export async function createSession(userId: string) {
 
   cookieStore.set("session", session, {
     httpOnly: true,
-    secure: true,
+    secure: isSecureCookie,
     expires: expiresAt,
     sameSite: "lax",
     path: "/",
@@ -56,7 +57,7 @@ export async function updateSession() {
   const cookieStore = await cookies();
   cookieStore.set("session", session, {
     httpOnly: true,
-    secure: true,
+    secure: isSecureCookie,
     expires: expires,
     sameSite: "lax",
     path: "/",

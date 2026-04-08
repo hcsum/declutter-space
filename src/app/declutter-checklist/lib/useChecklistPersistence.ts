@@ -99,6 +99,10 @@ function persistChecklistStateToStorage(state: ChecklistState) {
   );
 }
 
+function serializeChecklistState(state: ChecklistState) {
+  return JSON.stringify(state);
+}
+
 type ChecklistApiResponse = {
   loggedIn: boolean;
   hasData: boolean;
@@ -112,25 +116,36 @@ export function useChecklistPersistence({
   enableCloudSave = true,
 }: UseChecklistPersistenceOptions) {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isAuthResolved, setIsAuthResolved] = useState(false);
+  const [isBootstrapResolved, setIsBootstrapResolved] = useState(false);
   const [cloudStatus, setCloudStatus] = useState<
     "idle" | "syncing" | "saved" | "error"
   >("idle");
-  const cloudBootstrapStartedRef = useRef(false);
   const cloudReadyRef = useRef(false);
   const stateRef = useRef(state);
+  const settersRef = useRef(setters);
+  const lastSyncedStateRef = useRef<string | null>(null);
+  const inFlightSaveRef = useRef(false);
+  const queuedSaveRef = useRef<ChecklistState | null>(null);
 
   useEffect(() => {
     stateRef.current = state;
   }, [state]);
 
   useEffect(() => {
+    settersRef.current = setters;
+  }, [setters]);
+
+  useEffect(() => {
+    queuedSaveRef.current = state;
+  }, [state]);
+
+  useEffect(() => {
     if (hasLoadedStorage) return;
 
     const storageState = loadChecklistStateFromStorage();
-    applyChecklistState(storageState, setters);
-    setters.setHasLoadedStorage(true);
-  }, [hasLoadedStorage, setters]);
+    applyChecklistState(storageState, settersRef.current);
+    settersRef.current.setHasLoadedStorage(true);
+  }, [hasLoadedStorage]);
 
   useEffect(() => {
     if (!hasLoadedStorage) return;
@@ -141,31 +156,6 @@ export function useChecklistPersistence({
     if (!hasLoadedStorage) return;
 
     let cancelled = false;
-
-    fetch("/api/auth/status", { cache: "no-store" })
-      .then((response) => response.json())
-      .then((data) => {
-        if (cancelled) return;
-        setIsLoggedIn(Boolean(data?.loggedIn));
-        setIsAuthResolved(true);
-      })
-      .catch(() => {
-        if (cancelled) return;
-        setIsLoggedIn(false);
-        setIsAuthResolved(true);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, [hasLoadedStorage]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage || !isAuthResolved || !isLoggedIn) return;
-    if (cloudBootstrapStartedRef.current) return;
-
-    let cancelled = false;
-    cloudBootstrapStartedRef.current = true;
     setCloudStatus("syncing");
 
     fetch("/api/checklist", { cache: "no-store" })
@@ -173,18 +163,33 @@ export function useChecklistPersistence({
       .then(async (data) => {
         if (cancelled) return;
 
+        setIsLoggedIn(data.loggedIn);
+
+        if (!data.loggedIn) {
+          cloudReadyRef.current = false;
+          setCloudStatus("idle");
+          setIsBootstrapResolved(true);
+          return;
+        }
+
         if (data.hasData && data.state) {
           const cloudState = normalizeChecklistState(data.state);
-          applyChecklistState(cloudState, setters);
+          applyChecklistState(cloudState, settersRef.current);
           persistChecklistStateToStorage(cloudState);
+          lastSyncedStateRef.current = serializeChecklistState(cloudState);
           cloudReadyRef.current = true;
           setCloudStatus("saved");
+          setIsBootstrapResolved(true);
           return;
         }
 
         if (!enableCloudSave) {
+          lastSyncedStateRef.current = serializeChecklistState(
+            stateRef.current,
+          );
           cloudReadyRef.current = true;
           setCloudStatus("idle");
+          setIsBootstrapResolved(true);
           return;
         }
 
@@ -195,53 +200,91 @@ export function useChecklistPersistence({
         });
 
         if (!response.ok) throw new Error("Failed to create cloud snapshot");
+        lastSyncedStateRef.current = serializeChecklistState(stateRef.current);
         cloudReadyRef.current = true;
         setCloudStatus("saved");
+        setIsBootstrapResolved(true);
       })
       .catch(() => {
-        if (!cancelled) setCloudStatus("error");
+        if (!cancelled) {
+          setCloudStatus("error");
+          setIsBootstrapResolved(true);
+        }
       });
 
     return () => {
       cancelled = true;
     };
-  }, [enableCloudSave, hasLoadedStorage, isAuthResolved, isLoggedIn, setters]);
+  }, [enableCloudSave, hasLoadedStorage]);
 
   useEffect(() => {
     if (
       !enableCloudSave ||
       !hasLoadedStorage ||
       !isLoggedIn ||
-      !isAuthResolved
+      !isBootstrapResolved
     ) {
       return;
     }
     if (!cloudReadyRef.current) return;
 
-    const timeoutId = window.setTimeout(() => {
+    const saveState = async (nextState: ChecklistState): Promise<void> => {
+      const serializedState = serializeChecklistState(nextState);
+      if (serializedState === lastSyncedStateRef.current) return;
+
+      if (inFlightSaveRef.current) {
+        queuedSaveRef.current = nextState;
+        return;
+      }
+
+      inFlightSaveRef.current = true;
       setCloudStatus("syncing");
-      fetch("/api/checklist", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(state),
-      })
-        .then((response) => {
-          if (!response.ok) throw new Error("Failed to save checklist state");
-          setCloudStatus("saved");
-        })
-        .catch(() => {
-          setCloudStatus("error");
+
+      try {
+        const response = await fetch("/api/checklist", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: serializedState,
         });
+
+        if (!response.ok) throw new Error("Failed to save checklist state");
+
+        lastSyncedStateRef.current = serializedState;
+        setCloudStatus("saved");
+      } catch {
+        setCloudStatus("error");
+      } finally {
+        inFlightSaveRef.current = false;
+
+        const queuedState = queuedSaveRef.current;
+        if (
+          queuedState &&
+          serializeChecklistState(queuedState) !== lastSyncedStateRef.current
+        ) {
+          queuedSaveRef.current = null;
+          void saveState(queuedState);
+        }
+      }
+    };
+
+    const timeoutId = window.setTimeout(() => {
+      void saveState(state);
     }, 500);
 
     return () => {
       window.clearTimeout(timeoutId);
     };
-  }, [enableCloudSave, hasLoadedStorage, isAuthResolved, isLoggedIn, state]);
+  }, [
+    enableCloudSave,
+    hasLoadedStorage,
+    isBootstrapResolved,
+    isLoggedIn,
+    state,
+  ]);
 
   return {
     isLoggedIn,
-    isAuthResolved,
+    isAuthResolved: isBootstrapResolved,
     cloudStatus,
   };
 }

@@ -324,129 +324,66 @@ export async function saveChecklistState(
     });
   });
 
-  const activeListKeys = new Set(
-    Array.from(activeListRecords.entries())
-      .filter(([, record]) => record.isActive)
-      .map(([key]) => key),
+  const listRows = Array.from(activeListRecords.entries()).map(
+    ([key, record]) => ({
+      id: crypto.randomUUID(),
+      userId,
+      key,
+      title: record.title,
+      source: record.source,
+      isActive: record.isActive,
+    }),
   );
-  const activeEntryKeys = new Set(
-    Array.from(itemRecords.entries())
-      .filter(([, record]) => record.isActive)
-      .map(([entryKey]) => entryKey),
+  const listIdByKey = new Map(listRows.map((list) => [list.key, list.id]));
+
+  const itemRows = Array.from(itemRecords.entries())
+    .map(([entryKey, record]) => {
+      const listId = listIdByKey.get(record.categoryKey);
+      if (!listId) return null;
+
+      return {
+        id: crypto.randomUUID(),
+        userId,
+        listId,
+        itemKey: record.itemKey,
+        entryKey,
+        text: record.text,
+        source: record.source,
+        isActive: record.isActive,
+        archivedAt: record.archivedAt,
+      } satisfies Prisma.ChecklistItemCreateManyInput;
+    })
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+  const itemIdByEntryKey = new Map(
+    itemRows.map((item) => [item.entryKey, item.id]),
   );
+
+  const completionRows: Prisma.ChecklistCompletionCreateManyInput[] = [];
+  Object.entries(state.historyByDate).forEach(([dateKey, entryKeys]) => {
+    Array.from(new Set(entryKeys)).forEach((entryKey) => {
+      const itemId = itemIdByEntryKey.get(entryKey);
+      if (!itemId) return;
+      completionRows.push({
+        id: crypto.randomUUID(),
+        userId,
+        itemId,
+        completedOn: getStartOfDay(dateKey),
+      });
+    });
+  });
 
   await prisma.$transaction(async (tx) => {
-    for (const [key, record] of activeListRecords.entries()) {
-      await tx.checklistList.upsert({
-        where: { userId_key: { userId, key } },
-        update: {
-          title: record.title,
-          source: record.source,
-          isActive: record.isActive,
-        },
-        create: {
-          userId,
-          key,
-          title: record.title,
-          source: record.source,
-          isActive: record.isActive,
-        },
-      });
-    }
-
-    if (activeListKeys.size > 0) {
-      await tx.checklistList.updateMany({
-        where: {
-          userId,
-          key: { notIn: Array.from(activeListKeys) },
-        },
-        data: { isActive: false },
-      });
-    } else {
-      await tx.checklistList.updateMany({
-        where: { userId },
-        data: { isActive: false },
-      });
-    }
-
-    const lists = await tx.checklistList.findMany({ where: { userId } });
-    const listIdByKey = new Map(lists.map((list) => [list.key, list.id]));
-
-    for (const [entryKey, record] of itemRecords.entries()) {
-      const listId = listIdByKey.get(record.categoryKey);
-      if (!listId) continue;
-
-      await tx.checklistItem.upsert({
-        where: { userId_entryKey: { userId, entryKey } },
-        update: {
-          listId,
-          itemKey: record.itemKey,
-          text: record.text,
-          source: record.source,
-          isActive: record.isActive,
-          archivedAt: record.archivedAt,
-        },
-        create: {
-          userId,
-          listId,
-          itemKey: record.itemKey,
-          entryKey,
-          text: record.text,
-          source: record.source,
-          isActive: record.isActive,
-          archivedAt: record.archivedAt,
-        },
-      });
-    }
-
-    if (activeEntryKeys.size > 0) {
-      await tx.checklistItem.updateMany({
-        where: {
-          userId,
-          entryKey: { notIn: Array.from(activeEntryKeys) },
-        },
-        data: {
-          isActive: false,
-          archivedAt: new Date(),
-        },
-      });
-    } else {
-      await tx.checklistItem.updateMany({
-        where: { userId },
-        data: {
-          isActive: false,
-          archivedAt: new Date(),
-        },
-      });
-    }
-
-    const historyItems = await tx.checklistItem.findMany({
-      where: {
-        userId,
-        entryKey: {
-          in: historyEntryKeys.length > 0 ? historyEntryKeys : ["__none__"],
-        },
-      },
-      select: { id: true, entryKey: true },
-    });
-    const itemIdByEntryKey = new Map(
-      historyItems.map((item) => [item.entryKey, item.id]),
-    );
-
     await tx.checklistCompletion.deleteMany({ where: { userId } });
+    await tx.checklistItem.deleteMany({ where: { userId } });
+    await tx.checklistList.deleteMany({ where: { userId } });
 
-    const completionRows: Prisma.ChecklistCompletionCreateManyInput[] = [];
-    Object.entries(state.historyByDate).forEach(([dateKey, entryKeys]) => {
-      Array.from(new Set(entryKeys)).forEach((entryKey) => {
-        const itemId = itemIdByEntryKey.get(entryKey);
-        if (!itemId) return;
-        completionRows.push({
-          userId,
-          itemId,
-          completedOn: getStartOfDay(dateKey),
-        });
-      });
-    });
+    if (listRows.length > 0) {
+      await tx.checklistList.createMany({ data: listRows });
+    }
+
+    if (itemRows.length > 0) {
+      await tx.checklistItem.createMany({ data: itemRows });
+    }
 
     if (completionRows.length > 0) {
       await tx.checklistCompletion.createMany({ data: completionRows });
