@@ -3,6 +3,11 @@ import data from "@/const/declutter-checklist.json";
 export type DeclutterCategory = { category: string; items: string[] };
 export type CustomItem = { id: string; text: string };
 export type CustomItemsByCategory = Record<string, CustomItem[]>;
+export type RemovedItemsByCategory = Record<string, string[]>;
+export type ArchivedItemsByEntryKey = Record<
+  string,
+  { category: string; text: string }
+>;
 export type HistoryByDate = Record<string, string[]>;
 export type ImportedList = {
   id: string;
@@ -18,6 +23,8 @@ export type ChecklistCategory = DeclutterCategory & {
 const checklist = data as DeclutterCategory[];
 
 export const CUSTOM_ITEMS_STORAGE_KEY = "declutter-checklist-custom-items";
+export const REMOVED_ITEMS_STORAGE_KEY = "declutter-checklist-removed-items";
+export const ARCHIVED_ITEMS_STORAGE_KEY = "declutter-checklist-archived-items";
 export const HISTORY_STORAGE_KEY = "declutter-checklist-history";
 export const MOMENTUM_DIALOG_STORAGE_KEY =
   "declutter-checklist-momentum-dialog-seen";

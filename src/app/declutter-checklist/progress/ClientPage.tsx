@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
+  ARCHIVED_ITEMS_STORAGE_KEY,
   CUSTOM_ITEMS_STORAGE_KEY,
   HISTORY_STORAGE_KEY,
   IMPORTED_LISTS_STORAGE_KEY,
+  ArchivedItemsByEntryKey,
   CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
+  RemovedItemsByCategory,
+  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   formatDateKey,
   getAllChecklistCategories,
@@ -53,6 +57,10 @@ export default function ProgressClientPage() {
 
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
+  const [archivedItemsByEntryKey, setArchivedItemsByEntryKey] =
+    useState<ArchivedItemsByEntryKey>({});
+  const [removedItemsByCategory, setRemovedItemsByCategory] =
+    useState<RemovedItemsByCategory>({});
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
   const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
   const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
@@ -66,6 +74,12 @@ export default function ProgressClientPage() {
       const storedCustomItems = window.localStorage.getItem(
         CUSTOM_ITEMS_STORAGE_KEY,
       );
+      const storedArchivedItems = window.localStorage.getItem(
+        ARCHIVED_ITEMS_STORAGE_KEY,
+      );
+      const storedRemovedItems = window.localStorage.getItem(
+        REMOVED_ITEMS_STORAGE_KEY,
+      );
       const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
       const storedImportedLists = window.localStorage.getItem(
         IMPORTED_LISTS_STORAGE_KEY,
@@ -73,11 +87,17 @@ export default function ProgressClientPage() {
 
       if (storedCustomItems)
         setCustomItemsByCategory(JSON.parse(storedCustomItems));
+      if (storedArchivedItems)
+        setArchivedItemsByEntryKey(JSON.parse(storedArchivedItems));
+      if (storedRemovedItems)
+        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
       if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
       if (storedImportedLists)
         setImportedLists(JSON.parse(storedImportedLists));
     } catch {
       setCustomItemsByCategory({});
+      setArchivedItemsByEntryKey({});
+      setRemovedItemsByCategory({});
       setHistoryByDate({});
       setImportedLists([]);
     } finally {
@@ -86,8 +106,20 @@ export default function ProgressClientPage() {
   }, []);
 
   const categories = useMemo(
-    () => getAllChecklistCategories(importedLists),
-    [importedLists],
+    () =>
+      getAllChecklistCategories(importedLists).map((category) => ({
+        ...category,
+        defaultItems:
+          importedLists.length > 0
+            ? category.defaultItems
+            : category.defaultItems.filter(
+                (item) =>
+                  !(removedItemsByCategory[category.key] ?? []).includes(
+                    item.id,
+                  ),
+              ),
+      })),
+    [importedLists, removedItemsByCategory],
   );
 
   const allItemsByEntryKey = useMemo(() => {
@@ -170,7 +202,8 @@ export default function ProgressClientPage() {
   const selectedHistoryGroups = selectedHistoryEntries.reduce<
     Array<{ category: string; items: string[] }>
   >((groups, entryKey) => {
-    const details = allItemsByEntryKey.get(entryKey);
+    const details =
+      allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
     if (!details) return groups;
 
     const existing = groups.find(
@@ -191,7 +224,8 @@ export default function ProgressClientPage() {
 
     recordedDateKeys.forEach((dateKey) => {
       (historyByDate[dateKey] ?? []).forEach((entryKey) => {
-        const details = allItemsByEntryKey.get(entryKey);
+        const details =
+          allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
         if (!details) return;
         counts.set(details.category, (counts.get(details.category) ?? 0) + 1);
       });
@@ -213,6 +247,7 @@ export default function ProgressClientPage() {
       );
   }, [
     allItemsByEntryKey,
+    archivedItemsByEntryKey,
     historyByDate,
     recordedDateKeys,
     totalCompletedItems,
@@ -229,7 +264,8 @@ export default function ProgressClientPage() {
 
     return Array.from(counts.entries())
       .map(([entryKey, count]) => {
-        const details = allItemsByEntryKey.get(entryKey);
+        const details =
+          allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
         if (!details) return null;
         return {
           entryKey,
@@ -253,7 +289,12 @@ export default function ProgressClientPage() {
           right.count - left.count || left.text.localeCompare(right.text),
       )
       .slice(0, 10);
-  }, [allItemsByEntryKey, historyByDate, recordedDateKeys]);
+  }, [
+    allItemsByEntryKey,
+    archivedItemsByEntryKey,
+    historyByDate,
+    recordedDateKeys,
+  ]);
 
   const topCategory = categoryTotals[0];
   const chartRangeLabel =
@@ -268,8 +309,8 @@ export default function ProgressClientPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:flex">
-      <aside className="hidden h-screen w-64 shrink-0 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:flex md:sticky md:top-0">
+    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
+      <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
           <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
             DeclutterSpace
@@ -313,7 +354,7 @@ export default function ProgressClientPage() {
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">

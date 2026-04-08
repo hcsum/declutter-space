@@ -4,13 +4,17 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { useDialogState } from "@/components/DialogProvider";
 import {
+  ARCHIVED_ITEMS_STORAGE_KEY,
   CUSTOM_ITEMS_STORAGE_KEY,
   HISTORY_STORAGE_KEY,
   IMPORTED_LISTS_STORAGE_KEY,
   MOMENTUM_DIALOG_STORAGE_KEY,
+  ArchivedItemsByEntryKey,
   CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
+  RemovedItemsByCategory,
+  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   formatDateKey,
   getAllChecklistCategories,
@@ -52,6 +56,10 @@ export default function ClientPage() {
 
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
+  const [archivedItemsByEntryKey, setArchivedItemsByEntryKey] =
+    useState<ArchivedItemsByEntryKey>({});
+  const [removedItemsByCategory, setRemovedItemsByCategory] =
+    useState<RemovedItemsByCategory>({});
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
   const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
   const [draftsByCategory, setDraftsByCategory] = useState<DraftsByCategory>(
@@ -60,6 +68,7 @@ export default function ClientPage() {
   const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
     null,
   );
+  const [isEditMode, setIsEditMode] = useState(false);
   const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
@@ -67,6 +76,12 @@ export default function ClientPage() {
     try {
       const storedCustomItems = window.localStorage.getItem(
         CUSTOM_ITEMS_STORAGE_KEY,
+      );
+      const storedArchivedItems = window.localStorage.getItem(
+        ARCHIVED_ITEMS_STORAGE_KEY,
+      );
+      const storedRemovedItems = window.localStorage.getItem(
+        REMOVED_ITEMS_STORAGE_KEY,
       );
       const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
       const storedImportedLists = window.localStorage.getItem(
@@ -78,12 +93,18 @@ export default function ClientPage() {
 
       if (storedCustomItems)
         setCustomItemsByCategory(JSON.parse(storedCustomItems));
+      if (storedArchivedItems)
+        setArchivedItemsByEntryKey(JSON.parse(storedArchivedItems));
+      if (storedRemovedItems)
+        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
       if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
       if (storedImportedLists)
         setImportedLists(JSON.parse(storedImportedLists));
       if (storedMomentumDialog === "true") setHasSeenMomentumDialog(true);
     } catch {
       setCustomItemsByCategory({});
+      setArchivedItemsByEntryKey({});
+      setRemovedItemsByCategory({});
       setHistoryByDate({});
       setImportedLists([]);
       setHasSeenMomentumDialog(false);
@@ -93,8 +114,20 @@ export default function ClientPage() {
   }, []);
 
   const categories = useMemo(
-    () => getAllChecklistCategories(importedLists),
-    [importedLists],
+    () =>
+      getAllChecklistCategories(importedLists).map((category) => ({
+        ...category,
+        defaultItems:
+          importedLists.length > 0
+            ? category.defaultItems
+            : category.defaultItems.filter(
+                (item) =>
+                  !(removedItemsByCategory[category.key] ?? []).includes(
+                    item.id,
+                  ),
+              ),
+      })),
+    [importedLists, removedItemsByCategory],
   );
 
   useEffect(() => {
@@ -108,10 +141,34 @@ export default function ClientPage() {
   useEffect(() => {
     if (!hasLoadedStorage) return;
     window.localStorage.setItem(
+      ARCHIVED_ITEMS_STORAGE_KEY,
+      JSON.stringify(archivedItemsByEntryKey),
+    );
+  }, [archivedItemsByEntryKey, hasLoadedStorage]);
+
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
+    window.localStorage.setItem(
+      REMOVED_ITEMS_STORAGE_KEY,
+      JSON.stringify(removedItemsByCategory),
+    );
+  }, [hasLoadedStorage, removedItemsByCategory]);
+
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
+    window.localStorage.setItem(
       HISTORY_STORAGE_KEY,
       JSON.stringify(historyByDate),
     );
   }, [historyByDate, hasLoadedStorage]);
+
+  useEffect(() => {
+    if (!hasLoadedStorage) return;
+    window.localStorage.setItem(
+      IMPORTED_LISTS_STORAGE_KEY,
+      JSON.stringify(importedLists),
+    );
+  }, [hasLoadedStorage, importedLists]);
 
   useEffect(() => {
     if (!hasLoadedStorage) return;
@@ -148,7 +205,6 @@ export default function ClientPage() {
     [historyByDate, todayKey],
   );
 
-  const completedTodayCount = todayHistorySet.size;
   const selectedHistoryEntries = selectedHistoryDate
     ? (historyByDate[selectedHistoryDate] ?? [])
     : [];
@@ -156,7 +212,8 @@ export default function ClientPage() {
   const selectedHistoryGroups = selectedHistoryEntries.reduce<
     Array<{ category: string; items: string[] }>
   >((groups, entryKey) => {
-    const details = allItemsByEntryKey.get(entryKey);
+    const details =
+      allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
     if (!details) return groups;
 
     const existing = groups.find(
@@ -232,9 +289,104 @@ export default function ClientPage() {
     setDraftsByCategory((prev) => ({ ...prev, [categoryKey]: "" }));
   }
 
+  function removeItem(categoryKey: string, itemId: string) {
+    const entryKey = buildEntryKey(categoryKey, itemId);
+    const category = categories.find((value) => value.key === categoryKey);
+    const item =
+      category?.defaultItems.find((value) => value.id === itemId) ??
+      (customItemsByCategory[categoryKey] ?? []).find(
+        (value) => value.id === itemId,
+      );
+
+    if (category && item) {
+      setArchivedItemsByEntryKey((prev) => ({
+        ...prev,
+        [entryKey]: {
+          category: category.category,
+          text: item.text,
+        },
+      }));
+    }
+
+    if (itemId.startsWith("custom-")) {
+      setCustomItemsByCategory((prev) => {
+        const next = { ...prev };
+        const filtered = (next[categoryKey] ?? []).filter(
+          (item) => item.id !== itemId,
+        );
+
+        if (filtered.length === 0) delete next[categoryKey];
+        else next[categoryKey] = filtered;
+
+        return next;
+      });
+      return;
+    }
+
+    if (importedLists.length > 0) {
+      setImportedLists((prev) =>
+        prev
+          .map((list) => {
+            if (list.id !== categoryKey) return list;
+            return {
+              ...list,
+              items: list.items.filter((item) => item.id !== itemId),
+            };
+          })
+          .filter((list) => list.items.length > 0),
+      );
+      return;
+    }
+
+    setRemovedItemsByCategory((prev) => {
+      const next = { ...prev };
+      const removed = new Set(next[categoryKey] ?? []);
+      removed.add(itemId);
+      next[categoryKey] = Array.from(removed);
+      return next;
+    });
+  }
+
+  function confirmRemoveItem(
+    categoryKey: string,
+    itemId: string,
+    itemText: string,
+  ) {
+    setDialogContent({
+      title: "Pew, done with this for good? Press yes to confirm.",
+      content: (
+        <div className="space-y-3 text-base leading-7 text-neutral-700 dark:text-neutral-300">
+          <p>{itemText}</p>
+          <p>This item will still be kept in your decluterring progress.</p>
+        </div>
+      ),
+      actions: (
+        <div className="flex w-full items-center justify-end gap-3 px-2">
+          <button
+            type="button"
+            onClick={() => setDialogContent(undefined)}
+            className="rounded-xl bg-[#edefe7] px-5 py-2.5 text-sm font-bold text-[#2b694d]"
+          >
+            Cancel
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              removeItem(categoryKey, itemId);
+              setDialogContent(undefined);
+            }}
+            className="rounded-xl bg-[#002d1c] px-5 py-2.5 text-sm font-bold text-white"
+          >
+            Yes
+          </button>
+        </div>
+      ),
+    });
+  }
+
   return (
-    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:flex">
-      <aside className="hidden h-screen w-64 shrink-0 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:flex md:sticky md:top-0">
+    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
+      <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
           <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
             DeclutterSpace
@@ -275,7 +427,7 @@ export default function ClientPage() {
         </div>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
@@ -287,7 +439,18 @@ export default function ClientPage() {
           </div>
 
           <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
-            {completedTodayCount} tasks today
+            <button
+              type="button"
+              onClick={() => setIsEditMode((prev) => !prev)}
+              className={[
+                "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
+                isEditMode
+                  ? "bg-[#002d1c] text-white"
+                  : "bg-[#edefe7] text-[#2b694d]",
+              ].join(" ")}
+            >
+              {isEditMode ? "Done editing" : "Edit mode"}
+            </button>
           </div>
         </header>
 
@@ -477,54 +640,72 @@ export default function ClientPage() {
                       const isChecked = todayHistorySet.has(entryKey);
 
                       return (
-                        <label
-                          key={item.id}
-                          className="flex cursor-pointer items-start gap-3"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={() => toggleItem(category.key, item.id)}
-                            className="mt-0.5 h-5 w-5 shrink-0 rounded-md border-none bg-white text-[#2b694d] focus:ring-[#2b694d]/20"
-                          />
-                          <span
-                            className={[
-                              "text-sm font-medium text-[#414844] transition-colors",
-                              isChecked && "line-through opacity-60",
-                            ].join(" ")}
-                          >
-                            {item.text}
-                          </span>
-                        </label>
+                        <div key={item.id} className="flex items-start gap-3">
+                          <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
+                            <input
+                              type="checkbox"
+                              checked={isChecked}
+                              onChange={() => toggleItem(category.key, item.id)}
+                              className="mt-0.5 h-5 w-5 shrink-0 rounded-md border-none bg-white text-[#2b694d] focus:ring-[#2b694d]/20"
+                            />
+                            <span
+                              className={[
+                                "min-w-0 text-sm font-medium text-[#414844] transition-colors",
+                                isChecked && "line-through opacity-60",
+                              ].join(" ")}
+                            >
+                              {item.text}
+                            </span>
+                          </label>
+
+                          {isEditMode && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                confirmRemoveItem(
+                                  category.key,
+                                  item.id,
+                                  item.text,
+                                )
+                              }
+                              className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#7a3222]"
+                              aria-label={`Remove ${item.text}`}
+                            >
+                              Remove
+                            </button>
+                          )}
+                        </div>
                       );
                     })}
                   </div>
 
-                  <form
-                    onSubmit={(event) => addCustomItem(category.key, event)}
-                    className="mt-6"
-                  >
-                    <div className="flex gap-2 rounded-2xl bg-white p-2">
-                      <input
-                        type="text"
-                        value={draftsByCategory[category.key] ?? ""}
-                        onChange={(event) =>
-                          setDraftsByCategory((prev) => ({
-                            ...prev,
-                            [category.key]: event.target.value,
-                          }))
-                        }
-                        placeholder="Add item"
-                        className="min-w-0 flex-1 border-none bg-transparent px-3 py-2 text-sm focus:ring-0"
-                      />
-                      <button
-                        type="submit"
-                        className="rounded-2xl bg-[#002d1c] px-4 py-2 text-sm font-bold text-white"
-                      >
-                        Add
-                      </button>
-                    </div>
-                  </form>
+                  {isEditMode && (
+                    <form
+                      onSubmit={(event) => addCustomItem(category.key, event)}
+                      className="mt-6"
+                    >
+                      <div className="flex gap-2 rounded-2xl bg-white p-2">
+                        <input
+                          type="text"
+                          value={draftsByCategory[category.key] ?? ""}
+                          onChange={(event) =>
+                            setDraftsByCategory((prev) => ({
+                              ...prev,
+                              [category.key]: event.target.value,
+                            }))
+                          }
+                          placeholder="Add item"
+                          className="min-w-0 flex-1 border-none bg-transparent px-3 py-2 text-sm focus:ring-0"
+                        />
+                        <button
+                          type="submit"
+                          className="rounded-2xl bg-[#002d1c] px-4 py-2 text-sm font-bold text-white"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </form>
+                  )}
                 </article>
               );
             })}

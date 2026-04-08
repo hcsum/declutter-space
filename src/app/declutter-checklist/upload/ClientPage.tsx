@@ -3,11 +3,14 @@
 import Link from "next/link";
 import { ChangeEvent, useEffect, useMemo, useState } from "react";
 import {
+  CUSTOM_ITEMS_STORAGE_KEY,
   HISTORY_STORAGE_KEY,
   IMPORTED_LISTS_STORAGE_KEY,
-  ChecklistCategory,
+  CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
+  RemovedItemsByCategory,
+  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   buildImportedItemId,
   buildImportedListId,
@@ -18,6 +21,12 @@ import {
 type ParsedRow = { title: string; item: string };
 type PreviewList = {
   id: string;
+  title: string;
+  items: Array<{ id: string; text: string }>;
+};
+type SourceCategory = {
+  sourceListId: string;
+  targetListId: string;
   title: string;
   items: Array<{ id: string; text: string }>;
 };
@@ -212,7 +221,7 @@ function replaceImportedListsKeepingHistory(
   existingLists: ImportedList[],
   nextLists: ImportedList[],
   historyByDate: HistoryByDate,
-  presetCategories: ChecklistCategory[],
+  sourceCategories: SourceCategory[],
 ) {
   const nextByListId = new Map<string, ImportedList>();
   const nextHistoryByDate: HistoryByDate = Object.fromEntries(
@@ -289,12 +298,12 @@ function replaceImportedListsKeepingHistory(
     });
   });
 
-  presetCategories.forEach((category) => {
+  sourceCategories.forEach((category) => {
     preserveHistoryItems({
-      sourceListId: category.key,
-      targetListId: buildImportedListId(category.category),
-      title: category.category,
-      items: category.defaultItems,
+      sourceListId: category.sourceListId,
+      targetListId: category.targetListId,
+      title: category.title,
+      items: category.items,
     });
   });
 
@@ -308,7 +317,7 @@ function replaceImportedListsKeepingHistory(
 
 function promotePresetHistoryToImportedHistory(
   historyByDate: HistoryByDate,
-  presetCategories: ChecklistCategory[],
+  sourceCategories: SourceCategory[],
 ) {
   const nextHistoryByDate: HistoryByDate = Object.fromEntries(
     Object.entries(historyByDate).map(([dateKey, entryKeys]) => [
@@ -317,13 +326,14 @@ function promotePresetHistoryToImportedHistory(
     ]),
   );
 
-  presetCategories.forEach((category) => {
-    const importedListId = buildImportedListId(category.category);
-
-    category.defaultItems.forEach((item) => {
-      const presetEntryKey = buildEntryKey(category.key, item.id);
+  sourceCategories.forEach((category) => {
+    category.items.forEach((item) => {
+      const presetEntryKey = buildEntryKey(category.sourceListId, item.id);
       const importedItemId = buildImportedItemId(item.text);
-      const importedEntryKey = buildEntryKey(importedListId, importedItemId);
+      const importedEntryKey = buildEntryKey(
+        category.targetListId,
+        importedItemId,
+      );
 
       Object.entries(nextHistoryByDate).forEach(([dateKey, entryKeys]) => {
         if (!entryKeys.includes(presetEntryKey)) {
@@ -343,6 +353,10 @@ function promotePresetHistoryToImportedHistory(
 
 export default function UploadClientPage() {
   const presetCategories = useMemo(() => getChecklistCategories(), []);
+  const [customItemsByCategory, setCustomItemsByCategory] =
+    useState<CustomItemsByCategory>({});
+  const [removedItemsByCategory, setRemovedItemsByCategory] =
+    useState<RemovedItemsByCategory>({});
   const [existingLists, setExistingLists] = useState<ImportedList[]>([]);
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
   const [fileName, setFileName] = useState<string | null>(null);
@@ -355,10 +369,20 @@ export default function UploadClientPage() {
 
   useEffect(() => {
     try {
+      const storedCustomItems = window.localStorage.getItem(
+        CUSTOM_ITEMS_STORAGE_KEY,
+      );
+      const storedRemovedItems = window.localStorage.getItem(
+        REMOVED_ITEMS_STORAGE_KEY,
+      );
       const storedImportedLists = window.localStorage.getItem(
         IMPORTED_LISTS_STORAGE_KEY,
       );
       const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
+      if (storedCustomItems)
+        setCustomItemsByCategory(JSON.parse(storedCustomItems));
+      if (storedRemovedItems)
+        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
       if (storedImportedLists) {
         setExistingLists(
           sanitizeImportedLists(JSON.parse(storedImportedLists)),
@@ -366,6 +390,8 @@ export default function UploadClientPage() {
       }
       if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
     } catch {
+      setCustomItemsByCategory({});
+      setRemovedItemsByCategory({});
       setExistingLists([]);
       setHistoryByDate({});
     }
@@ -408,14 +434,28 @@ export default function UploadClientPage() {
 
   function handleImport() {
     const nextLists = sanitizeImportedLists(previewLists);
+    const initialSourceCategories: SourceCategory[] = presetCategories.map(
+      (category) => ({
+        sourceListId: category.key,
+        targetListId: buildImportedListId(category.category),
+        title: category.category,
+        items: [
+          ...category.defaultItems.filter(
+            (item) =>
+              !(removedItemsByCategory[category.key] ?? []).includes(item.id),
+          ),
+          ...(customItemsByCategory[category.key] ?? []),
+        ],
+      }),
+    );
     const currentActiveLists =
       existingLists.length > 0
         ? existingLists
         : sanitizeImportedLists(
-            presetCategories.map((category) => ({
-              id: buildImportedListId(category.category),
-              title: category.category,
-              items: category.defaultItems.map((item) => ({
+            initialSourceCategories.map((category) => ({
+              id: category.targetListId,
+              title: category.title,
+              items: category.items.map((item) => ({
                 id: buildImportedItemId(item.text),
                 text: item.text,
               })),
@@ -427,7 +467,7 @@ export default function UploadClientPage() {
             currentActiveLists,
             nextLists,
             historyByDate,
-            existingLists.length === 0 ? presetCategories : [],
+            existingLists.length === 0 ? initialSourceCategories : [],
           )
         : null;
     const result =
@@ -437,7 +477,10 @@ export default function UploadClientPage() {
     const nextHistory =
       replaceResult?.historyByDate ??
       (existingLists.length === 0
-        ? promotePresetHistoryToImportedHistory(historyByDate, presetCategories)
+        ? promotePresetHistoryToImportedHistory(
+            historyByDate,
+            initialSourceCategories,
+          )
         : historyByDate);
 
     window.localStorage.setItem(
@@ -459,8 +502,8 @@ export default function UploadClientPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:flex">
-      <aside className="hidden h-screen w-64 shrink-0 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:flex md:sticky md:top-0">
+    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
+      <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
           <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
             DeclutterSpace
@@ -499,7 +542,7 @@ export default function UploadClientPage() {
         </Link>
       </aside>
 
-      <div className="flex min-w-0 flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
