@@ -2,17 +2,13 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import ChecklistCloudBanner from "../components/ChecklistCloudBanner";
 import {
-  ARCHIVED_ITEMS_STORAGE_KEY,
-  CUSTOM_ITEMS_STORAGE_KEY,
-  HISTORY_STORAGE_KEY,
-  IMPORTED_LISTS_STORAGE_KEY,
   ArchivedItemsByEntryKey,
   CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
   RemovedItemsByCategory,
-  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   formatDateKey,
   getAllChecklistCategories,
@@ -21,6 +17,7 @@ import {
   monthDayFormatter,
   parseDateKey,
 } from "../lib/checklist";
+import { useChecklistPersistence } from "../lib/useChecklistPersistence";
 
 const categoryAccents = [
   "bg-[#dcebdd] text-[#2b694d]",
@@ -63,47 +60,12 @@ export default function ProgressClientPage() {
     useState<RemovedItemsByCategory>({});
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
   const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
+  const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
   const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
     null,
   );
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
-
-  useEffect(() => {
-    try {
-      const storedCustomItems = window.localStorage.getItem(
-        CUSTOM_ITEMS_STORAGE_KEY,
-      );
-      const storedArchivedItems = window.localStorage.getItem(
-        ARCHIVED_ITEMS_STORAGE_KEY,
-      );
-      const storedRemovedItems = window.localStorage.getItem(
-        REMOVED_ITEMS_STORAGE_KEY,
-      );
-      const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
-      const storedImportedLists = window.localStorage.getItem(
-        IMPORTED_LISTS_STORAGE_KEY,
-      );
-
-      if (storedCustomItems)
-        setCustomItemsByCategory(JSON.parse(storedCustomItems));
-      if (storedArchivedItems)
-        setArchivedItemsByEntryKey(JSON.parse(storedArchivedItems));
-      if (storedRemovedItems)
-        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
-      if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
-      if (storedImportedLists)
-        setImportedLists(JSON.parse(storedImportedLists));
-    } catch {
-      setCustomItemsByCategory({});
-      setArchivedItemsByEntryKey({});
-      setRemovedItemsByCategory({});
-      setHistoryByDate({});
-      setImportedLists([]);
-    } finally {
-      setHasLoadedStorage(true);
-    }
-  }, []);
 
   const categories = useMemo(
     () =>
@@ -121,6 +83,39 @@ export default function ProgressClientPage() {
       })),
     [importedLists, removedItemsByCategory],
   );
+
+  const checklistState = useMemo(
+    () => ({
+      customItemsByCategory,
+      archivedItemsByEntryKey,
+      removedItemsByCategory,
+      historyByDate,
+      importedLists,
+      hasSeenMomentumDialog,
+    }),
+    [
+      archivedItemsByEntryKey,
+      customItemsByCategory,
+      hasSeenMomentumDialog,
+      historyByDate,
+      importedLists,
+      removedItemsByCategory,
+    ],
+  );
+
+  const { isLoggedIn, cloudStatus } = useChecklistPersistence({
+    state: checklistState,
+    hasLoadedStorage,
+    setters: {
+      setCustomItemsByCategory,
+      setArchivedItemsByEntryKey,
+      setRemovedItemsByCategory,
+      setHistoryByDate,
+      setImportedLists,
+      setHasSeenMomentumDialog,
+      setHasLoadedStorage,
+    },
+  });
 
   const allItemsByEntryKey = useMemo(() => {
     const entries = new Map<string, { category: string; text: string }>();
@@ -371,6 +366,11 @@ export default function ProgressClientPage() {
         </header>
 
         <section className="flex-1 space-y-8 px-5 pb-10 pt-4 md:px-8">
+          <ChecklistCloudBanner
+            isLoggedIn={isLoggedIn}
+            cloudStatus={cloudStatus}
+          />
+
           <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#6d756f]">

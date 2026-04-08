@@ -1,20 +1,15 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { useDialogState } from "@/components/DialogProvider";
+import ChecklistCloudBanner from "./components/ChecklistCloudBanner";
 import {
-  ARCHIVED_ITEMS_STORAGE_KEY,
-  CUSTOM_ITEMS_STORAGE_KEY,
-  HISTORY_STORAGE_KEY,
-  IMPORTED_LISTS_STORAGE_KEY,
-  MOMENTUM_DIALOG_STORAGE_KEY,
   ArchivedItemsByEntryKey,
   CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
   RemovedItemsByCategory,
-  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   formatDateKey,
   getAllChecklistCategories,
@@ -22,6 +17,7 @@ import {
   monthDayFormatter,
   parseDateKey,
 } from "./lib/checklist";
+import { useChecklistPersistence } from "./lib/useChecklistPersistence";
 
 type DraftsByCategory = Record<string, string>;
 
@@ -72,47 +68,6 @@ export default function ClientPage() {
   const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
-  useEffect(() => {
-    try {
-      const storedCustomItems = window.localStorage.getItem(
-        CUSTOM_ITEMS_STORAGE_KEY,
-      );
-      const storedArchivedItems = window.localStorage.getItem(
-        ARCHIVED_ITEMS_STORAGE_KEY,
-      );
-      const storedRemovedItems = window.localStorage.getItem(
-        REMOVED_ITEMS_STORAGE_KEY,
-      );
-      const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
-      const storedImportedLists = window.localStorage.getItem(
-        IMPORTED_LISTS_STORAGE_KEY,
-      );
-      const storedMomentumDialog = window.localStorage.getItem(
-        MOMENTUM_DIALOG_STORAGE_KEY,
-      );
-
-      if (storedCustomItems)
-        setCustomItemsByCategory(JSON.parse(storedCustomItems));
-      if (storedArchivedItems)
-        setArchivedItemsByEntryKey(JSON.parse(storedArchivedItems));
-      if (storedRemovedItems)
-        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
-      if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
-      if (storedImportedLists)
-        setImportedLists(JSON.parse(storedImportedLists));
-      if (storedMomentumDialog === "true") setHasSeenMomentumDialog(true);
-    } catch {
-      setCustomItemsByCategory({});
-      setArchivedItemsByEntryKey({});
-      setRemovedItemsByCategory({});
-      setHistoryByDate({});
-      setImportedLists([]);
-      setHasSeenMomentumDialog(false);
-    } finally {
-      setHasLoadedStorage(true);
-    }
-  }, []);
-
   const categories = useMemo(
     () =>
       getAllChecklistCategories(importedLists).map((category) => ({
@@ -130,53 +85,38 @@ export default function ClientPage() {
     [importedLists, removedItemsByCategory],
   );
 
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      CUSTOM_ITEMS_STORAGE_KEY,
-      JSON.stringify(customItemsByCategory),
-    );
-  }, [customItemsByCategory, hasLoadedStorage]);
+  const checklistState = useMemo(
+    () => ({
+      customItemsByCategory,
+      archivedItemsByEntryKey,
+      removedItemsByCategory,
+      historyByDate,
+      importedLists,
+      hasSeenMomentumDialog,
+    }),
+    [
+      archivedItemsByEntryKey,
+      customItemsByCategory,
+      hasSeenMomentumDialog,
+      historyByDate,
+      importedLists,
+      removedItemsByCategory,
+    ],
+  );
 
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      ARCHIVED_ITEMS_STORAGE_KEY,
-      JSON.stringify(archivedItemsByEntryKey),
-    );
-  }, [archivedItemsByEntryKey, hasLoadedStorage]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      REMOVED_ITEMS_STORAGE_KEY,
-      JSON.stringify(removedItemsByCategory),
-    );
-  }, [hasLoadedStorage, removedItemsByCategory]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      HISTORY_STORAGE_KEY,
-      JSON.stringify(historyByDate),
-    );
-  }, [historyByDate, hasLoadedStorage]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      IMPORTED_LISTS_STORAGE_KEY,
-      JSON.stringify(importedLists),
-    );
-  }, [hasLoadedStorage, importedLists]);
-
-  useEffect(() => {
-    if (!hasLoadedStorage) return;
-    window.localStorage.setItem(
-      MOMENTUM_DIALOG_STORAGE_KEY,
-      String(hasSeenMomentumDialog),
-    );
-  }, [hasLoadedStorage, hasSeenMomentumDialog]);
+  const { isLoggedIn, cloudStatus } = useChecklistPersistence({
+    state: checklistState,
+    hasLoadedStorage,
+    setters: {
+      setCustomItemsByCategory,
+      setArchivedItemsByEntryKey,
+      setRemovedItemsByCategory,
+      setHistoryByDate,
+      setImportedLists,
+      setHasSeenMomentumDialog,
+      setHasLoadedStorage,
+    },
+  });
 
   const allItemsByEntryKey = useMemo(() => {
     const entries = new Map<string, { category: string; text: string }>();
@@ -455,6 +395,11 @@ export default function ClientPage() {
         </header>
 
         <section className="flex-1 space-y-8 px-5 pb-10 pt-4 md:px-8">
+          <ChecklistCloudBanner
+            isLoggedIn={isLoggedIn}
+            cloudStatus={cloudStatus}
+          />
+
           <section className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
             <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>

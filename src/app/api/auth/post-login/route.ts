@@ -5,6 +5,7 @@ import { prisma } from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { createSession } from "@/lib/session";
 import { createUser } from "@/actions/user";
+import { sanitizePostLoginNextPath } from "@/lib/google-auth";
 
 // Ensure Node runtime for Prisma/bcrypt compatibility
 export const runtime = "nodejs";
@@ -13,6 +14,7 @@ export const runtime = "nodejs";
 // map the NextAuth user to our own User record and set our app session cookie.
 export async function GET(request: Request) {
   const url = new URL(request.url);
+  const nextPath = sanitizePostLoginNextPath(url.searchParams.get("next"));
 
   const session = await getServerSession(authOptions);
   const email = session?.user?.email as string | undefined;
@@ -47,5 +49,5 @@ export async function GET(request: Request) {
 
   await createSession(user.id);
 
-  return NextResponse.redirect(new URL("/dashboard", url));
+  return NextResponse.redirect(new URL(nextPath, url));
 }

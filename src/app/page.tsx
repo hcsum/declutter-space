@@ -2,6 +2,7 @@ import React from "react";
 import Image from "next/image";
 import ContactForm from "@/components/ContactForm";
 import HomeCtas from "@/components/HomeCtas";
+import { buildGoogleSignInHref } from "@/lib/google-auth";
 import {
   FREE_TRAIL_ITEMS_LIMIT,
   MEMBERSHIP_ITEMS_LIMIT,
@@ -202,9 +203,7 @@ const LandingPage = () => {
                   </li>
                   <li>Set deadlines and get email reminders</li>
                 </ul>
-                <a
-                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
-                >
+                <a href={buildGoogleSignInHref("/dashboard")}>
                   <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                     Get Started
                   </button>
@@ -230,9 +229,7 @@ const LandingPage = () => {
                   <li>Personalized decluttering insights (coming soon)</li>
                   <li>Export your items data (coming soon)</li>
                 </ul>
-                <a
-                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
-                >
+                <a href={buildGoogleSignInHref("/dashboard")}>
                   <button className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto">
                     Get Started
                   </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { forgotPassword, resetPassword } from "@/actions/auth";
+import { buildGoogleSignInHref } from "@/lib/google-auth";
 import { useActionState } from "react";
 
 export function ForgotPasswordForm({ token }: { token?: string }) {
@@ -34,7 +35,7 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
                 You can now{" "}
                 <a
-                  href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
+                  href={buildGoogleSignInHref("/dashboard")}
                   className="text-blue-500 hover:underline dark:text-blue-400"
                 >
                   login
@@ -164,7 +165,7 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
         <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
           Remember your password?{" "}
           <a
-            href={`/api/auth/signin/google?callbackUrl=${encodeURIComponent("/api/auth/post-login")}`}
+            href={buildGoogleSignInHref("/dashboard")}
             className="text-blue-500 hover:underline dark:text-blue-400"
           >
             Back to login

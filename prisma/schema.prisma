@@ -20,9 +20,24 @@ model User {
   updatedAt              DateTime  @updatedAt
   isVerified             Boolean   @default(false)
   items                  Item[]
+  checklistLists         ChecklistList[]
+  checklistItems         ChecklistItem[]
+  checklistCompletions   ChecklistCompletion[]
+  checklistPreference    ChecklistPreference?
 
   membership Membership[]
   categories Category[]
+}
+
+enum ChecklistListSource {
+  PRESET
+  IMPORTED
+}
+
+enum ChecklistItemSource {
+  PRESET
+  CUSTOM
+  IMPORTED
 }
 
 enum ItemPlan {
@@ -87,4 +102,62 @@ model Membership {
   stripeSubscriptionId String? // Stripe subscription ID (starts with 'sub_')
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
+}
+
+model ChecklistList {
+  id        String              @id @default(uuid())
+  userId    String
+  user      User                @relation(fields: [userId], references: [id])
+  key       String
+  title     String
+  source    ChecklistListSource
+  isActive  Boolean             @default(true)
+  items     ChecklistItem[]
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+
+  @@unique([userId, key])
+  @@index([userId, isActive])
+}
+
+model ChecklistItem {
+  id          String              @id @default(uuid())
+  userId      String
+  user        User                @relation(fields: [userId], references: [id])
+  listId      String
+  list        ChecklistList       @relation(fields: [listId], references: [id])
+  itemKey     String
+  entryKey    String
+  text        String
+  source      ChecklistItemSource
+  isActive    Boolean             @default(true)
+  archivedAt  DateTime?
+  completions ChecklistCompletion[]
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  @@unique([userId, entryKey])
+  @@unique([listId, itemKey])
+  @@index([userId, isActive])
+}
+
+model ChecklistCompletion {
+  id          String        @id @default(uuid())
+  userId      String
+  user        User          @relation(fields: [userId], references: [id])
+  itemId      String
+  item        ChecklistItem @relation(fields: [itemId], references: [id])
+  completedOn DateTime
+  createdAt   DateTime      @default(now())
+
+  @@unique([userId, itemId, completedOn])
+  @@index([userId, completedOn])
+}
+
+model ChecklistPreference {
+  userId                String   @id
+  user                  User     @relation(fields: [userId], references: [id])
+  hasSeenMomentumDialog Boolean  @default(false)
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
 }

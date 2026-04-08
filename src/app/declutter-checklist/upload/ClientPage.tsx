@@ -1,22 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useMemo, useState } from "react";
+import ChecklistCloudBanner from "../components/ChecklistCloudBanner";
 import {
-  CUSTOM_ITEMS_STORAGE_KEY,
-  HISTORY_STORAGE_KEY,
-  IMPORTED_LISTS_STORAGE_KEY,
+  ArchivedItemsByEntryKey,
   CustomItemsByCategory,
   HistoryByDate,
   ImportedList,
   RemovedItemsByCategory,
-  REMOVED_ITEMS_STORAGE_KEY,
   buildEntryKey,
   buildImportedItemId,
   buildImportedListId,
   getChecklistCategories,
   sanitizeImportedLists,
 } from "../lib/checklist";
+import { useChecklistPersistence } from "../lib/useChecklistPersistence";
 
 type ParsedRow = { title: string; item: string };
 type PreviewList = {
@@ -355,10 +354,14 @@ export default function UploadClientPage() {
   const presetCategories = useMemo(() => getChecklistCategories(), []);
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
+  const [archivedItemsByEntryKey, setArchivedItemsByEntryKey] =
+    useState<ArchivedItemsByEntryKey>({});
   const [removedItemsByCategory, setRemovedItemsByCategory] =
     useState<RemovedItemsByCategory>({});
-  const [existingLists, setExistingLists] = useState<ImportedList[]>([]);
+  const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
+  const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
+  const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
   const [previewLists, setPreviewLists] = useState<PreviewList[]>([]);
   const [parseError, setParseError] = useState<string | null>(null);
@@ -367,35 +370,40 @@ export default function UploadClientPage() {
   const [importMode, setImportMode] = useState<"merge" | "replace">("merge");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  useEffect(() => {
-    try {
-      const storedCustomItems = window.localStorage.getItem(
-        CUSTOM_ITEMS_STORAGE_KEY,
-      );
-      const storedRemovedItems = window.localStorage.getItem(
-        REMOVED_ITEMS_STORAGE_KEY,
-      );
-      const storedImportedLists = window.localStorage.getItem(
-        IMPORTED_LISTS_STORAGE_KEY,
-      );
-      const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
-      if (storedCustomItems)
-        setCustomItemsByCategory(JSON.parse(storedCustomItems));
-      if (storedRemovedItems)
-        setRemovedItemsByCategory(JSON.parse(storedRemovedItems));
-      if (storedImportedLists) {
-        setExistingLists(
-          sanitizeImportedLists(JSON.parse(storedImportedLists)),
-        );
-      }
-      if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
-    } catch {
-      setCustomItemsByCategory({});
-      setRemovedItemsByCategory({});
-      setExistingLists([]);
-      setHistoryByDate({});
-    }
-  }, []);
+  const existingLists = importedLists;
+
+  const checklistState = useMemo(
+    () => ({
+      customItemsByCategory,
+      archivedItemsByEntryKey,
+      removedItemsByCategory,
+      historyByDate,
+      importedLists,
+      hasSeenMomentumDialog,
+    }),
+    [
+      archivedItemsByEntryKey,
+      customItemsByCategory,
+      hasSeenMomentumDialog,
+      historyByDate,
+      importedLists,
+      removedItemsByCategory,
+    ],
+  );
+
+  const { isLoggedIn, cloudStatus } = useChecklistPersistence({
+    state: checklistState,
+    hasLoadedStorage,
+    setters: {
+      setCustomItemsByCategory,
+      setArchivedItemsByEntryKey,
+      setRemovedItemsByCategory,
+      setHistoryByDate,
+      setImportedLists,
+      setHasSeenMomentumDialog,
+      setHasLoadedStorage,
+    },
+  });
 
   const previewItemCount = useMemo(
     () => previewLists.reduce((sum, list) => sum + list.items.length, 0),
@@ -483,16 +491,7 @@ export default function UploadClientPage() {
           )
         : historyByDate);
 
-    window.localStorage.setItem(
-      IMPORTED_LISTS_STORAGE_KEY,
-      JSON.stringify(result),
-    );
-    window.localStorage.setItem(
-      HISTORY_STORAGE_KEY,
-      JSON.stringify(nextHistory),
-    );
-
-    setExistingLists(result);
+    setImportedLists(result);
     setHistoryByDate(nextHistory);
     setSuccessMessage(
       importMode === "replace"
@@ -562,6 +561,11 @@ export default function UploadClientPage() {
         </header>
 
         <section className="flex-1 space-y-8 px-5 pb-10 pt-4 md:px-8">
+          <ChecklistCloudBanner
+            isLoggedIn={isLoggedIn}
+            cloudStatus={cloudStatus}
+          />
+
           <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#6d756f]">
