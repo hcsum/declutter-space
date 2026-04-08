@@ -1,30 +1,25 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import Link from "next/link";
 import { useDialogState } from "@/components/DialogProvider";
-import data from "@/const/declutter-checklist.json";
+import {
+  CUSTOM_ITEMS_STORAGE_KEY,
+  HISTORY_STORAGE_KEY,
+  IMPORTED_LISTS_STORAGE_KEY,
+  MOMENTUM_DIALOG_STORAGE_KEY,
+  CustomItemsByCategory,
+  HistoryByDate,
+  ImportedList,
+  buildEntryKey,
+  formatDateKey,
+  getAllChecklistCategories,
+  longDateFormatter,
+  monthDayFormatter,
+  parseDateKey,
+} from "./lib/checklist";
 
-type DeclutterCategory = { category: string; items: string[] };
-type CustomItem = { id: string; text: string };
-type CustomItemsByCategory = Record<string, CustomItem[]>;
-type HistoryByDate = Record<string, string[]>;
 type DraftsByCategory = Record<string, string>;
-
-const checklist = data as DeclutterCategory[];
-
-const CUSTOM_ITEMS_STORAGE_KEY = "declutter-checklist-custom-items";
-const HISTORY_STORAGE_KEY = "declutter-checklist-history";
-const MOMENTUM_DIALOG_STORAGE_KEY = "declutter-checklist-momentum-dialog-seen";
-const monthDayFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-});
-const longDateFormatter = new Intl.DateTimeFormat("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
 
 const categoryAccents = [
   "bg-[#dcebdd] text-[#2b694d]",
@@ -35,25 +30,6 @@ const categoryAccents = [
   "bg-[#e4f0ec] text-[#2a6c59]",
 ];
 
-function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
-
-function formatDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function parseDateKey(dateKey: string) {
-  const [year, month, day] = dateKey.split("-").map(Number);
-  return new Date(year, month - 1, day);
-}
-
 function getFlowDates() {
   const today = new Date();
 
@@ -62,14 +38,6 @@ function getFlowDates() {
     date.setDate(today.getDate() + index - 10);
     return date;
   });
-}
-
-function buildEntryKey(categoryKey: string, itemId: string) {
-  return `${categoryKey}::${itemId}`;
-}
-
-function buildCategoryKey(category: string, index: number) {
-  return `${slugify(category)}-${index}`;
 }
 
 function getCategoryAccent(index: number) {
@@ -82,22 +50,10 @@ export default function ClientPage() {
   const todayKey = formatDateKey(today);
   const flowDates = useMemo(() => getFlowDates(), []);
 
-  const categories = useMemo(
-    () =>
-      checklist.map((category, index) => ({
-        ...category,
-        key: buildCategoryKey(category.category, index),
-        defaultItems: category.items.map((text, itemIndex) => ({
-          id: `default-${itemIndex}`,
-          text,
-        })),
-      })),
-    [],
-  );
-
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
   const [historyByDate, setHistoryByDate] = useState<HistoryByDate>({});
+  const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
   const [draftsByCategory, setDraftsByCategory] = useState<DraftsByCategory>(
     {},
   );
@@ -113,6 +69,9 @@ export default function ClientPage() {
         CUSTOM_ITEMS_STORAGE_KEY,
       );
       const storedHistory = window.localStorage.getItem(HISTORY_STORAGE_KEY);
+      const storedImportedLists = window.localStorage.getItem(
+        IMPORTED_LISTS_STORAGE_KEY,
+      );
       const storedMomentumDialog = window.localStorage.getItem(
         MOMENTUM_DIALOG_STORAGE_KEY,
       );
@@ -120,15 +79,23 @@ export default function ClientPage() {
       if (storedCustomItems)
         setCustomItemsByCategory(JSON.parse(storedCustomItems));
       if (storedHistory) setHistoryByDate(JSON.parse(storedHistory));
+      if (storedImportedLists)
+        setImportedLists(JSON.parse(storedImportedLists));
       if (storedMomentumDialog === "true") setHasSeenMomentumDialog(true);
     } catch {
       setCustomItemsByCategory({});
       setHistoryByDate({});
+      setImportedLists([]);
       setHasSeenMomentumDialog(false);
     } finally {
       setHasLoadedStorage(true);
     }
   }, []);
+
+  const categories = useMemo(
+    () => getAllChecklistCategories(importedLists),
+    [importedLists],
+  );
 
   useEffect(() => {
     if (!hasLoadedStorage) return;
@@ -181,23 +148,7 @@ export default function ClientPage() {
     [historyByDate, todayKey],
   );
 
-  const totalTrackedItems = useMemo(
-    () =>
-      categories.reduce(
-        (sum, category) =>
-          sum +
-          category.defaultItems.length +
-          (customItemsByCategory[category.key] ?? []).length,
-        0,
-      ),
-    [categories, customItemsByCategory],
-  );
-
   const completedTodayCount = todayHistorySet.size;
-  const completionRate =
-    totalTrackedItems === 0
-      ? 0
-      : Math.round((completedTodayCount / totalTrackedItems) * 100);
   const selectedHistoryEntries = selectedHistoryDate
     ? (historyByDate[selectedHistoryDate] ?? [])
     : [];
@@ -294,15 +245,24 @@ export default function ClientPage() {
         </div>
 
         <nav className="flex-1 space-y-2 text-lg font-semibold">
-          <div className="rounded-xl bg-white p-3 text-[#002d1c] shadow-sm">
+          <Link
+            href="/declutter-checklist"
+            className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
+          >
             Declutter Checklist
-          </div>
-          <div className="rounded-xl p-3 text-[#414844]">
+          </Link>
+          <Link
+            href="/declutter-checklist/progress"
+            className="block rounded-xl p-3 text-[#414844]"
+          >
             Track your progress
-          </div>
-          <div className="rounded-xl p-3 text-[#414844]">
+          </Link>
+          <Link
+            href="/declutter-checklist/upload"
+            className="block rounded-xl p-3 text-[#414844]"
+          >
             Upload your own list
-          </div>
+          </Link>
         </nav>
 
         <button className="w-full rounded-xl bg-[#002d1c] py-4 text-sm font-bold tracking-[0.18em] text-white uppercase">
