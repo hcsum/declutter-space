@@ -385,6 +385,10 @@ export default function ClientPage() {
               What you keep shapes how you live
             </h2>
           </div>
+
+          <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-bold text-[#2b694d]">
+            {todayHistorySet.size} tasks today
+          </div>
         </header>
 
         <section className="flex-1 space-y-8 px-5 pb-10 pt-4 md:px-8">
