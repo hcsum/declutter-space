@@ -3,6 +3,7 @@
 import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
 import { useDialogState } from "@/components/DialogProvider";
+import { logout } from "@/actions/auth";
 import ChecklistCloudBanner from "./components/ChecklistCloudBanner";
 import {
   ArchivedItemsByEntryKey,
@@ -363,7 +364,14 @@ export default function ClientPage() {
 
         <div className="mt-6 space-y-2 text-sm font-medium">
           <div className="rounded-xl p-2 text-[#414844]">Help</div>
-          <div className="rounded-xl p-2 text-[#ba1a1a]">Sign Out</div>
+          {isLoggedIn && (
+            <button
+              onClick={logout}
+              className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
+            >
+              Sign Out
+            </button>
+          )}
         </div>
       </aside>
 
@@ -376,21 +384,6 @@ export default function ClientPage() {
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
               What you keep shapes how you live
             </h2>
-          </div>
-
-          <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
-            <button
-              type="button"
-              onClick={() => setIsEditMode((prev) => !prev)}
-              className={[
-                "rounded-full px-4 py-2 text-sm font-semibold transition-colors",
-                isEditMode
-                  ? "bg-[#002d1c] text-white"
-                  : "bg-[#edefe7] text-[#2b694d]",
-              ].join(" ")}
-            >
-              {isEditMode ? "Done editing" : "Edit mode"}
-            </button>
           </div>
         </header>
 
@@ -540,6 +533,21 @@ export default function ClientPage() {
               </div>
             </section>
           )}
+
+          <div className="flex items-center justify-end">
+            <button
+              type="button"
+              onClick={() => setIsEditMode((prev) => !prev)}
+              className={[
+                "rounded-full px-4 py-2 text-xs font-bold transition-colors",
+                isEditMode
+                  ? "bg-[#002d1c] text-white"
+                  : "bg-[#edefe7] text-[#2b694d] hover:bg-[#e0e4d9]",
+              ].join(" ")}
+            >
+              {isEditMode ? "✓ Done editing" : "✎ Edit list"}
+            </button>
+          </div>
 
           <section className="grid items-start gap-6 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4">
             {categories.map((category, index) => {

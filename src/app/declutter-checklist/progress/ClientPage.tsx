@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { logout } from "@/actions/auth";
 import ChecklistCloudBanner from "../components/ChecklistCloudBanner";
 import {
   ArchivedItemsByEntryKey,
@@ -345,7 +346,14 @@ export default function ProgressClientPage() {
 
         <div className="mt-6 space-y-2 text-sm font-medium">
           <div className="rounded-xl p-2 text-[#414844]">Help</div>
-          <div className="rounded-xl p-2 text-[#ba1a1a]">Sign Out</div>
+          {isLoggedIn && (
+            <button
+              onClick={logout}
+              className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
+            >
+              Sign Out
+            </button>
+          )}
         </div>
       </aside>
 
