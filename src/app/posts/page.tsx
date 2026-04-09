@@ -1,4 +1,9 @@
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: { index: false },
+};
 
 export default function PostsPage() {
   // This would typically fetch from an API or database

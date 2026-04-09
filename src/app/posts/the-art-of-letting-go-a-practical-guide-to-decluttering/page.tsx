@@ -1,3 +1,9 @@
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  robots: { index: false },
+};
+
 export default function DeclutteringTipsPage() {
   return (
     <article className="prose dark:prose-invert prose-headings:text-gray-700 max-w-3xl mx-auto py-8 px-4 prose-h2:mt-12 prose-h3:mt-8 prose-p:mb-6">

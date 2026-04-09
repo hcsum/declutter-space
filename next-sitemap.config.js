@@ -2,5 +2,12 @@
 module.exports = {
   siteUrl: process.env.SITE_URL,
   generateRobotsTxt: true,
-  exclude: ["/privacy-policy", "/customer-service-policy", "/login", "/signup"],
+  exclude: [
+    "/privacy-policy",
+    "/customer-service-policy",
+    "/login",
+    "/signup",
+    "/posts",
+    "/posts/*",
+  ],
 };
