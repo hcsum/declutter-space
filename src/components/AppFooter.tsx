@@ -38,7 +38,7 @@ export default function AppFooter() {
             Blog
           </Link>
         </div>
-        <div className="mt-4">
+        <div className="mt-4 flex flex-col sm:flex-row justify-center items-center sm:space-x-4 space-y-2 sm:space-y-0">
           <a
             href="https://startupfa.st"
             target="_blank"
@@ -52,6 +52,14 @@ export default function AppFooter() {
               height="44"
               className="inline-block"
             />
+          </a>
+          <a
+            href="https://www.showmysites.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-gray-400 hover:text-blue-300 text-sm"
+          >
+            ShowMySites
           </a>
         </div>
       </div>
