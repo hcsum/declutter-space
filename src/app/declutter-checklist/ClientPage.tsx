@@ -403,7 +403,7 @@ export default function ClientPage() {
             <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  Track Your Declutter Progress
+                  Decluttering is an on-going progress
                 </h2>
                 <p className="mt-1 text-sm font-medium text-[#5e6662]">
                   Your declutter checklist resets each day, while your daily
