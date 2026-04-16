@@ -76,25 +76,6 @@ export default function ProgressClientPage() {
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
-  const categories = useMemo(
-    () =>
-      getLocalizedChecklistCategories(locale, importedLists).map(
-        (category) => ({
-          ...category,
-          defaultItems:
-            importedLists.length > 0
-              ? category.defaultItems
-              : category.defaultItems.filter(
-                  (item) =>
-                    !(removedItemsByCategory[category.key] ?? []).includes(
-                      item.id,
-                    ),
-                ),
-        }),
-      ),
-    [importedLists, locale, removedItemsByCategory],
-  );
-
   const historyCategories = useMemo(
     () => getLocalizedChecklistCategories(locale, importedLists),
     [importedLists, locale],
