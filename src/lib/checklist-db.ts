@@ -7,11 +7,8 @@ import { prisma } from "@/lib/prisma";
 import {
   buildEntryKey,
   getAllChecklistCategories,
-} from "@/app/declutter-checklist/lib/checklist";
-import {
-  ChecklistState,
-  emptyChecklistState,
-} from "@/app/declutter-checklist/lib/state";
+} from "@/lib/checklist/checklist";
+import { ChecklistState, emptyChecklistState } from "@/lib/checklist/state";
 
 function getStartOfDay(dateKey: string) {
   return new Date(`${dateKey}T00:00:00.000Z`);

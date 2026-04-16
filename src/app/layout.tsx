@@ -2,9 +2,10 @@ import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Signika } from "next/font/google";
 import "./globals.css";
+import Providers from "@/components/Providers";
+import I18nWrapper from "@/components/I18nWrapper";
 import LandingPageHeader from "@/components/Header";
 import AppFooter from "@/components/AppFooter";
-import Providers from "@/components/Providers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -48,14 +49,18 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased min-h-screen flex flex-col`}
       >
-        <div id="app-view" className="flex-1 bg-gray-50 dark:bg-gray-900 relative flex flex-col">
+        <div
+          id="app-view"
+          className="flex-1 bg-gray-50 dark:bg-gray-900 relative flex flex-col"
+        >
           <Providers>
-            <LandingPageHeader />
-            {/* App content area. Default: allow page scroll. Feature routes can opt-out via body.no-scroll. */}
-            <div id="app-content" className="flex-1 overflow-auto min-h-0">
-              {children}
-            </div>
-            <AppFooter />
+            <I18nWrapper>
+              <LandingPageHeader />
+              <div id="app-content" className="flex-1 overflow-auto min-h-0">
+                {children}
+              </div>
+              <AppFooter />
+            </I18nWrapper>
           </Providers>
         </div>
       </body>

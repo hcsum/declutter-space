@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { logout } from "@/actions/auth";
+import { useI18n } from "@/i18n/i18n-provider";
 import ChecklistCloudBanner from "../components/ChecklistCloudBanner";
+import ChecklistLocaleSwitcher from "../components/ChecklistLocaleSwitcher";
 import {
   ArchivedItemsByEntryKey,
   CustomItemsByCategory,
@@ -12,13 +15,12 @@ import {
   RemovedItemsByCategory,
   buildEntryKey,
   formatDateKey,
-  getAllChecklistCategories,
+  getChecklistDateFormatters,
+  getLocalizedChecklistCategories,
   getTimelineDates,
-  longDateFormatter,
-  monthDayFormatter,
   parseDateKey,
-} from "../lib/checklist";
-import { useChecklistPersistence } from "../lib/useChecklistPersistence";
+} from "@/lib/checklist/checklist";
+import { useChecklistPersistence } from "@/lib/checklist/useChecklistPersistence";
 
 const categoryAccents = [
   "bg-[#dcebdd] text-[#2b694d]",
@@ -49,9 +51,14 @@ function clamp(value: number, min: number, max: number) {
 }
 
 export default function ProgressClientPage() {
+  const { t, locale, localePath } = useI18n();
   const today = new Date();
   const todayKey = formatDateKey(today);
   const todayDate = useMemo(() => parseDateKey(todayKey), [todayKey]);
+  const { monthDayFormatter, longDateFormatter } = useMemo(
+    () => getChecklistDateFormatters(locale),
+    [locale],
+  );
 
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
@@ -65,24 +72,32 @@ export default function ProgressClientPage() {
   const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
     null,
   );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [visibleStartIndex, setVisibleStartIndex] = useState(0);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
   const categories = useMemo(
     () =>
-      getAllChecklistCategories(importedLists).map((category) => ({
-        ...category,
-        defaultItems:
-          importedLists.length > 0
-            ? category.defaultItems
-            : category.defaultItems.filter(
-                (item) =>
-                  !(removedItemsByCategory[category.key] ?? []).includes(
-                    item.id,
-                  ),
-              ),
-      })),
-    [importedLists, removedItemsByCategory],
+      getLocalizedChecklistCategories(locale, importedLists).map(
+        (category) => ({
+          ...category,
+          defaultItems:
+            importedLists.length > 0
+              ? category.defaultItems
+              : category.defaultItems.filter(
+                  (item) =>
+                    !(removedItemsByCategory[category.key] ?? []).includes(
+                      item.id,
+                    ),
+                ),
+        }),
+      ),
+    [importedLists, locale, removedItemsByCategory],
+  );
+
+  const historyCategories = useMemo(
+    () => getLocalizedChecklistCategories(locale, importedLists),
+    [importedLists, locale],
   );
 
   const checklistState = useMemo(
@@ -121,7 +136,7 @@ export default function ProgressClientPage() {
   const allItemsByEntryKey = useMemo(() => {
     const entries = new Map<string, { category: string; text: string }>();
 
-    categories.forEach((category) => {
+    historyCategories.forEach((category) => {
       category.defaultItems.forEach((item) => {
         entries.set(buildEntryKey(category.key, item.id), {
           category: category.category,
@@ -138,7 +153,7 @@ export default function ProgressClientPage() {
     });
 
     return entries;
-  }, [categories, customItemsByCategory]);
+  }, [customItemsByCategory, historyCategories]);
 
   const recordedDateKeys = useMemo(
     () =>
@@ -309,67 +324,140 @@ export default function ProgressClientPage() {
       <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
           <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
-            DeclutterSpace
+            {t("common.appName")}
           </h1>
           <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
-            Let&apos;s declutter your home today
+            {t("checklist.sidebarSubtitle")}
           </p>
         </div>
 
         <nav className="flex-1 space-y-2 text-lg font-semibold">
           <Link
-            href="/declutter-checklist"
+            href={localePath("/declutter-checklist")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Declutter Checklist
+            {t("checklist.navChecklist")}
           </Link>
           <Link
-            href="/declutter-checklist/progress"
+            href={localePath("/declutter-checklist/progress")}
             className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
           >
-            Track your progress
+            {t("checklist.navProgress")}
           </Link>
           <Link
-            href="/declutter-checklist/upload"
+            href={localePath("/declutter-checklist/upload")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Upload your own list
+            {t("checklist.navUpload")}
           </Link>
         </nav>
 
-        <Link
-          href="/declutter-checklist"
-          className="block w-full rounded-xl bg-[#002d1c] py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white"
-        >
-          Start Today&apos;s Declutter
-        </Link>
-
         <div className="mt-6 space-y-2 text-sm font-medium">
-          <div className="rounded-xl p-2 text-[#414844]">Help</div>
           {isLoggedIn && (
             <button
               onClick={logout}
               className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
             >
-              Sign Out
+              {t("checklist.signOut")}
             </button>
           )}
         </div>
+
+        <ChecklistLocaleSwitcher />
       </aside>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-[#1a1c18]/35 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          <aside
+            className="flex h-full w-72 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/10"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <Link
+                  href={localePath("/")}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
+                    {t("common.appName")}
+                  </span>
+                </Link>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
+                  {t("checklist.sidebarSubtitle")}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(false)}
+                aria-label={t("checklist.close")}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2b694d] shadow-sm"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 space-y-2 text-lg font-semibold">
+              <Link
+                href={localePath("/declutter-checklist")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navChecklist")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/progress")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
+              >
+                {t("checklist.navProgress")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/upload")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navUpload")}
+              </Link>
+            </nav>
+
+            <div className="mt-6 space-y-2 text-sm font-medium">
+              {isLoggedIn && (
+                <button
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    void logout();
+                  }}
+                  className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
+                >
+                  {t("checklist.signOut")}
+                </button>
+              )}
+            </div>
+
+            <ChecklistLocaleSwitcher />
+          </aside>
+        </div>
+      )}
 
       <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
-              Track your progress
+              {t("checklist.progressHeaderLabel")}
             </p>
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
-              Your declutter rhythm over time
+              {t("checklist.progressHeaderTitle")}
             </h2>
           </div>
 
           <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
-            {totalCompletedItems} recorded clears
+            {t("checklist.progressRecordedClears").replace(
+              "{count}",
+              String(totalCompletedItems),
+            )}
           </div>
         </header>
 
@@ -382,37 +470,42 @@ export default function ProgressClientPage() {
           <section className="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#6d756f]">
-                Stats
+                {t("checklist.statsLabel")}
               </p>
               <h3 className="mt-3 text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                Declutter journey
+                {t("checklist.journeyTitle")}
               </h3>
               <div className="mt-8 flex items-end gap-4">
                 <div className="text-6xl font-black tracking-[-0.08em] text-[#002d1c] md:text-7xl">
                   {journeyDays}
                 </div>
                 <div className="pb-2 text-lg font-semibold text-[#56615c]">
-                  {journeyDays === 1 ? "day" : "days"}
+                  {journeyDays === 1 ? t("checklist.day") : t("checklist.days")}
                 </div>
               </div>
               <p className="mt-4 max-w-2xl text-sm text-[#56615c]">
                 {firstRecordDate
-                  ? `Counting from ${longDateFormatter.format(firstRecordDate)} through today.`
-                  : "Your journey day count will start as soon as you complete your first checklist item."}
+                  ? t("checklist.journeyCounting").replace(
+                      "{date}",
+                      longDateFormatter.format(firstRecordDate),
+                    )
+                  : t("checklist.journeyNotStarted")}
               </p>
             </article>
 
             <article className="rounded-[2rem] bg-[#002d1c] p-6 text-white md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#b0f1cc]">
-                Focus Area
+                {t("checklist.focusArea")}
               </p>
               <h3 className="mt-3 text-3xl font-black tracking-[-0.05em]">
-                {topCategory?.category ?? "Start your first check-in"}
+                {topCategory?.category ?? t("checklist.startFirstCheckin")}
               </h3>
               <p className="mt-4 text-sm text-[#b7d1c4]">
                 {topCategory
-                  ? `${topCategory.count} recorded clears, which is ${topCategory.percentage}% of all tracked progress so far.`
-                  : "Once you have history, this card will highlight the area where you declutter most often."}
+                  ? t("checklist.focusAreaDesc")
+                      .replace("{count}", String(topCategory.count))
+                      .replace("{percentage}", String(topCategory.percentage))
+                  : t("checklist.focusAreaEmpty")}
               </p>
             </article>
           </section>
@@ -421,11 +514,10 @@ export default function ProgressClientPage() {
             <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
               <div>
                 <h3 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  Full progress chart
+                  {t("checklist.fullChartTitle")}
                 </h3>
                 <p className="mt-2 text-sm font-medium text-[#5e6662]">
-                  Move backward or forward in 30-day steps to review the days
-                  you showed up.
+                  {t("checklist.fullChartDesc")}
                 </p>
               </div>
 
@@ -436,7 +528,7 @@ export default function ProgressClientPage() {
                   disabled={!canGoBackward}
                   className="rounded-full border border-[#d7dbd4] bg-[#f9faf2] px-4 py-2 text-sm font-bold text-[#002d1c] disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Previous 30
+                  {t("checklist.previous30")}
                 </button>
                 <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
                   {chartRangeLabel}
@@ -447,7 +539,7 @@ export default function ProgressClientPage() {
                   disabled={!canGoForward}
                   className="rounded-full border border-[#d7dbd4] bg-[#f9faf2] px-4 py-2 text-sm font-bold text-[#002d1c] disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Next 30
+                  {t("checklist.next30")}
                 </button>
               </div>
             </div>
@@ -483,7 +575,7 @@ export default function ProgressClientPage() {
                         }
                         className="group flex min-w-0 flex-col items-center"
                         aria-pressed={isSelected}
-                        aria-label={`${monthDayFormatter.format(date)}: ${completedCount} items completed`}
+                        aria-label={`${monthDayFormatter.format(date)}: ${t("checklist.itemsCompleted").replace("{count}", String(completedCount))}`}
                       >
                         <span
                           className={[
@@ -491,7 +583,7 @@ export default function ProgressClientPage() {
                             isToday ? "opacity-100" : "opacity-0",
                           ].join(" ")}
                         >
-                          Today
+                          {t("checklist.today")}
                         </span>
                         <span className="flex h-64 w-full items-end">
                           <span
@@ -527,7 +619,7 @@ export default function ProgressClientPage() {
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.24em] text-[#5d6661]">
-                    Daily Progress
+                    {t("checklist.dailyProgress")}
                   </p>
                   <h3 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
                     {longDateFormatter.format(
@@ -535,7 +627,7 @@ export default function ProgressClientPage() {
                     )}
                   </h3>
                   <p className="mt-2 text-sm text-[#56615c]">
-                    These are the items you completed on that day.
+                    {t("checklist.dailyProgressDesc")}
                   </p>
                 </div>
 
@@ -544,7 +636,7 @@ export default function ProgressClientPage() {
                   onClick={() => setSelectedHistoryDate(null)}
                   className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#2b694d]"
                 >
-                  Close
+                  {t("checklist.close")}
                 </button>
               </div>
 
@@ -578,10 +670,10 @@ export default function ProgressClientPage() {
               <div className="flex items-center justify-between gap-4">
                 <div>
                   <h3 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                    Main declutter areas
+                    {t("checklist.mainAreasTitle")}
                   </h3>
                   <p className="mt-2 text-sm text-[#5e6662]">
-                    The spaces where you tend to make the most progress.
+                    {t("checklist.mainAreasDesc")}
                   </p>
                 </div>
               </div>
@@ -589,8 +681,7 @@ export default function ProgressClientPage() {
               <div className="mt-8 space-y-4">
                 {categoryTotals.length === 0 && (
                   <div className="rounded-[1.5rem] bg-[#f3f4ec] p-5 text-sm text-[#56615c]">
-                    No recorded progress yet. Complete a few checklist items and
-                    your main areas will show up here.
+                    {t("checklist.noProgressYet")}
                   </div>
                 )}
 
@@ -611,7 +702,10 @@ export default function ProgressClientPage() {
                             {area.category}
                           </h4>
                           <p className="text-sm text-[#5e6662]">
-                            {area.percentage}% of all recorded clears
+                            {t("checklist.percentageOfClears").replace(
+                              "{percentage}",
+                              String(area.percentage),
+                            )}
                           </p>
                         </div>
                       </div>
@@ -627,18 +721,16 @@ export default function ProgressClientPage() {
 
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <h3 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                Top 10 items repeatedly crossed
+                {t("checklist.topItemsTitle")}
               </h3>
               <p className="mt-2 text-sm text-[#5e6662]">
-                These are the items that appear most often across your
-                check-ins.
+                {t("checklist.topItemsDesc")}
               </p>
 
               <div className="mt-8 space-y-3">
                 {repeatedItems.length === 0 && (
                   <div className="rounded-[1.5rem] bg-[#f3f4ec] p-5 text-sm text-[#56615c]">
-                    Your top repeated items will appear here once you build some
-                    history.
+                    {t("checklist.topItemsEmpty")}
                   </div>
                 )}
 
@@ -671,6 +763,15 @@ export default function ProgressClientPage() {
           </section>
         </section>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label={t("header.openMenu")}
+        className="fixed bottom-5 left-5 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#002d1c] text-white shadow-lg shadow-[#1a1c18]/20 md:hidden"
+      >
+        <Bars3Icon className="h-5 w-5" />
+      </button>
     </main>
   );
 }

@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "@/lib/session";
 import { loadChecklistState, saveChecklistState } from "@/lib/checklist-db";
-import { normalizeChecklistState } from "@/app/declutter-checklist/lib/state";
+import { normalizeChecklistState } from "@/lib/checklist/state";
 
 async function getUserIdFromSession() {
   const cookie = (await cookies()).get("session")?.value;

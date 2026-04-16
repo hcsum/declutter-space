@@ -3,6 +3,7 @@
 import { AuthFormState } from "@/lib/definitions";
 import { useActionState } from "react";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
+import { useI18n } from "@/i18n/i18n-provider";
 
 interface AuthFormProps {
   formType: "login" | "signup";
@@ -15,9 +16,8 @@ export default function AuthForm({
   action,
   disableEmail = true,
 }: AuthFormProps) {
-  // Keep the classic dialog UI, but optionally disable email/password.
   const isSignup = formType === "signup";
-  // Always call hook with a safe fallback when email is disabled.
+  const { t, localePath } = useI18n();
   type ActionFn = (
     state: AuthFormState,
     formData: FormData,
@@ -35,22 +35,20 @@ export default function AuthForm({
     <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
       <div className="w-full md:max-w-md bg-white dark:bg-gray-800 md:rounded-lg md:shadow-lg p-6">
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-6">
-          {isSignup ? "Create Your Account" : "Login to Your Account"}
+          {isSignup ? t("auth.createAccount") : t("auth.loginAccount")}
         </h1>
 
-        {/* OAuth */}
         <div className="space-y-3">
           <GoogleSignInButton nextPath="/dashboard" className="w-full" />
           {!disableEmail && (
             <div className="flex items-center gap-2">
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
-              <span className="text-xs text-gray-400">or</span>
+              <span className="text-xs text-gray-400">{t("auth.or")}</span>
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
             </div>
           )}
         </div>
 
-        {/* Classic email/password form is hidden when disabled */}
         {!disableEmail && (
           <form action={formAction} className="space-y-4">
             <fieldset
@@ -64,12 +62,12 @@ export default function AuthForm({
                     htmlFor="name"
                     className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                   >
-                    Name
+                    {t("auth.name")}
                   </label>
                   <input
                     id="name"
                     name="name"
-                    placeholder="Name"
+                    placeholder={t("auth.namePlaceholder")}
                     defaultValue={formData.name}
                     className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                   />
@@ -86,12 +84,12 @@ export default function AuthForm({
                   htmlFor="email"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                  Email
+                  {t("auth.email")}
                 </label>
                 <input
                   id="email"
                   name="email"
-                  placeholder="Email"
+                  placeholder={t("auth.emailPlaceholder")}
                   defaultValue={formData.email}
                   className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
@@ -107,18 +105,20 @@ export default function AuthForm({
                   htmlFor="password"
                   className="block text-sm font-medium text-gray-700 dark:text-gray-300"
                 >
-                  Password
+                  {t("auth.password")}
                 </label>
                 <input
                   id="password"
                   name="password"
                   type="password"
-                  placeholder="Password"
+                  placeholder={t("auth.passwordPlaceholder")}
                   className="w-full mt-1 px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-900 dark:bg-gray-700 dark:border-gray-600 dark:text-gray-200"
                 />
                 {state?.errors?.password && (
                   <div className="mt-2">
-                    <p className="text-sm text-red-500">Password must:</p>
+                    <p className="text-sm text-red-500">
+                      {t("auth.passwordMust")}
+                    </p>
                     <ul className="list-disc list-inside text-sm text-red-500">
                       {state.errors.password.map((error) => (
                         <li key={error}>- {error}</li>
@@ -131,10 +131,10 @@ export default function AuthForm({
               {!isSignup && (
                 <div className="text-right">
                   <a
-                    href="/forgot-password"
+                    href={localePath("/forgot-password")}
                     className="text-sm text-blue-500 hover:underline dark:text-blue-400"
                   >
-                    Forgot Password?
+                    {t("auth.forgotPassword")}
                   </a>
                 </div>
               )}
@@ -150,11 +150,11 @@ export default function AuthForm({
               >
                 {pending
                   ? isSignup
-                    ? "Signing Up..."
-                    : "Logging In..."
+                    ? t("auth.signingUp")
+                    : t("auth.loggingIn")
                   : isSignup
-                    ? "Sign Up"
-                    : "Log In"}
+                    ? t("auth.signUp")
+                    : t("auth.logIn")}
               </button>
             </fieldset>
           </form>
@@ -162,14 +162,12 @@ export default function AuthForm({
 
         {!disableEmail && (
           <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
-            {isSignup
-              ? "Already have an account? "
-              : "Don't have an account yet? "}
+            {isSignup ? t("auth.alreadyHaveAccount") : t("auth.noAccountYet")}
             <a
-              href={isSignup ? "/login" : "/signup"}
+              href={isSignup ? localePath("/login") : localePath("/signup")}
               className="text-blue-500 hover:underline dark:text-blue-400"
             >
-              {isSignup ? "Log in" : "Sign up"}
+              {isSignup ? t("auth.loginLink") : t("auth.signupLink")}
             </a>
           </p>
         )}

@@ -2,7 +2,10 @@
 
 import Link from "next/link";
 import { ChangeEvent, useMemo, useState } from "react";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
+import { useI18n } from "@/i18n/i18n-provider";
 import ChecklistCloudBanner from "../components/ChecklistCloudBanner";
+import ChecklistLocaleSwitcher from "../components/ChecklistLocaleSwitcher";
 import {
   ArchivedItemsByEntryKey,
   CustomItemsByCategory,
@@ -14,8 +17,8 @@ import {
   buildImportedListId,
   getChecklistCategories,
   sanitizeImportedLists,
-} from "../lib/checklist";
-import { useChecklistPersistence } from "../lib/useChecklistPersistence";
+} from "@/lib/checklist/checklist";
+import { useChecklistPersistence } from "@/lib/checklist/useChecklistPersistence";
 
 type ParsedRow = { title: string; item: string };
 type PreviewList = {
@@ -351,7 +354,11 @@ function promotePresetHistoryToImportedHistory(
 }
 
 export default function UploadClientPage() {
-  const presetCategories = useMemo(() => getChecklistCategories(), []);
+  const { t, locale, localePath } = useI18n();
+  const presetCategories = useMemo(
+    () => getChecklistCategories(locale),
+    [locale],
+  );
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
   const [archivedItemsByEntryKey, setArchivedItemsByEntryKey] =
@@ -369,6 +376,7 @@ export default function UploadClientPage() {
   const [duplicateCount, setDuplicateCount] = useState(0);
   const [importMode, setImportMode] = useState<"merge" | "replace">("merge");
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const existingLists = importedLists;
 
@@ -495,8 +503,13 @@ export default function UploadClientPage() {
     setHistoryByDate(nextHistory);
     setSuccessMessage(
       importMode === "replace"
-        ? `Replaced your current lists from ${fileName ?? "your file"}. Previously crossed items were kept and merged with the new import.`
-        : `Merged ${nextLists.length} lists from ${fileName ?? "your file"} into your current lists.`,
+        ? t("checklist.uploadReplaceSuccess").replace(
+            "{file}",
+            fileName ?? t("checklist.yourFile"),
+          )
+        : t("checklist.uploadMergeSuccess")
+            .replace("{count}", String(nextLists.length))
+            .replace("{file}", fileName ?? t("checklist.yourFile")),
     );
   }
 
@@ -505,58 +518,119 @@ export default function UploadClientPage() {
       <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
           <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
-            DeclutterSpace
+            {t("common.appName")}
           </h1>
           <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
-            Let&apos;s declutter your home today
+            {t("checklist.sidebarSubtitle")}
           </p>
         </div>
 
         <nav className="flex-1 space-y-2 text-lg font-semibold">
           <Link
-            href="/declutter-checklist"
+            href={localePath("/declutter-checklist")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Declutter Checklist
+            {t("checklist.navChecklist")}
           </Link>
           <Link
-            href="/declutter-checklist/progress"
+            href={localePath("/declutter-checklist/progress")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Track your progress
+            {t("checklist.navProgress")}
           </Link>
           <Link
-            href="/declutter-checklist/upload"
+            href={localePath("/declutter-checklist/upload")}
             className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
           >
-            Upload your own list
+            {t("checklist.navUpload")}
           </Link>
         </nav>
 
-        <Link
-          href="/declutter-checklist"
-          className="block w-full rounded-xl bg-[#002d1c] py-4 text-center text-sm font-bold uppercase tracking-[0.18em] text-white"
-        >
-          Start Today&apos;s Declutter
-        </Link>
+        <ChecklistLocaleSwitcher />
       </aside>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-[#1a1c18]/35 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          <aside
+            className="flex h-full w-72 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/10"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <Link
+                  href={localePath("/")}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
+                    {t("common.appName")}
+                  </span>
+                </Link>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
+                  {t("checklist.sidebarSubtitle")}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(false)}
+                aria-label={t("checklist.close")}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2b694d] shadow-sm"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 space-y-2 text-lg font-semibold">
+              <Link
+                href={localePath("/declutter-checklist")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navChecklist")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/progress")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navProgress")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/upload")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
+              >
+                {t("checklist.navUpload")}
+              </Link>
+            </nav>
+
+            <ChecklistLocaleSwitcher />
+          </aside>
+        </div>
+      )}
 
       <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
-              Upload your own list
+              {t("checklist.uploadHeaderLabel")}
             </p>
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
-              Bring your own declutter lists in one CSV
+              {t("checklist.uploadHeaderTitle")}
             </h2>
           </div>
 
           <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
-            {existingLists.length > 0
-              ? existingLists.length
-              : presetCategories.length}{" "}
-            current lists
+            {t("checklist.currentLists").replace(
+              "{count}",
+              String(
+                existingLists.length > 0
+                  ? existingLists.length
+                  : presetCategories.length,
+              ),
+            )}
           </div>
         </header>
 
@@ -569,37 +643,36 @@ export default function UploadClientPage() {
           <section className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#6d756f]">
-                CSV format
+                {t("checklist.csvFormat")}
               </p>
               <h3 className="mt-3 text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                Keep it simple
+                {t("checklist.keepItSimple")}
               </h3>
               <p className="mt-4 text-sm text-[#56615c]">
-                Use one CSV file with two columns: one for the list title, one
-                for the item. One file can cover as many lists as you want.
+                {t("checklist.csvFormatDesc")}
               </p>
               <pre className="mt-6 overflow-x-auto rounded-[1.5rem] bg-[#f3f4ec] p-5 text-sm leading-7 text-[#002d1c]">
                 <code>{sampleCsv}</code>
               </pre>
               <p className="mt-4 text-sm text-[#56615c]">
-                Use exactly this header row: <code>list,item</code>.
+                {t("checklist.csvHeaderHint")}
               </p>
             </article>
 
             <article className="rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
               <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#6d756f]">
-                Import file
+                {t("checklist.importFile")}
               </p>
               <h3 className="mt-3 text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                Import your lists in one step
+                {t("checklist.importTitle")}
               </h3>
 
               <label className="mt-6 flex cursor-pointer flex-col items-center justify-center rounded-[1.75rem] border-2 border-dashed border-[#c9d0c8] bg-[#f3f4ec] px-6 py-10 text-center">
                 <span className="text-lg font-bold text-[#002d1c]">
-                  Choose a CSV file
+                  {t("checklist.chooseCsv")}
                 </span>
                 <span className="mt-2 text-sm text-[#56615c]">
-                  {fileName ?? "No file selected yet"}
+                  {fileName ?? t("checklist.noFileSelected")}
                 </span>
                 <input
                   type="file"
@@ -615,21 +688,23 @@ export default function UploadClientPage() {
                     {previewLists.length}
                   </div>
                   <div className="mt-1 text-sm text-[#56615c]">
-                    lists detected
+                    {t("checklist.listsDetected")}
                   </div>
                 </div>
                 <div className="rounded-[1.5rem] bg-[#f3f4ec] p-4">
                   <div className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
                     {previewItemCount}
                   </div>
-                  <div className="mt-1 text-sm text-[#56615c]">items ready</div>
+                  <div className="mt-1 text-sm text-[#56615c]">
+                    {t("checklist.itemsReady")}
+                  </div>
                 </div>
                 <div className="rounded-[1.5rem] bg-[#f3f4ec] p-4">
                   <div className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
                     {invalidRowCount + duplicateCount}
                   </div>
                   <div className="mt-1 text-sm text-[#56615c]">
-                    rows skipped
+                    {t("checklist.rowsSkipped")}
                   </div>
                 </div>
               </div>
@@ -645,7 +720,7 @@ export default function UploadClientPage() {
                       : "bg-[#edefe7] text-[#2b694d]",
                   ].join(" ")}
                 >
-                  Merge with current lists
+                  {t("checklist.mergeCurrent")}
                 </button>
                 <button
                   type="button"
@@ -657,18 +732,16 @@ export default function UploadClientPage() {
                       : "bg-[#edefe7] text-[#2b694d]",
                   ].join(" ")}
                 >
-                  Replace current lists
+                  {t("checklist.replaceCurrent")}
                 </button>
               </div>
 
               <p className="mt-4 text-sm text-[#56615c]">
-                Crossed items will always be kept and merged into the new active
-                lists.
+                {t("checklist.crossedItemsKept")}
               </p>
 
               <div className="mt-6 rounded-[1.5rem] bg-[#f3f4ec] p-5 text-sm text-[#56615c]">
-                Merge adds the CSV into your current active lists. Replace swaps
-                your current active lists for the new import.
+                {t("checklist.mergeReplaceDesc")}
               </div>
 
               {parseError && (
@@ -690,13 +763,13 @@ export default function UploadClientPage() {
                   disabled={previewLists.length === 0 || Boolean(parseError)}
                   className="rounded-xl bg-[#002d1c] px-5 py-3 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  Import lists
+                  {t("checklist.importLists")}
                 </button>
                 <Link
-                  href="/declutter-checklist"
+                  href={localePath("/declutter-checklist")}
                   className="rounded-xl bg-[#edefe7] px-5 py-3 text-sm font-bold text-[#2b694d]"
                 >
-                  Go to checklist
+                  {t("checklist.goToChecklist")}
                 </Link>
               </div>
             </article>
@@ -706,22 +779,24 @@ export default function UploadClientPage() {
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div>
                 <h3 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  Preview your imported lists
+                  {t("checklist.previewTitle")}
                 </h3>
                 <p className="mt-2 text-sm text-[#5e6662]">
-                  Review the titles and items before saving them into your
-                  checklist.
+                  {t("checklist.previewDesc")}
                 </p>
               </div>
               <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-semibold text-[#2b694d]">
-                {existingLists.length} currently stored
+                {t("checklist.currentlyStored").replace(
+                  "{count}",
+                  String(existingLists.length),
+                )}
               </div>
             </div>
 
             <div className="mt-8 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {previewLists.length === 0 && (
                 <div className="rounded-[1.5rem] bg-[#f3f4ec] p-5 text-sm text-[#56615c]">
-                  Upload a CSV to preview your lists here.
+                  {t("checklist.uploadToPreview")}
                 </div>
               )}
 
@@ -746,7 +821,7 @@ export default function UploadClientPage() {
                         {list.title}
                       </h4>
                       <p className="text-sm text-[#5e6662]">
-                        {list.items.length} items
+                        {list.items.length} {t("checklist.items")}
                       </p>
                     </div>
                   </div>
@@ -767,6 +842,15 @@ export default function UploadClientPage() {
           </section>
         </section>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label={t("header.openMenu")}
+        className="fixed bottom-5 left-5 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#002d1c] text-white shadow-lg shadow-[#1a1c18]/20 md:hidden"
+      >
+        <Bars3Icon className="h-5 w-5" />
+      </button>
     </main>
   );
 }

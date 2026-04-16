@@ -2,9 +2,12 @@
 
 import { FormEvent, useMemo, useState } from "react";
 import Link from "next/link";
+import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDialogState } from "@/components/DialogProvider";
+import { useI18n } from "@/i18n/i18n-provider";
 import { logout } from "@/actions/auth";
 import ChecklistCloudBanner from "./components/ChecklistCloudBanner";
+import ChecklistLocaleSwitcher from "./components/ChecklistLocaleSwitcher";
 import {
   ArchivedItemsByEntryKey,
   CustomItemsByCategory,
@@ -13,12 +16,11 @@ import {
   RemovedItemsByCategory,
   buildEntryKey,
   formatDateKey,
-  getAllChecklistCategories,
-  longDateFormatter,
-  monthDayFormatter,
+  getChecklistDateFormatters,
+  getLocalizedChecklistCategories,
   parseDateKey,
-} from "./lib/checklist";
-import { useChecklistPersistence } from "./lib/useChecklistPersistence";
+} from "@/lib/checklist/checklist";
+import { useChecklistPersistence } from "@/lib/checklist/useChecklistPersistence";
 
 type DraftsByCategory = Record<string, string>;
 
@@ -33,7 +35,6 @@ const categoryAccents = [
 
 function getFlowDates() {
   const today = new Date();
-
   return Array.from({ length: 31 }, (_, index) => {
     const date = new Date(today);
     date.setDate(today.getDate() + index - 10);
@@ -47,9 +48,14 @@ function getCategoryAccent(index: number) {
 
 export default function ClientPage() {
   const { setDialogContent } = useDialogState();
+  const { t, locale, localePath } = useI18n();
   const today = new Date();
   const todayKey = formatDateKey(today);
   const flowDates = useMemo(() => getFlowDates(), []);
+  const { monthDayFormatter, longDateFormatter } = useMemo(
+    () => getChecklistDateFormatters(locale),
+    [locale],
+  );
 
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
@@ -65,25 +71,33 @@ export default function ClientPage() {
   const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
     null,
   );
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
   const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
 
   const categories = useMemo(
     () =>
-      getAllChecklistCategories(importedLists).map((category) => ({
-        ...category,
-        defaultItems:
-          importedLists.length > 0
-            ? category.defaultItems
-            : category.defaultItems.filter(
-                (item) =>
-                  !(removedItemsByCategory[category.key] ?? []).includes(
-                    item.id,
-                  ),
-              ),
-      })),
-    [importedLists, removedItemsByCategory],
+      getLocalizedChecklistCategories(locale, importedLists).map(
+        (category) => ({
+          ...category,
+          defaultItems:
+            importedLists.length > 0
+              ? category.defaultItems
+              : category.defaultItems.filter(
+                  (item) =>
+                    !(removedItemsByCategory[category.key] ?? []).includes(
+                      item.id,
+                    ),
+                ),
+        }),
+      ),
+    [importedLists, locale, removedItemsByCategory],
+  );
+
+  const historyCategories = useMemo(
+    () => getLocalizedChecklistCategories(locale, importedLists),
+    [importedLists, locale],
   );
 
   const checklistState = useMemo(
@@ -121,15 +135,13 @@ export default function ClientPage() {
 
   const allItemsByEntryKey = useMemo(() => {
     const entries = new Map<string, { category: string; text: string }>();
-
-    categories.forEach((category) => {
+    historyCategories.forEach((category) => {
       category.defaultItems.forEach((item) => {
         entries.set(buildEntryKey(category.key, item.id), {
           category: category.category,
           text: item.text,
         });
       });
-
       (customItemsByCategory[category.key] ?? []).forEach((item) => {
         entries.set(buildEntryKey(category.key, item.id), {
           category: category.category,
@@ -137,9 +149,8 @@ export default function ClientPage() {
         });
       });
     });
-
     return entries;
-  }, [categories, customItemsByCategory]);
+  }, [customItemsByCategory, historyCategories]);
 
   const todayHistorySet = useMemo(
     () => new Set(historyByDate[todayKey] ?? []),
@@ -156,7 +167,6 @@ export default function ClientPage() {
     const details =
       allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
     if (!details) return groups;
-
     const existing = groups.find(
       (group) => group.category === details.category,
     );
@@ -164,22 +174,19 @@ export default function ClientPage() {
       existing.items.push(details.text);
       return groups;
     }
-
     groups.push({ category: details.category, items: [details.text] });
     return groups;
   }, []);
 
   function toggleItem(categoryKey: string, itemId: string) {
     const entryKey = buildEntryKey(categoryKey, itemId);
-
     if (hasLoadedStorage && !hasSeenMomentumDialog) {
       setHasSeenMomentumDialog(true);
       setDialogContent({
-        title: "Keep the momentum going",
+        title: t("checklist.momentumTitle"),
         content: (
           <p className="text-base leading-7 text-neutral-700 dark:text-neutral-300">
-            Decluttering is an ongoing progress, make sure to check back and
-            build momentum.
+            {t("checklist.momentumDesc")}
           </p>
         ),
         actions: (
@@ -188,7 +195,7 @@ export default function ClientPage() {
             onClick={() => setDialogContent(undefined)}
             className="rounded-xl bg-[#002d1c] px-5 py-2.5 text-sm font-bold text-white"
           >
-            Keep going
+            {t("checklist.keepGoing")}
           </button>
         ),
       });
@@ -197,13 +204,10 @@ export default function ClientPage() {
     setHistoryByDate((prev) => {
       const next = { ...prev };
       const entries = new Set(next[todayKey] ?? []);
-
       if (entries.has(entryKey)) entries.delete(entryKey);
       else entries.add(entryKey);
-
       if (entries.size === 0) delete next[todayKey];
       else next[todayKey] = Array.from(entries);
-
       return next;
     });
   }
@@ -215,7 +219,6 @@ export default function ClientPage() {
     event.preventDefault();
     const draft = (draftsByCategory[categoryKey] ?? "").trim();
     if (!draft) return;
-
     setCustomItemsByCategory((prev) => {
       const next = { ...prev };
       const items = next[categoryKey] ? [...next[categoryKey]] : [];
@@ -226,7 +229,6 @@ export default function ClientPage() {
       next[categoryKey] = items;
       return next;
     });
-
     setDraftsByCategory((prev) => ({ ...prev, [categoryKey]: "" }));
   }
 
@@ -238,32 +240,24 @@ export default function ClientPage() {
       (customItemsByCategory[categoryKey] ?? []).find(
         (value) => value.id === itemId,
       );
-
     if (category && item) {
       setArchivedItemsByEntryKey((prev) => ({
         ...prev,
-        [entryKey]: {
-          category: category.category,
-          text: item.text,
-        },
+        [entryKey]: { category: category.category, text: item.text },
       }));
     }
-
     if (itemId.startsWith("custom-")) {
       setCustomItemsByCategory((prev) => {
         const next = { ...prev };
         const filtered = (next[categoryKey] ?? []).filter(
           (item) => item.id !== itemId,
         );
-
         if (filtered.length === 0) delete next[categoryKey];
         else next[categoryKey] = filtered;
-
         return next;
       });
       return;
     }
-
     if (importedLists.length > 0) {
       setImportedLists((prev) =>
         prev
@@ -278,7 +272,6 @@ export default function ClientPage() {
       );
       return;
     }
-
     setRemovedItemsByCategory((prev) => {
       const next = { ...prev };
       const removed = new Set(next[categoryKey] ?? []);
@@ -294,11 +287,11 @@ export default function ClientPage() {
     itemText: string,
   ) {
     setDialogContent({
-      title: "Pew, done with this for good? Press yes to confirm.",
+      title: t("checklist.confirmRemoveTitle"),
       content: (
         <div className="space-y-3 text-base leading-7 text-neutral-700 dark:text-neutral-300">
           <p>{itemText}</p>
-          <p>This item will still be kept in your decluterring progress.</p>
+          <p>{t("checklist.confirmRemoveDesc")}</p>
         </div>
       ),
       actions: (
@@ -308,7 +301,7 @@ export default function ClientPage() {
             onClick={() => setDialogContent(undefined)}
             className="rounded-xl bg-[#edefe7] px-5 py-2.5 text-sm font-bold text-[#2b694d]"
           >
-            Cancel
+            {t("checklist.cancel")}
           </button>
           <button
             type="button"
@@ -318,78 +311,155 @@ export default function ClientPage() {
             }}
             className="rounded-xl bg-[#002d1c] px-5 py-2.5 text-sm font-bold text-white"
           >
-            Yes
+            {t("checklist.yes")}
           </button>
         </div>
       ),
     });
   }
 
+  const checklistPath = localePath("/declutter-checklist");
+
   return (
     <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
       <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
         <div className="mb-8">
-          <Link href="/">
+          <Link href={localePath("/")}>
             <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
-              DeclutterSpace
+              {t("common.appName")}
             </span>
           </Link>
           <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
-            Let&apos;s declutter your home today
+            {t("checklist.sidebarSubtitle")}
           </p>
         </div>
 
         <nav className="flex-1 space-y-2 text-lg font-semibold">
           <Link
-            href="/declutter-checklist"
+            href={checklistPath}
             className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
           >
-            Declutter Checklist
+            {t("checklist.navChecklist")}
           </Link>
           <Link
-            href="/declutter-checklist/progress"
+            href={localePath("/declutter-checklist/progress")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Track your progress
+            {t("checklist.navProgress")}
           </Link>
           <Link
-            href="/declutter-checklist/upload"
+            href={localePath("/declutter-checklist/upload")}
             className="block rounded-xl p-3 text-[#414844]"
           >
-            Upload your own list
+            {t("checklist.navUpload")}
           </Link>
         </nav>
 
-        <button className="w-full rounded-xl bg-[#002d1c] py-4 text-sm font-bold tracking-[0.18em] text-white uppercase">
-          Start Today&apos;s Declutter
-        </button>
-
         <div className="mt-6 space-y-2 text-sm font-medium">
-          <div className="rounded-xl p-2 text-[#414844]">Help</div>
           {isLoggedIn && (
             <button
               onClick={logout}
               className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
             >
-              Sign Out
+              {t("checklist.signOut")}
             </button>
           )}
         </div>
+
+        <ChecklistLocaleSwitcher />
       </aside>
+
+      {isSidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-[#1a1c18]/35 md:hidden"
+          onClick={() => setIsSidebarOpen(false)}
+        >
+          <aside
+            className="flex h-full w-72 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/10"
+            onClick={(event) => event.stopPropagation()}
+          >
+            <div className="mb-8 flex items-start justify-between gap-4">
+              <div>
+                <Link
+                  href={localePath("/")}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
+                    {t("common.appName")}
+                  </span>
+                </Link>
+                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
+                  {t("checklist.sidebarSubtitle")}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsSidebarOpen(false)}
+                aria-label={t("checklist.close")}
+                className="flex h-10 w-10 items-center justify-center rounded-full bg-white text-[#2b694d] shadow-sm"
+              >
+                <XMarkIcon className="h-5 w-5" />
+              </button>
+            </div>
+
+            <nav className="flex-1 space-y-2 text-lg font-semibold">
+              <Link
+                href={checklistPath}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl bg-white p-3 text-[#002d1c] shadow-sm"
+              >
+                {t("checklist.navChecklist")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/progress")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navProgress")}
+              </Link>
+              <Link
+                href={localePath("/declutter-checklist/upload")}
+                onClick={() => setIsSidebarOpen(false)}
+                className="block rounded-xl p-3 text-[#414844]"
+              >
+                {t("checklist.navUpload")}
+              </Link>
+            </nav>
+
+            <div className="mt-6 space-y-2 text-sm font-medium">
+              {isLoggedIn && (
+                <button
+                  onClick={() => {
+                    setIsSidebarOpen(false);
+                    void logout();
+                  }}
+                  className="w-full rounded-xl p-2 text-left text-[#ba1a1a] hover:bg-[#ba1a1a]/10"
+                >
+                  {t("checklist.signOut")}
+                </button>
+              )}
+            </div>
+
+            <ChecklistLocaleSwitcher />
+          </aside>
+        </div>
+      )}
 
       <div className="flex min-w-0 flex-1 flex-col md:ml-64">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
             <h1 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
-              Declutter Checklist
+              {t("checklist.headerLabel")}
             </h1>
             <p className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
-              What you keep shapes how you live
+              {t("checklist.headerTitle")}
             </p>
           </div>
-
           <div className="rounded-full bg-[#edefe7] px-4 py-2 text-sm font-bold text-[#2b694d]">
-            {todayHistorySet.size} tasks today
+            {t("checklist.tasksToday").replace(
+              "{count}",
+              String(todayHistorySet.size),
+            )}
           </div>
         </header>
 
@@ -403,16 +473,14 @@ export default function ClientPage() {
             <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
               <div>
                 <h2 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  Decluttering is an on-going progress
+                  {t("checklist.ongoingTitle")}
                 </h2>
                 <p className="mt-1 text-sm font-medium text-[#5e6662]">
-                  Your declutter checklist resets each day, while your daily
-                  progress stays part of the bigger picture.
+                  {t("checklist.ongoingDesc")}
                 </p>
               </div>
-
               <div className="text-sm font-bold text-[#2b694d]">
-                try to actually do 1 or 2 tasks today, every bit counts.
+                {t("checklist.tryTasks")}
               </div>
             </div>
 
@@ -448,7 +516,7 @@ export default function ClientPage() {
                         }
                         className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end"
                         aria-pressed={isSelected}
-                        aria-label={`${monthDayFormatter.format(date)}: ${completedCount} items completed`}
+                        aria-label={`${monthDayFormatter.format(date)}: ${t("checklist.itemsCompleted").replace("{count}", String(completedCount))}`}
                       >
                         <span
                           className={[
@@ -456,7 +524,7 @@ export default function ClientPage() {
                             isToday ? "opacity-100" : "opacity-0",
                           ].join(" ")}
                         >
-                          Today
+                          {t("checklist.today")}
                         </span>
                         <span
                           className={[
@@ -480,7 +548,7 @@ export default function ClientPage() {
 
                 <div className="mt-3 flex justify-between text-[11px] font-semibold uppercase tracking-[0.22em] text-[#717973]">
                   <span>{monthDayFormatter.format(flowDates[0])}</span>
-                  <span>Tap a highlighted bar to inspect that day</span>
+                  <span>{t("checklist.tapBar")}</span>
                   <span>
                     {monthDayFormatter.format(flowDates[flowDates.length - 1])}
                   </span>
@@ -494,7 +562,7 @@ export default function ClientPage() {
               <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
                 <div>
                   <p className="text-xs font-black uppercase tracking-[0.24em] text-[#5d6661]">
-                    Daily Progress
+                    {t("checklist.dailyProgress")}
                   </p>
                   <h3 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
                     {longDateFormatter.format(
@@ -502,16 +570,15 @@ export default function ClientPage() {
                     )}
                   </h3>
                   <p className="mt-2 text-sm text-[#56615c]">
-                    These are the items you completed on that day.
+                    {t("checklist.dailyProgressDesc")}
                   </p>
                 </div>
-
                 <button
                   type="button"
                   onClick={() => setSelectedHistoryDate(null)}
                   className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#2b694d]"
                 >
-                  Close
+                  {t("checklist.close")}
                 </button>
               </div>
 
@@ -542,7 +609,7 @@ export default function ClientPage() {
 
           <div className="flex items-center justify-between">
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
-              Your Daily Declutter Tasks
+              {t("checklist.dailyTasksTitle")}
             </h2>
             <button
               type="button"
@@ -554,7 +621,9 @@ export default function ClientPage() {
                   : "bg-[#edefe7] text-[#2b694d] hover:bg-[#e0e4d9]",
               ].join(" ")}
             >
-              {isEditMode ? "✓ Done editing" : "✎ Edit list"}
+              {isEditMode
+                ? t("checklist.doneEditing")
+                : t("checklist.editList")}
             </button>
           </div>
 
@@ -590,7 +659,6 @@ export default function ClientPage() {
                         {category.category}
                       </h3>
                     </div>
-
                     <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#2b694d]">
                       {completedCount}/{allItems.length}
                     </span>
@@ -600,7 +668,6 @@ export default function ClientPage() {
                     {sortedItems.map((item) => {
                       const entryKey = buildEntryKey(category.key, item.id);
                       const isChecked = todayHistorySet.has(entryKey);
-
                       return (
                         <div key={item.id} className="flex items-start gap-3">
                           <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
@@ -619,7 +686,6 @@ export default function ClientPage() {
                               {item.text}
                             </span>
                           </label>
-
                           {isEditMode && (
                             <button
                               type="button"
@@ -631,9 +697,9 @@ export default function ClientPage() {
                                 )
                               }
                               className="rounded-full bg-white px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#7a3222]"
-                              aria-label={`Remove ${item.text}`}
+                              aria-label={`${t("checklist.remove")} ${item.text}`}
                             >
-                              Remove
+                              {t("checklist.remove")}
                             </button>
                           )}
                         </div>
@@ -656,14 +722,14 @@ export default function ClientPage() {
                               [category.key]: event.target.value,
                             }))
                           }
-                          placeholder="Add item"
+                          placeholder={t("checklist.addItem")}
                           className="min-w-0 flex-1 border-none bg-transparent px-3 py-2 text-sm focus:ring-0"
                         />
                         <button
                           type="submit"
                           className="rounded-2xl bg-[#002d1c] px-4 py-2 text-sm font-bold text-white"
                         >
-                          Add
+                          {t("checklist.add")}
                         </button>
                       </div>
                     </form>
@@ -677,25 +743,31 @@ export default function ClientPage() {
             <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
               <div className="max-w-3xl">
                 <p className="text-[10px] font-black uppercase tracking-[0.28em] text-[#b0f1cc]">
-                  Daily Reminder
+                  {t("checklist.dailyReminder")}
                 </p>
                 <h3 className="mt-3 text-2xl font-bold leading-tight tracking-[-0.04em]">
-                  &quot;When you revisit your belongings, you&apos;re deciding
-                  what deserves space in your life.&quot;
+                  {t("checklist.reminderQuote")}
                 </h3>
                 <p className="mt-3 text-sm text-[#b7d1c4]">
-                  Your checklist resets each day, but your consistency keeps
-                  compounding.
+                  {t("checklist.reminderDesc")}
                 </p>
               </div>
-
               <div className="flex h-24 w-24 items-center justify-center rounded-full border-4 border-white/10 bg-[#2b694d] text-xs font-black uppercase tracking-[0.2em] text-[#b0f1cc] md:h-32 md:w-32">
-                Flow
+                {t("checklist.flow")}
               </div>
             </div>
           </section>
         </section>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label={t("header.openMenu")}
+        className="fixed bottom-5 left-5 z-30 flex h-12 w-12 items-center justify-center rounded-full bg-[#002d1c] text-white shadow-lg shadow-[#1a1c18]/20 md:hidden"
+      >
+        <Bars3Icon className="h-5 w-5" />
+      </button>
     </main>
   );
 }

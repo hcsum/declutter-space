@@ -1,4 +1,6 @@
 import data from "@/const/declutter-checklist.json";
+import zhData from "@/const/declutter-checklist.zh.json";
+import { defaultLocale, type Locale } from "@/i18n/config";
 
 export type DeclutterCategory = { category: string; items: string[] };
 export type CustomItem = { id: string; text: string };
@@ -21,6 +23,10 @@ export type ChecklistCategory = DeclutterCategory & {
 };
 
 const checklist = data as DeclutterCategory[];
+const localizedChecklists: Record<Locale, DeclutterCategory[]> = {
+  en: checklist,
+  zh: zhData as DeclutterCategory[],
+};
 
 export const CUSTOM_ITEMS_STORAGE_KEY = "declutter-checklist-custom-items";
 export const REMOVED_ITEMS_STORAGE_KEY = "declutter-checklist-removed-items";
@@ -30,22 +36,28 @@ export const MOMENTUM_DIALOG_STORAGE_KEY =
   "declutter-checklist-momentum-dialog-seen";
 export const IMPORTED_LISTS_STORAGE_KEY = "declutter-checklist-imported-lists";
 
-export const monthDayFormatter = new Intl.DateTimeFormat("en-US", {
-  month: "short",
-  day: "numeric",
-});
-
-export const longDateFormatter = new Intl.DateTimeFormat("en-US", {
-  weekday: "long",
-  month: "long",
-  day: "numeric",
-  year: "numeric",
-});
+export function getChecklistDateFormatters(locale: Locale) {
+  return {
+    monthDayFormatter: new Intl.DateTimeFormat(locale, {
+      month: "short",
+      day: "numeric",
+    }),
+    longDateFormatter: new Intl.DateTimeFormat(locale, {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    }),
+  };
+}
 
 export function slugify(value: string) {
-  return value
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
+  return Array.from(value.toLowerCase())
+    .map((char) =>
+      /^[a-z0-9]$/.test(char) || /^[\u4e00-\u9fff]$/.test(char) ? char : "-",
+    )
+    .join("")
+    .replace(/-+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
 
@@ -69,16 +81,22 @@ export function buildCategoryKey(category: string, index: number) {
   return `${slugify(category)}-${index}`;
 }
 
-export function getChecklistCategories() {
-  return checklist.map((category, index) => ({
-    ...category,
-    key: buildCategoryKey(category.category, index),
-    defaultItems: category.items.map((text, itemIndex) => ({
-      id: `default-${itemIndex}`,
-      text,
-    })),
-    source: "built-in" as const,
-  }));
+export function getChecklistCategories(locale: Locale = defaultLocale) {
+  const localizedChecklist = localizedChecklists[locale] ?? checklist;
+
+  return checklist.map((baseCategory, index) => {
+    const localizedCategory = localizedChecklist[index] ?? baseCategory;
+
+    return {
+      ...localizedCategory,
+      key: buildCategoryKey(baseCategory.category, index),
+      defaultItems: baseCategory.items.map((baseText, itemIndex) => ({
+        id: `default-${itemIndex}`,
+        text: localizedCategory.items[itemIndex] ?? baseText,
+      })),
+      source: "built-in" as const,
+    };
+  });
 }
 
 export function buildImportedListId(title: string) {
@@ -137,6 +155,14 @@ export function getImportedCategories(importedLists: ImportedList[]) {
 export function getAllChecklistCategories(importedLists: ImportedList[] = []) {
   if (importedLists.length > 0) return getImportedCategories(importedLists);
   return getChecklistCategories();
+}
+
+export function getLocalizedChecklistCategories(
+  locale: Locale,
+  importedLists: ImportedList[] = [],
+) {
+  if (importedLists.length > 0) return getImportedCategories(importedLists);
+  return getChecklistCategories(locale);
 }
 
 export function getTimelineDates(startDate: Date, endDate: Date) {

@@ -1,7 +1,9 @@
 "use client";
 
+import Link from "next/link";
 import { useDialogState } from "@/components/DialogProvider";
-import checklist from "@/const/declutter-checklist.json";
+import { useI18n } from "@/i18n/i18n-provider";
+import { getChecklistCategories } from "@/lib/checklist/checklist";
 
 type PoolItem = { category: string; item: string };
 
@@ -12,10 +14,11 @@ export default function HomeCtas({
   showTaskButton?: boolean;
   showChecklistLink?: boolean;
 }) {
+  const { t, locale, localePath } = useI18n();
   const { setDialogContent } = useDialogState();
 
   function randomDeclutterTasks(): PoolItem[] {
-    const data = checklist as Array<{ category: string; items: string[] }>;
+    const data = getChecklistCategories(locale);
     const pool: PoolItem[] = [];
     for (const c of data) {
       for (const item of c.items) pool.push({ category: c.category, item });
@@ -37,12 +40,11 @@ export default function HomeCtas({
     const choice = picks[0];
     const reroll = () => onGiveMeTask();
     setDialogContent({
-      title: "Quick Declutter Task",
+      title: t("homeCtas.dialogTitle"),
       content: (
         <div className="pt-2 text-left">
           {choice ? (
             <div className="space-y-3">
-              {/* Category label: remove ALL CAPS and switch to a friendlier font for readability */}
               <div className="text-xl tracking-normal text-black dark:text-white font-medium font-geist">
                 {choice.category}
               </div>
@@ -50,13 +52,12 @@ export default function HomeCtas({
                 {choice.item}
               </h3>
               <p className="text-neutral-600 dark:text-neutral-300">
-                Spend some time on this. Do what you can. Set a timer if you
-                want.
+                {t("homeCtas.dialogSpentTime")}
               </p>
             </div>
           ) : (
             <p className="text-neutral-600 dark:text-neutral-300">
-              No tasks available.
+              {t("homeCtas.dialogNoTasks")}
             </p>
           )}
         </div>
@@ -67,13 +68,13 @@ export default function HomeCtas({
             onClick={() => setDialogContent(undefined)}
             className="px-4 py-2 rounded-md border border-gray-300 dark:border-gray-600 text-gray-800 dark:text-gray-100 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
           >
-            OK
+            {t("homeCtas.ok")}
           </button>
           <button
             onClick={reroll}
             className="px-4 py-2 rounded-md bg-blue-500 hover:bg-blue-600 text-white"
           >
-            Give me another
+            {t("homeCtas.giveMeAnother")}
           </button>
         </div>
       ),
@@ -87,16 +88,16 @@ export default function HomeCtas({
           onClick={onGiveMeTask}
           className="bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 mt-6 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
         >
-          Get a Declutter task
+          {t("homeCtas.getTask")}
         </button>
       )}
       {showChecklistLink && (
-        <a
-          href="/declutter-checklist"
+        <Link
+          href={localePath("/declutter-checklist")}
           className="inline-flex items-center justify-center bg-blue-500 hover:bg-blue-600 text-white font-medium px-6 py-3 rounded-lg text-lg transition-colors duration-200 w-full sm:w-auto"
         >
-          Check the full Declutter Checklist
-        </a>
+          {t("homeCtas.checklistLink")}
+        </Link>
       )}
     </div>
   );
