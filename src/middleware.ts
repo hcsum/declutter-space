@@ -12,7 +12,14 @@ const publicRoutes = [
   "/api/auth/post-login",
 ];
 
-const i18nExcludedPrefixes = ["/posts", "/api", "/_next"];
+const i18nExcludedPrefixes = [
+  "/posts",
+  "/api",
+  "/_next",
+  "/robots.txt",
+  "/sitemap.xml",
+  "/sitemap-",
+];
 
 function isI18nExcluded(pathname: string): boolean {
   return i18nExcludedPrefixes.some((p) => pathname.startsWith(p));

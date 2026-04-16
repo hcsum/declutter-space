@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: process.env.SITE_URL,
+  siteUrl: process.env.SITE_URL || "https://declutterspace.net",
   generateRobotsTxt: true,
   exclude: [
     "/privacy-policy",
