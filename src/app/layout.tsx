@@ -6,6 +6,7 @@ import Providers from "@/components/Providers";
 import I18nWrapper from "@/components/I18nWrapper";
 import LandingPageHeader from "@/components/Header";
 import AppFooter from "@/components/AppFooter";
+import { siteUrl } from "@/lib/site";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,7 +34,7 @@ export const metadata: Metadata = {
     "declutter your home",
     "how to declutter your home",
   ],
-  metadataBase: new URL("https://declutterspace.net"),
+  metadataBase: new URL(siteUrl),
   alternates: {
     canonical: "/",
   },

@@ -11,7 +11,7 @@
     "account": "Account"
   },
   "footer": {
-    "copyright": "© {year} declutterspace.net. All rights reserved.",
+    "copyright": "© {year} declutteryourhome.net. All rights reserved.",
     "builtWithLove": "Built with love to help you simplify your life.",
     "customerServicePolicy": "Customer Service Policy",
     "privacyPolicy": "Privacy Policy",
@@ -143,18 +143,18 @@
     "serviceProviders": "Service Providers: Trusted third parties that assist with app functionality, payment processing, and customer support.",
     "legalObligations": "Legal Obligations: When required by law or to protect the rights and safety of our users.",
     "dataRetention": "4. Data Retention",
-    "dataRetentionDesc": "We retain your data for as long as necessary to provide our services and comply with legal obligations. You can request deletion of your data by contacting us at: <email>hi@declutterspace.net</email>.",
+    "dataRetentionDesc": "We retain your data for as long as necessary to provide our services and comply with legal obligations. You can request deletion of your data by contacting us at: <email>hi@declutteryourhome.net</email>.",
     "yourRights": "5. Your Rights",
     "right1": "Access, update, or delete your personal information.",
     "right2": "Opt-out of marketing communications.",
     "right3": "Request a copy of your data in a portable format.",
-    "yourRightsContact": "To exercise these rights, contact us at: <email>hi@declutterspace.net</email>.",
+    "yourRightsContact": "To exercise these rights, contact us at: <email>hi@declutteryourhome.net</email>.",
     "security": "6. Security",
     "securityDesc": "We implement industry-standard security measures to protect your data. However, no method of transmission or storage is 100% secure. Please use our services at your discretion.",
     "changes": "7. Changes to This Policy",
     "changesDesc": "We may update this policy periodically. Changes will be effective immediately upon posting. Please review this policy regularly to stay informed.",
     "contactUs": "8. Contact Us",
-    "contactUsDesc": "For questions or concerns about this Privacy Policy, please contact us at: <email>hi@declutterspace.net</email>."
+    "contactUsDesc": "For questions or concerns about this Privacy Policy, please contact us at: <email>hi@declutteryourhome.net</email>."
   },
   "customerService": {
     "title": "Customer Service Policy",
@@ -166,15 +166,15 @@
     "nonRefundable": "2. Non-Refundable Items",
     "nonRefundableDesc": "Certain purchases, such as one-time downloadable content or special promotions, are non-refundable. These items will be clearly marked at the time of purchase.",
     "refundProcess": "3. Refund Request Process",
-    "process1": "Submit your refund request by emailing us at <email>hi@declutterspace.net</email> with the subject line \"Refund Request.\"",
+    "process1": "Submit your refund request by emailing us at <email>hi@declutteryourhome.net</email> with the subject line \"Refund Request.\"",
     "process2": "Include your name, email address, and proof of purchase in the email body.",
     "process3": "Our team will review your request and respond within 5-7 business days.",
     "disputeResolution": "4. Dispute Resolution",
     "disputeIntro": "If you are dissatisfied with our service, we encourage you to contact us to resolve the issue before filing a dispute. We are committed to finding a solution that works for you.",
-    "dispute1": "Contact our support team at <email>hi@declutterspace.net</email> and provide details of the issue.",
+    "dispute1": "Contact our support team at <email>hi@declutteryourhome.net</email> and provide details of the issue.",
     "dispute2": "If the issue cannot be resolved, you may escalate it to a formal dispute through your payment provider.",
     "contactUs": "5. Contact Us",
-    "contactUsDesc": "For any questions or concerns regarding this Refund and Dispute Policy, please email us at <email>hi@declutterspace.net</email>. We're here to help!"
+    "contactUsDesc": "For any questions or concerns regarding this Refund and Dispute Policy, please email us at <email>hi@declutteryourhome.net</email>. We're here to help!"
   },
   "verifyEmail": {
     "cantVerify": "Can't verify your email",
@@ -188,7 +188,7 @@
     "returnToDashboard": "Return to Dashboard",
     "processing": "Processing payment...",
     "failedTitle": "Payment Failed",
-    "failedMessage": "Something went wrong with your payment. Please try again. If the problem persists, please contact hi@declutterspace.net.",
+    "failedMessage": "Something went wrong with your payment. Please try again. If the problem persists, please contact hi@declutteryourhome.net.",
     "loading": "Loading..."
   },
   "checklist": {

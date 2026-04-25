@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import getDictionary from "@/i18n/getDictionary";
 import { isValidLocale, defaultLocale } from "@/i18n/config";
+import { contactEmail } from "@/lib/site";
 
 export const metadata: Metadata = {
   robots: { index: false },
@@ -44,10 +45,10 @@ const RefundPolicy = async ({
           <li>
             Submit your refund request by emailing us at{" "}
             <a
-              href="mailto:hi@declutterspace.net"
+              href={`mailto:${contactEmail}`}
               className="text-blue-500 hover:underline"
             >
-              hi@declutterspace.net
+              {contactEmail}
             </a>{" "}
             with the subject line &ldquo;Refund Request.&rdquo;
           </li>
@@ -67,10 +68,10 @@ const RefundPolicy = async ({
           <li>
             Contact our support team at{" "}
             <a
-              href="mailto:hi@declutterspace.net"
+              href={`mailto:${contactEmail}`}
               className="text-blue-500 hover:underline"
             >
-              hi@declutterspace.net
+              {contactEmail}
             </a>{" "}
             and provide details of the issue.
           </li>
@@ -85,10 +86,10 @@ const RefundPolicy = async ({
           For any questions or concerns regarding this Refund and Dispute
           Policy, please email us at{" "}
           <a
-            href="mailto:hi@declutterspace.net"
+            href={`mailto:${contactEmail}`}
             className="text-blue-500 hover:underline"
           >
-            hi@declutterspace.net
+            {contactEmail}
           </a>
           . We&apos;re here to help!
         </p>

@@ -1,7 +1,6 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/config";
-
-const siteUrl = "https://declutterspace.net";
+import { siteUrl } from "@/lib/site";
 const sitemapPaths = ["", "/declutter-checklist"];
 
 function localizedUrl(locale: string, path: string) {

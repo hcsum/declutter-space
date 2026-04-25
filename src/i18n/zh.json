@@ -11,7 +11,7 @@
     "account": "账户"
   },
   "footer": {
-    "copyright": "© {year} declutterspace.net. 保留所有权利。",
+    "copyright": "© {year} declutteryourhome.net. 保留所有权利。",
     "builtWithLove": "用心打造，助你简化生活。",
     "customerServicePolicy": "客户服务政策",
     "privacyPolicy": "隐私政策",
@@ -143,18 +143,18 @@
     "serviceProviders": "服务提供商：协助应用功能、支付处理和客户支持的可信第三方。",
     "legalObligations": "法律义务：法律要求或保护用户权利和安全时。",
     "dataRetention": "4. 数据保留",
-    "dataRetentionDesc": "我们保留您的数据的时间以满足提供服务所需并遵守法律义务。您可以通过联系我们请求删除数据：<email>hi@declutterspace.net</email>。",
+    "dataRetentionDesc": "我们保留您的数据的时间以满足提供服务所需并遵守法律义务。您可以通过联系我们请求删除数据：<email>hi@declutteryourhome.net</email>。",
     "yourRights": "5. 您的权利",
     "right1": "访问、更新或删除您的个人信息。",
     "right2": "退出营销通信。",
     "right3": "以可移植格式请求您的数据副本。",
-    "yourRightsContact": "要行使这些权利，请联系我们：<email>hi@declutterspace.net</email>。",
+    "yourRightsContact": "要行使这些权利，请联系我们：<email>hi@declutteryourhome.net</email>。",
     "security": "6. 安全",
     "securityDesc": "我们采取行业标准的安全措施来保护您的数据。但是，没有任何传输或存储方法是100%安全的。请谨慎使用我们的服务。",
     "changes": "7. 政策变更",
     "changesDesc": "我们可能会定期更新本政策。变更将在发布后立即生效。请定期查看本政策以保持知情。",
     "contactUs": "8. 联系我们",
-    "contactUsDesc": "如有关于本隐私政策的问题或疑虑，请联系我们：<email>hi@declutterspace.net</email>。"
+    "contactUsDesc": "如有关于本隐私政策的问题或疑虑，请联系我们：<email>hi@declutteryourhome.net</email>。"
   },
   "customerService": {
     "title": "客户服务政策",
@@ -166,15 +166,15 @@
     "nonRefundable": "2. 不可退款项目",
     "nonRefundableDesc": "某些购买项目，如一次性下载内容或特别促销，不可退款。这些项目在购买时会明确标注。",
     "refundProcess": "3. 退款申请流程",
-    "process1": "通过发送邮件至 <email>hi@declutterspace.net</email> 提交退款请求，主题行注明\"退款申请\"。",
+    "process1": "通过发送邮件至 <email>hi@declutteryourhome.net</email> 提交退款请求，主题行注明\"退款申请\"。",
     "process2": "在邮件正文中包含您的姓名、邮箱地址和购买凭证。",
     "process3": "我们的团队将审核您的请求并在5-7个工作日内回复。",
     "disputeResolution": "4. 争议解决",
     "disputeIntro": "如果您对我们的服务不满意，我们鼓励您在提出争议之前先联系我们解决问题。我们致力于找到对您有效的解决方案。",
-    "dispute1": "联系我们的支持团队 <email>hi@declutterspace.net</email> 并提供问题详情。",
+    "dispute1": "联系我们的支持团队 <email>hi@declutteryourhome.net</email> 并提供问题详情。",
     "dispute2": "如果问题无法解决，您可以通过您的支付提供商升级为正式争议。",
     "contactUs": "5. 联系我们",
-    "contactUsDesc": "如有关于本退款和争议政策的任何问题或疑虑，请发送邮件至 <email>hi@declutterspace.net</email>。我们随时为您提供帮助！"
+    "contactUsDesc": "如有关于本退款和争议政策的任何问题或疑虑，请发送邮件至 <email>hi@declutteryourhome.net</email>。我们随时为您提供帮助！"
   },
   "verifyEmail": {
     "cantVerify": "无法验证您的邮箱",
@@ -188,7 +188,7 @@
     "returnToDashboard": "返回仪表板",
     "processing": "正在处理支付...",
     "failedTitle": "支付失败",
-    "failedMessage": "您的支付出现了问题。请重试。如果问题仍然存在，请联系 hi@declutterspace.net。",
+    "failedMessage": "您的支付出现了问题。请重试。如果问题仍然存在，请联系 hi@declutteryourhome.net。",
     "loading": "加载中..."
   },
   "checklist": {

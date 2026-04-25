@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import getDictionary from "@/i18n/getDictionary";
 import { isValidLocale, defaultLocale } from "@/i18n/config";
+import { contactEmail } from "@/lib/site";
 
 export const metadata: Metadata = {
   robots: { index: false },
@@ -87,10 +88,10 @@ const PrivacyPolicy = async ({
           and comply with legal obligations. You can request deletion of your
           data by contacting us at:{" "}
           <a
-            href="mailto:hi@declutterspace.net"
+            href={`mailto:${contactEmail}`}
             className="text-blue-500 hover:underline"
           >
-            hi@declutterspace.net
+            {contactEmail}
           </a>
           .
         </p>
@@ -104,10 +105,10 @@ const PrivacyPolicy = async ({
         <p className="mb-6">
           To exercise these rights, contact us at:{" "}
           <a
-            href="mailto:hi@declutterspace.net"
+            href={`mailto:${contactEmail}`}
             className="text-blue-500 hover:underline"
           >
-            hi@declutterspace.net
+            {contactEmail}
           </a>
           .
         </p>
@@ -123,10 +124,10 @@ const PrivacyPolicy = async ({
           For questions or concerns about this Privacy Policy, please contact us
           at:{" "}
           <a
-            href="mailto:hi@declutterspace.net"
+            href={`mailto:${contactEmail}`}
             className="text-blue-500 hover:underline"
           >
-            hi@declutterspace.net
+            {contactEmail}
           </a>
           .
         </p>

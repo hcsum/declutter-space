@@ -23,7 +23,7 @@ export default {
 	async scheduled(controller: ScheduledController): Promise<void> {
 		console.log(`trigger fired at ${controller.cron}`);
 
-		const resp = await fetch('https://declutterspace.net/api/item-reminder');
+		const resp = await fetch('https://declutteryourhome.net/api/item-reminder');
 		// const resp = await fetch('http://localhost:3000/api/item-reminder');
 		const wasSuccessful = resp.ok ? 'success' : 'fail';
 		console.log(`API call result: ${wasSuccessful}`);
