@@ -24,10 +24,10 @@ const PrivacyPolicy = async ({
         <h1 className="text-4xl font-bold text-center mb-8">{p.title}</h1>
 
         <p className="text-lg mb-4">
-          At <span className="font-bold">DeclutterSpace</span>, we are committed
-          to protecting your privacy and ensuring the security of your personal
-          information. This Privacy Policy outlines how we collect, use, and
-          safeguard your data when you use our web app and services.
+          At <span className="font-bold">DeclutterYourHome</span>, we are
+          committed to protecting your privacy and ensuring the security of your
+          personal information. This Privacy Policy outlines how we collect,
+          use, and safeguard your data when you use our web app and services.
         </p>
 
         <h2 className="text-2xl font-semibold mb-4">{p.infoWeCollect}</h2>

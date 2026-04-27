@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "DeclutterSpace"
+    "appName": "DeclutterYourHome"
   },
   "header": {
     "declutterChecklist": "断舍离清单",
@@ -18,8 +18,8 @@
     "blog": "博客"
   },
   "home": {
-    "metaTitle": "断舍离清单 | 全屋整理与收纳指南 - DeclutterSpace",
-    "metaDescription": "用 DeclutterSpace 的断舍离清单整理你的家。从卧室、厨房、衣柜到卫生间，按区域一步步筛选、丢弃、归位，建立更容易坚持的整理收纳习惯。",
+    "metaTitle": "断舍离清单 | 全屋整理与收纳指南 - DeclutterYourHome",
+    "metaDescription": "用 DeclutterYourHome 的断舍离清单整理你的家。从卧室、厨房、衣柜到卫生间，按区域一步步筛选、丢弃、归位，建立更容易坚持的整理收纳习惯。",
     "heroTitle": "断舍离清单",
     "heroSubtitle": "从全屋到单个房间，按清单一步步整理。先筛选，再归位，建立更容易维持的整洁习惯。",
     "quoteTitle": "关键在于有意识地保留那些真正能提升生活品质的物品。",
@@ -181,8 +181,8 @@
     "signupLink": "注册"
   },
   "declutteringTips": {
-    "metaTitle": "断舍离助手 — 留还是扔？设个期限再决定 | DeclutterSpace",
-    "metaDescription": "不确定要不要保留？用这个断舍离工具为犹豫的物品设定期限，到期提醒你做决定，轻松搞定留还是扔的纠结。",
+    "metaTitle": "如何开始断舍离 | 留还是扔？更轻松地做决定 | DeclutterYourHome",
+    "metaDescription": "学会断舍离，不一定要一次把所有决定都做完。通过为犹豫物品设定期限、到期再回看，你会更容易判断什么该留下，什么该放手。",
     "heroTitle": "不确定该留还是该放手？",
     "heroSubtitle": "整理房间时，有些物品很容易决定去留，但那些「犹豫 pile」会拖慢你的节奏。「再看一眼」帮你用信心而非猜测做出决定。",
     "howItWorksTitle": "「再看一眼」怎么用",
@@ -234,7 +234,7 @@
   },
   "privacy": {
     "title": "隐私政策",
-    "intro": "在<b>DeclutterSpace</b>，我们致力于保护您的隐私并确保您的个人信息安全。本隐私政策概述了当您使用我们的网络应用和服务时，我们如何收集、使用和保护您的数据。",
+    "intro": "在<b>DeclutterYourHome</b>，我们致力于保护您的隐私并确保您的个人信息安全。本隐私政策概述了当您使用我们的网络应用和服务时，我们如何收集、使用和保护您的数据。",
     "infoWeCollect": "1. 我们收集的信息",
     "infoYouProvide": "您提供的信息",
     "accountInfo": "账户信息：当您注册时，我们收集您的姓名、邮箱地址和密码。",
@@ -268,7 +268,7 @@
   },
   "customerService": {
     "title": "客户服务政策",
-    "intro": "在<b>DeclutterSpace</b>，我们重视您的满意度，致力于提供无缝且愉快的体验。本退款和争议政策概述了与服务相关的退款和解决争议的流程。",
+    "intro": "在<b>DeclutterYourHome</b>，我们重视您的满意度，致力于提供无缝且愉快的体验。本退款和争议政策概述了与服务相关的退款和解决争议的流程。",
     "refundEligibility": "1. 退款资格",
     "refund1": "如果在原购买后14天内提出请求，且您未大量使用该服务，订阅制服务可申请退款。",
     "refund2": "如果发生技术问题且我们无法在合理时间内解决，您可能有资格获得退款。",
@@ -302,8 +302,8 @@
     "loading": "加载中..."
   },
   "checklist": {
-    "metaTitle": "断舍离清单 | DeclutterSpace",
-    "metaDescription": "免费断舍离清单，按房间追踪每日整理任务。设置截止日期，逐步筛选、丢弃和归位，养成更容易坚持的整理习惯。",
+    "metaTitle": "断舍离清单 | 按房间整理清单 - DeclutterYourHome",
+    "metaDescription": "免费断舍离清单，帮你按房间整理家务与收纳任务。逐项追踪、持续整理，建立更容易坚持的断舍离习惯。",
     "sidebarSubtitle": "从今天开始断舍离",
     "navChecklist": "断舍离清单",
     "navProgress": "追踪你的进度",

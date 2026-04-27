@@ -24,7 +24,7 @@ const RefundPolicy = async ({
         <h1 className="text-4xl font-bold text-center mb-8">{c.title}</h1>
 
         <p className="text-lg mb-4">
-          At <span className="font-bold">DeclutterSpace</span>, we value your
+          At <span className="font-bold">DeclutterYourHome</span>, we value your
           satisfaction and strive to provide a seamless and enjoyable
           experience. This Refund and Dispute Policy outlines the process for
           refunds and resolving disputes related to our services.

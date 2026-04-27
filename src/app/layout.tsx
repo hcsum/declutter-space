@@ -29,15 +29,15 @@ const manrope = Manrope({
 });
 
 export const metadata: Metadata = {
-  title: "Declutter Space - The Declutter App for your home",
+  title: "DeclutterYourHome | Practical Guides, Checklists, and Decluttering Tools",
   description:
-    "An app for decluttering. Easily upload your items by image recognition, and track your items with ease. Set deadlines for every item and take control of your home one step at a time. Receive email reminders when your items are due.",
+    "Declutter your home with practical guides, room-by-room checklists, and simple tools that help you stay organized and build decluttering habits that last.",
   keywords: [
-    "decluttering tips",
-    "app for decluttering",
-    "declutter app",
     "declutter your home",
     "how to declutter your home",
+    "declutter checklist",
+    "decluttering tips",
+    "home organization",
   ],
   metadataBase: new URL(siteUrl),
   alternates: {

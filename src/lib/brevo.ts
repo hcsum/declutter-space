@@ -113,7 +113,7 @@ export class BrevoAdapter {
 
     const to = {
       email: email,
-      name: "DeclutterSpace User",
+      name: "DeclutterYourHome User",
     };
 
     sendSmtpEmail.subject = "Password Reset Request";
@@ -137,7 +137,7 @@ export class BrevoAdapter {
 
     const to = {
       email: email,
-      name: "DeclutterSpace User",
+      name: "DeclutterYourHome User",
     };
 
     sendSmtpEmail.subject = "Please verify your email";

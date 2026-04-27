@@ -1,6 +1,6 @@
 {
   "common": {
-    "appName": "DeclutterSpace"
+    "appName": "DeclutterYourHome"
   },
   "header": {
     "declutterChecklist": "Declutter Checklist",
@@ -18,7 +18,7 @@
     "blog": "Blog"
   },
   "home": {
-    "metaTitle": "How to Declutter Your Home | DeclutterSpace",
+    "metaTitle": "How to Declutter Your Home | DeclutterYourHome",
     "metaDescription": "Learn how to declutter your home with our step-by-step guide. Get practical tips to declutter room-by-room and build habits that keep your space organized.",
     "heroTitle": "Let's declutter your home today",
     "heroSubtitle": "What you keep shapes how you live. When you take the time to revisit your belongings, you're not just organizing objects — you're redefining what deserves space in your life.",
@@ -181,8 +181,8 @@
     "signupLink": "Sign up"
   },
   "declutteringTips": {
-    "metaTitle": "Declutter App — Keep or Toss? Set Deadlines and Decide Later | DeclutterSpace",
-    "metaDescription": "Not sure whether to keep it or let it go? Use this declutter app to set deadlines for items you're unsure about. Get reminders and make confident keep-or-toss decisions.",
+    "metaTitle": "How to Declutter Your Home | Keep or Toss? Decide With Confidence | DeclutterYourHome",
+    "metaDescription": "Learning how to declutter your home gets easier when you stop forcing every decision at once. Use this keep-or-toss method to set deadlines, revisit unsure items, and let time clarify what stays.",
     "heroTitle": "Not Sure Whether to Keep It or Let It Go?",
     "heroSubtitle": "When you're decluttering your home, some items are easy to decide. Others — the maybe pile — slow you down. Second Look helps you handle those decisions with confidence, not guesswork.",
     "howItWorksTitle": "How Second Look works",
@@ -234,7 +234,7 @@
   },
   "privacy": {
     "title": "Privacy Policy",
-    "intro": "At <b>DeclutterSpace</b>, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, and safeguard your data when you use our web app and services.",
+    "intro": "At <b>DeclutterYourHome</b>, we are committed to protecting your privacy and ensuring the security of your personal information. This Privacy Policy outlines how we collect, use, and safeguard your data when you use our web app and services.",
     "infoWeCollect": "1. Information We Collect",
     "infoYouProvide": "Information You Provide",
     "accountInfo": "Account Information: When you sign up, we collect your name, email address, and password.",
@@ -268,7 +268,7 @@
   },
   "customerService": {
     "title": "Customer Service Policy",
-    "intro": "At <b>DeclutterSpace</b>, we value your satisfaction and strive to provide a seamless and enjoyable experience. This Refund and Dispute Policy outlines the process for refunds and resolving disputes related to our services.",
+    "intro": "At <b>DeclutterYourHome</b>, we value your satisfaction and strive to provide a seamless and enjoyable experience. This Refund and Dispute Policy outlines the process for refunds and resolving disputes related to our services.",
     "refundEligibility": "1. Refund Eligibility",
     "refund1": "Refunds are available for subscription-based services if requested within 14 days of the original purchase, provided you have not extensively used the service.",
     "refund2": "If a technical issue occurs and we are unable to resolve it within a reasonable timeframe, you may be eligible for a refund.",
@@ -302,8 +302,8 @@
     "loading": "Loading..."
   },
   "checklist": {
-    "metaTitle": "Declutter Checklist | DeclutterSpace",
-    "metaDescription": "Free declutter checklist to track daily tasks. Organize room-by-room, set deadlines, and build decluttering habits that stick.",
+    "metaTitle": "Decluttering Checklist | Free Room-by-Room Declutter Checklist | DeclutterYourHome",
+    "metaDescription": "Use this free decluttering checklist to organize your home room by room, track daily tasks, and build decluttering habits that are easier to maintain.",
     "sidebarSubtitle": "Let's declutter your home today",
     "navChecklist": "Declutter Checklist",
     "navProgress": "Track your progress",
