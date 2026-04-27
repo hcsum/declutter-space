@@ -104,9 +104,9 @@
     "guide3Title": "正念筛选的心理学",
     "guide3Desc": "理解我们为什么会执着于物品，以及如何温柔地放手。",
     "guide3Link": "阅读指南",
-    "ctaTitle": "准备好找回你的空间了吗？",
-    "ctaDesc": "加入数千人的行列，把家变成有意识的、充满平静和专注的空间。",
-    "ctaButton": "免费创建账户",
+    "ctaTitle": "准备好整理你的家了吗？",
+    "ctaDesc": "探索我们的工具，开始改变你的空间，每一次决定都更有信心。",
+    "ctaButton": "探索工具",
     "faqSubtitle": "在开始之前先安心。",
     "coreFeatures": "核心功能",
     "bentoSubtitle": "我们帮助你为空间书写下一个篇章，让困难的决定变得更简单。",
@@ -221,7 +221,12 @@
     "progressLabel": "{percentage}% 进度",
     "reviewBy": "截止日期：{date}",
     "loginPrompt": "登录后开始添加你自己的物品",
-    "demoDisclaimer": "这些是示例物品，登录后可以添加你自己的。"
+    "demoDisclaimer": "这些是示例物品，登录后可以添加你自己的。",
+    "confirmKeepTitle": "保留这个物品？",
+    "confirmKeepDesc": "这个物品将被移到你的已归档物品中。",
+    "confirmLetGoTitle": "放手这个物品？",
+    "confirmLetGoDesc": "此操作无法撤销。",
+    "confirmAction": "确认"
   },
   "dashboard": {
     "secondLookTitle": "你可以稍后再看一眼，我们会通过邮件提醒你。",

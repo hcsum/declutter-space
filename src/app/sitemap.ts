@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
-const sitemapPaths = ["", "/declutter-checklist"];
+const sitemapPaths = ["", "/declutter-checklist", "/keep-or-toss"];
 
 function localizedUrl(locale: string, path: string) {
   return `${siteUrl}/${locale}${path}`;

@@ -15,6 +15,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useLoginDialog } from "./LoginDialogProvider";
+import { logout } from "@/actions/auth";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
@@ -24,6 +25,7 @@ const Header: React.FC = () => {
   const { setOpen: setLoginOpen } = useLoginDialog();
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -139,13 +141,29 @@ const Header: React.FC = () => {
             </div>
           </div>
           {loggedIn && (
-            <Link
-              href={localePath("/dashboard/user")}
-              className="hidden md:flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-gray-700 transition-colors"
-              aria-label={t("header.account")}
-            >
-              <UserCircleIcon className="h-5 w-5 text-stone-600 dark:text-stone-300" />
-            </Link>
+            <div className="relative hidden md:block">
+              <button
+                onClick={() => setIsProfileOpen((v) => !v)}
+                className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-gray-700 transition-colors"
+                aria-label={t("header.account")}
+                aria-expanded={isProfileOpen}
+              >
+                <UserCircleIcon className="h-5 w-5 text-stone-600 dark:text-stone-300" />
+              </button>
+              {isProfileOpen && (
+                <div className="absolute right-0 top-full mt-2 w-40 bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 rounded-xl shadow-lg z-50 overflow-hidden">
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      void logout();
+                    }}
+                    className="w-full text-left px-4 py-3 text-sm font-medium text-stone-700 dark:text-stone-200 hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors"
+                  >
+                    {t("checklist.signOut")}
+                  </button>
+                </div>
+              )}
+            </div>
           )}
           {!loggedIn && (
             <button
@@ -236,14 +254,16 @@ const Header: React.FC = () => {
 
             <div className="mt-4">
               {loggedIn ? (
-                <Link
-                  href={localePath("/dashboard/user")}
-                  className="flex items-center justify-center gap-2 rounded-2xl bg-[#1f3a2d] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#173023]"
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <button
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    void logout();
+                  }}
+                  className="flex items-center justify-center gap-2 rounded-2xl bg-[#1f3a2d] px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-[#173023] w-full"
                 >
                   <UserCircleIcon className="h-5 w-5" />
-                  {t("header.account")}
-                </Link>
+                  {t("checklist.signOut")}
+                </button>
               ) : (
                 <button
                   onClick={() => {

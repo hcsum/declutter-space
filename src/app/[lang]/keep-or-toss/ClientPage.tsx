@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import { createItem, deleteItem, archiveItem } from "@/actions/items";
 import { useI18n } from "@/i18n/i18n-provider";
 import { useLoginDialog } from "@/components/LoginDialogProvider";
+import { useDialogState } from "@/components/DialogProvider";
 
 type FetchedItem = {
   id: string;
@@ -88,6 +89,7 @@ function toDisplayItems(fetched: FetchedItem[]): DisplayItem[] {
 export default function ClientPage() {
   const { t } = useI18n();
   const { setOpen: setLoginOpen } = useLoginDialog();
+  const { setDialogContent } = useDialogState();
   const [loggedIn, setLoggedIn] = useState(false);
   const [realItems, setRealItems] = useState<DisplayItem[]>([]);
   const [itemName, setItemName] = useState("");
@@ -163,6 +165,70 @@ export default function ClientPage() {
     },
     [actingOn, fetchItems],
   );
+
+  function confirmKeep(id: string) {
+    setDialogContent({
+      title: t("declutteringTips.confirmKeepTitle"),
+      content: (
+        <p className="text-base leading-7 text-neutral-700 dark:text-neutral-300">
+          {t("declutteringTips.confirmKeepDesc")}
+        </p>
+      ),
+      actions: (
+        <div className="flex w-full items-center justify-end gap-3 px-2">
+          <button
+            type="button"
+            onClick={() => setDialogContent(undefined)}
+            className="rounded-xl bg-[#edefe7] px-5 py-2.5 text-sm font-bold text-[#2b694d]"
+          >
+            {t("checklist.cancel")}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleKeep(id);
+              setDialogContent(undefined);
+            }}
+            className="rounded-xl bg-[#002d1c] px-5 py-2.5 text-sm font-bold text-white"
+          >
+            {t("declutteringTips.confirmAction")}
+          </button>
+        </div>
+      ),
+    });
+  }
+
+  function confirmLetGo(id: string) {
+    setDialogContent({
+      title: t("declutteringTips.confirmLetGoTitle"),
+      content: (
+        <p className="text-base leading-7 text-neutral-700 dark:text-neutral-300">
+          {t("declutteringTips.confirmLetGoDesc")}
+        </p>
+      ),
+      actions: (
+        <div className="flex w-full items-center justify-end gap-3 px-2">
+          <button
+            type="button"
+            onClick={() => setDialogContent(undefined)}
+            className="rounded-xl bg-[#edefe7] px-5 py-2.5 text-sm font-bold text-[#2b694d]"
+          >
+            {t("checklist.cancel")}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              handleLetGo(id);
+              setDialogContent(undefined);
+            }}
+            className="rounded-xl bg-[#002d1c] px-5 py-2.5 text-sm font-bold text-white"
+          >
+            {t("declutteringTips.confirmAction")}
+          </button>
+        </div>
+      ),
+    });
+  }
 
   const items = loggedIn ? realItems : DEMO_ITEMS;
 
@@ -324,14 +390,14 @@ export default function ClientPage() {
                   {loggedIn ? (
                     <div className="flex gap-3">
                       <button
-                        onClick={() => handleKeep(item.id)}
+                        onClick={() => confirmKeep(item.id)}
                         disabled={isLoading}
                         className="flex-1 bg-[#82533f] text-white font-medium py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-60"
                       >
                         {isLoading ? "..." : t("declutteringTips.keepIt")}
                       </button>
                       <button
-                        onClick={() => handleLetGo(item.id)}
+                        onClick={() => confirmLetGo(item.id)}
                         disabled={isLoading}
                         className="flex-1 border border-[#84746e] dark:border-gray-500 text-[#84746e] dark:text-gray-300 font-medium py-3 rounded-lg hover:bg-[#fbf9f8] dark:hover:bg-gray-700 transition-all disabled:opacity-60"
                       >

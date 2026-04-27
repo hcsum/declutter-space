@@ -104,9 +104,9 @@
     "guide3Title": "The Psychology of Mindful Discernment",
     "guide3Desc": "Understanding why we hold on and how to let go with kindness.",
     "guide3Link": "Read Guide",
-    "ctaTitle": "Ready to find your space?",
-    "ctaDesc": "Join thousands of others who are transforming their homes into intentional spaces of peace and focus.",
-    "ctaButton": "Create Free Account",
+    "ctaTitle": "Ready to declutter your home?",
+    "ctaDesc": "Explore our tools and start transforming your space, one confident decision at a time.",
+    "ctaButton": "Explore Tools",
     "faqSubtitle": "Find peace of mind before you begin.",
     "coreFeatures": "Core Features",
     "bentoSubtitle": "We help you write the next chapter of your space by making difficult decisions easier.",
@@ -221,7 +221,12 @@
     "progressLabel": "{percentage}% progress",
     "reviewBy": "Review by {date}",
     "loginPrompt": "Log in to start adding your own items",
-    "demoDisclaimer": "These are sample items. Log in to add your own."
+    "demoDisclaimer": "These are sample items. Log in to add your own.",
+    "confirmKeepTitle": "Keep this item?",
+    "confirmKeepDesc": "This item will be moved to your archived items.",
+    "confirmLetGoTitle": "Let this item go?",
+    "confirmLetGoDesc": "This action cannot be undone.",
+    "confirmAction": "Confirm"
   },
   "dashboard": {
     "secondLookTitle": "You can take a second look later, we will remind you via email.",
