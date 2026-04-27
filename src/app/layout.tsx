@@ -1,6 +1,6 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
-import { Geist, Geist_Mono, Signika } from "next/font/google";
+import { Geist, Geist_Mono, Signika, Manrope } from "next/font/google";
 import "./globals.css";
 import Providers from "@/components/Providers";
 import I18nWrapper from "@/components/I18nWrapper";
@@ -20,6 +20,11 @@ const geistMono = Geist_Mono({
 
 const signika = Signika({
   variable: "--font-signika",
+  subsets: ["latin"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
 });
 
@@ -47,22 +52,28 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+          rel="stylesheet"
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} antialiased min-h-screen flex flex-col`}
+        className={`${geistSans.variable} ${geistMono.variable} ${signika.variable} ${manrope.variable} antialiased min-h-screen flex flex-col`}
       >
         <div
           id="app-view"
-          className="flex-1 bg-gray-50 dark:bg-gray-900 relative flex flex-col"
+          className="flex-1 bg-background dark:bg-gray-900 relative flex flex-col"
         >
-          <Providers>
-            <I18nWrapper>
+          <I18nWrapper>
+            <Providers>
               <LandingPageHeader />
               <div id="app-content" className="flex-1 overflow-auto min-h-0">
                 {children}
               </div>
               <AppFooter />
-            </I18nWrapper>
-          </Providers>
+            </Providers>
+          </I18nWrapper>
         </div>
       </body>
       <GoogleAnalytics gaId="G-LT4QGDFCR2" />

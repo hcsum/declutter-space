@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { useLightDarkMode } from "./LightDarkModeContext";
 import { SnackBarProvider } from "./SnackbarProvider";
 import { DialogProvider } from "./DialogProvider";
+import { LoginDialogProvider } from "./LoginDialogProvider";
 export default function UIProvider({
   children,
 }: {
@@ -19,7 +20,9 @@ export default function UIProvider({
     <AppRouterCacheProvider>
       <ThemeProvider theme={currentTheme}>
         <SnackBarProvider>
-          <DialogProvider>{children}</DialogProvider>
+          <DialogProvider>
+            <LoginDialogProvider>{children}</LoginDialogProvider>
+          </DialogProvider>
         </SnackBarProvider>
       </ThemeProvider>
     </AppRouterCacheProvider>

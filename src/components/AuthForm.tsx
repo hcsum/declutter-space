@@ -9,12 +9,14 @@ interface AuthFormProps {
   formType: "login" | "signup";
   action?: (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
   disableEmail?: boolean;
+  compact?: boolean;
 }
 
 export default function AuthForm({
   formType,
   action,
   disableEmail = true,
+  compact = false,
 }: AuthFormProps) {
   const isSignup = formType === "signup";
   const { t, localePath } = useI18n();
@@ -32,14 +34,14 @@ export default function AuthForm({
   const formData = state?.formData || {};
 
   return (
-    <div className="min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16">
-      <div className="w-full md:max-w-md bg-white dark:bg-gray-800 md:rounded-lg md:shadow-lg p-6">
+    <div className={compact ? "" : "min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16"}>
+      <div className={compact ? "w-full p-6" : "w-full md:max-w-md bg-white dark:bg-gray-800 md:rounded-lg md:shadow-lg p-6"}>
         <h1 className="text-2xl font-bold text-gray-800 dark:text-gray-200 text-center mb-6">
           {isSignup ? t("auth.createAccount") : t("auth.loginAccount")}
         </h1>
 
         <div className="space-y-3">
-          <GoogleSignInButton nextPath="/dashboard" className="w-full" />
+          <GoogleSignInButton nextPath="/dashboard" className="w-full" label={t("auth.continueWithGoogle")} />
           {!disableEmail && (
             <div className="flex items-center gap-2">
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />

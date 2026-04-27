@@ -514,17 +514,8 @@ export default function UploadClientPage() {
   }
 
   return (
-    <main className="min-h-screen bg-[#f9faf2] text-[#1a1c18] md:block">
-      <aside className="hidden h-screen w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:inset-y-0 md:left-0 md:flex">
-        <div className="mb-8">
-          <h1 className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c]">
-            {t("common.appName")}
-          </h1>
-          <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
-            {t("checklist.sidebarSubtitle")}
-          </p>
-        </div>
-
+    <main className="min-h-screen bg-[#f9faf2] pt-16 text-[#1a1c18] md:block">
+      <aside className="hidden h-[calc(100vh-4rem)] w-64 flex-col bg-[#f3f4ec] p-6 shadow-xl shadow-[#1a1c18]/5 md:fixed md:bottom-0 md:left-0 md:top-16 md:flex">
         <nav className="flex-1 space-y-2 text-lg font-semibold">
           <Link
             href={localePath("/declutter-checklist")}
@@ -559,19 +550,6 @@ export default function UploadClientPage() {
             onClick={(event) => event.stopPropagation()}
           >
             <div className="mb-8 flex items-start justify-between gap-4">
-              <div>
-                <Link
-                  href={localePath("/")}
-                  onClick={() => setIsSidebarOpen(false)}
-                >
-                  <span className="text-xl font-black uppercase tracking-[-0.04em] text-[#002d1c] hover:opacity-80 transition-opacity">
-                    {t("common.appName")}
-                  </span>
-                </Link>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.22em] text-[#414844]/70">
-                  {t("checklist.sidebarSubtitle")}
-                </p>
-              </div>
               <button
                 type="button"
                 onClick={() => setIsSidebarOpen(false)}

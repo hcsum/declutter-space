@@ -49,6 +49,7 @@ export default function ChecklistCloudBanner({
         <GoogleSignInButton
           nextPath="/declutter-checklist"
           className="w-full border-[#e4c79e] text-[#573611] lg:w-auto"
+          label={t("auth.continueWithGoogle")}
         />
       </div>
     </section>

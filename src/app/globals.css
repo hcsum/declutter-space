@@ -2,19 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fbf9f8;
+  --foreground: #1b1c1c;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-/* Also honor class-based dark mode toggling (Tailwind dark mode = class) */
+/* App theme is controlled by the `dark` class, not OS preference. */
 html.dark {
   --background: #0a0a0a;
   --foreground: #ededed;
@@ -23,12 +20,11 @@ html.dark {
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), Manrope, Arial, Helvetica, sans-serif;
 }
 
-/* Use the same display font as the home page h1 for all h1/h2 */
 h1, h2 {
-  font-family: var(--font-signika), Arial, Helvetica, sans-serif;
+  font-family: var(--font-manrope), Manrope, Arial, Helvetica, sans-serif;
 }
 
 /* Route-scoped scroll lock: apply `no-scroll` class on declutter page only */
