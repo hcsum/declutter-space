@@ -97,7 +97,7 @@ const LandingPage = async ({ params }: Props) => {
                   {dict.home.featureSecondLookDesc}
                 </p>
                 <Link
-                  href={`/${locale}/keep-or-toss`}
+                  href={`/${locale}/decluttering-decision-guide`}
                   className="px-8 py-3 bg-secondary/5 border border-secondary text-secondary dark:text-blue-400 dark:border-blue-400 rounded-full text-label-sm uppercase tracking-widest transition-all duration-300 hover:px-10"
                 >
                   {dict.home.featureSecondLookCta}

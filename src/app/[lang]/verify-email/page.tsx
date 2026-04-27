@@ -15,7 +15,7 @@ function VerifyEmailContent() {
 
   useEffect(() => {
     if (!token) {
-      router.push(localePath("/login"));
+      router.push(localePath("/"));
       return;
     }
 

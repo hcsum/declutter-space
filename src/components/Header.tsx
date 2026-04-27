@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { useLightDarkMode } from "./LightDarkModeContext";
 import { useI18n } from "@/i18n/i18n-provider";
@@ -26,6 +26,7 @@ const Header: React.FC = () => {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const profileRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -46,6 +47,21 @@ const Header: React.FC = () => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        profileRef.current &&
+        !profileRef.current.contains(event.target as Node)
+      ) {
+        setIsProfileOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   function switchLocale(newLocale: Locale) {
     const segments = pathname.split("/");
     const maybeLocale = segments[1];
@@ -62,7 +78,9 @@ const Header: React.FC = () => {
     pathname === `/${locale}` ||
     pathname === `/${locale}/`;
   const isChecklist = pathname.includes("/declutter-checklist");
-  const isSecondLook = pathname.includes("/keep-or-toss");
+  const isSecondLook =
+    pathname.includes("/decluttering-decision-guide") ||
+    pathname.includes("/keep-or-toss");
 
   return (
     <header className="fixed top-0 w-full z-50 border-b border-stone-200 dark:border-gray-700 bg-stone-50/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">
@@ -95,7 +113,7 @@ const Header: React.FC = () => {
             {t("header.declutterChecklist")}
           </Link>
           <Link
-            href={localePath("/keep-or-toss")}
+            href={localePath("/decluttering-decision-guide")}
             className={
               isSecondLook
                 ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
@@ -141,7 +159,7 @@ const Header: React.FC = () => {
             </div>
           </div>
           {loggedIn && (
-            <div className="relative hidden md:block">
+            <div ref={profileRef} className="relative hidden md:block">
               <button
                 onClick={() => setIsProfileOpen((v) => !v)}
                 className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-gray-700 transition-colors"
@@ -215,7 +233,7 @@ const Header: React.FC = () => {
                 {t("header.declutterChecklist")}
               </Link>
               <Link
-            href={localePath("/keep-or-toss")}
+             href={localePath("/decluttering-decision-guide")}
                 className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
                   isSecondLook
                     ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"

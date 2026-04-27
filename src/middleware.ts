@@ -38,7 +38,7 @@ export default async function middleware(req: NextRequest) {
 
   if (pathname === "/logout") {
     (await cookies()).delete("session");
-    return NextResponse.redirect(new URL("/login", req.nextUrl));
+    return NextResponse.redirect(new URL("/", req.nextUrl));
   }
 
   if (isI18nExcluded(pathname)) {
@@ -58,7 +58,7 @@ export default async function middleware(req: NextRequest) {
     const isPublic = publicRoutes.some((r) => barePath.startsWith(r));
 
     if (isProtected && !session?.userId) {
-      return NextResponse.redirect(new URL("/login", req.nextUrl));
+      return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 
     if (isPublic && session?.userId && !barePath.startsWith("/dashboard")) {
@@ -75,7 +75,7 @@ export default async function middleware(req: NextRequest) {
   const isPublic = publicRoutes.some((r) => barePath.startsWith(r));
 
   if (isProtected && !session?.userId) {
-    return NextResponse.redirect(new URL(`/${maybeLocale}/login`, req.nextUrl));
+    return NextResponse.redirect(new URL(`/${maybeLocale}`, req.nextUrl));
   }
 
   if (isPublic && session?.userId && !barePath.startsWith("/dashboard")) {

@@ -22,7 +22,7 @@ export async function GET(request: Request) {
 
   if (!email) {
     // Could not read email from NextAuth session; send user back to login.
-    return NextResponse.redirect(new URL("/login?error=google_no_email", url));
+    return NextResponse.redirect(new URL("/?error=google_no_email", url));
   }
 
   // Find or create the user in our own DB.

@@ -118,7 +118,7 @@ export async function login(state: AuthFormState, formData: FormData) {
 
 export async function logout() {
   await deleteSession();
-  redirect("/login");
+  redirect("/");
 }
 
 export async function forgotPassword(
