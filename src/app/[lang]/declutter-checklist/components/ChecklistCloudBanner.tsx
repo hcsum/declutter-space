@@ -4,11 +4,13 @@ import { useI18n } from "@/i18n/i18n-provider";
 type ChecklistCloudBannerProps = {
   isLoggedIn: boolean;
   cloudStatus: "idle" | "syncing" | "saved" | "error";
+  nextPath?: string;
 };
 
 export default function ChecklistCloudBanner({
   isLoggedIn,
   cloudStatus,
+  nextPath = "/declutter-checklist",
 }: ChecklistCloudBannerProps) {
   const { t } = useI18n();
 
@@ -47,7 +49,7 @@ export default function ChecklistCloudBanner({
           </p>
         </div>
         <GoogleSignInButton
-          nextPath="/declutter-checklist"
+          nextPath={nextPath}
           className="w-full border-[#e4c79e] text-[#573611] lg:w-auto"
           label={t("auth.continueWithGoogle")}
         />

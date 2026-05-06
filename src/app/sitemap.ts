@@ -1,7 +1,17 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/config";
+import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
 import { siteUrl } from "@/lib/site";
-const sitemapPaths = ["", "/declutter-checklist", "/decluttering-decision-guide"];
+
+const sitemapPaths = [
+  "",
+  "/declutter-checklist",
+  "/decluttering-decision-guide",
+  "/how-to-declutter-your-bedroom",
+  "/how-to-declutter-your-living-room",
+  "/how-to-declutter-your-closet",
+  ...getChecklistCategorySlugs().map((slug) => `/declutter-checklist/${slug}`),
+];
 
 function localizedUrl(locale: string, path: string) {
   return `${siteUrl}/${locale}${path}`;

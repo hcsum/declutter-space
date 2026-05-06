@@ -242,10 +242,10 @@ const LandingPage = async ({ params }: Props) => {
               </div>
             </Link>
             {/* Guide 2 - Room by Room */}
-            <Link
-              href={`/${locale}#room-by-room`}
-              className="bg-surface dark:bg-gray-700 rounded-2xl overflow-hidden shadow-soft-depth hover:-translate-y-2 transition-transform duration-300 group"
-            >
+          <Link
+            href={`/${locale}#room-by-room`}
+            className="bg-surface dark:bg-gray-700 rounded-2xl overflow-hidden shadow-soft-depth hover:-translate-y-2 transition-transform duration-300 group"
+          >
               <img
                 alt="Room by room guide"
                 className="w-full h-48 object-cover"
@@ -351,19 +351,37 @@ const LandingPage = async ({ params }: Props) => {
           </p>
           <div className="grid gap-gutter md:grid-cols-2 lg:grid-cols-3">
             {[
-              { title: dict.home.livingRoomTitle, desc: dict.home.livingRoomDesc },
-              { title: dict.home.bedroomTitle, desc: dict.home.bedroomDesc },
+              {
+                title: dict.home.livingRoomTitle,
+                desc: dict.home.livingRoomDesc,
+                href: `/${locale}/how-to-declutter-your-living-room`,
+              },
+              {
+                title: dict.home.bedroomTitle,
+                desc: dict.home.bedroomDesc,
+                href: `/${locale}/how-to-declutter-your-bedroom`,
+              },
               { title: dict.home.kitchenTitle, desc: dict.home.kitchenDesc },
               { title: dict.home.bathroomTitle, desc: dict.home.bathroomDesc },
               { title: dict.home.homeOfficeTitle, desc: dict.home.homeOfficeDesc },
-              { title: dict.home.closetsTitle, desc: dict.home.closetsDesc },
+              {
+                title: dict.home.closetsTitle,
+                desc: dict.home.closetsDesc,
+                href: `/${locale}/how-to-declutter-your-closet`,
+              },
             ].map((room) => (
               <div
                 key={room.title}
                 className="bg-surface dark:bg-gray-700 rounded-2xl p-6 shadow-soft-depth border border-outline-variant dark:border-gray-600"
               >
                 <h3 className="text-headline-md mb-3 text-on-surface dark:text-white">
-                  {room.title}
+                  {room.href ? (
+                    <Link href={room.href} className="hover:underline">
+                      {room.title}
+                    </Link>
+                  ) : (
+                    room.title
+                  )}
                 </h3>
                 <p className="text-on-surface-variant dark:text-gray-400 text-body-md">
                   {room.desc}

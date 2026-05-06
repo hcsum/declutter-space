@@ -18,6 +18,7 @@ export type ImportedList = {
 };
 export type ChecklistCategory = DeclutterCategory & {
   key: string;
+  slug: string;
   defaultItems: CustomItem[];
   source: "built-in" | "imported";
 };
@@ -90,6 +91,7 @@ export function getChecklistCategories(locale: Locale = defaultLocale) {
     return {
       ...localizedCategory,
       key: buildCategoryKey(baseCategory.category, index),
+      slug: slugify(baseCategory.category),
       defaultItems: baseCategory.items.map((baseText, itemIndex) => ({
         id: `default-${itemIndex}`,
         text: localizedCategory.items[itemIndex] ?? baseText,
@@ -147,6 +149,7 @@ export function getImportedCategories(importedLists: ImportedList[]) {
     category: list.title,
     items: list.items.map((item) => item.text),
     key: list.id,
+    slug: slugify(list.title),
     defaultItems: list.items,
     source: "imported" as const,
   }));
@@ -163,6 +166,17 @@ export function getLocalizedChecklistCategories(
 ) {
   if (importedLists.length > 0) return getImportedCategories(importedLists);
   return getChecklistCategories(locale);
+}
+
+export function getChecklistCategoryBySlug(
+  slug: string,
+  locale: Locale = defaultLocale,
+) {
+  return getChecklistCategories(locale).find((category) => category.slug === slug);
+}
+
+export function getChecklistCategorySlugs() {
+  return getChecklistCategories().map((category) => category.slug);
 }
 
 export function getTimelineDates(startDate: Date, endDate: Date) {

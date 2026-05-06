@@ -632,7 +632,16 @@ export default function ClientPage() {
                         {category.category.slice(0, 2).toUpperCase()}
                       </div>
                       <h3 className="text-lg font-bold tracking-[-0.03em] text-[#002d1c]">
-                        {category.category}
+                        {category.source === "built-in" ? (
+                          <Link
+                            href={localePath(`/declutter-checklist/${category.slug}`)}
+                            className="hover:underline"
+                          >
+                            {category.category}
+                          </Link>
+                        ) : (
+                          category.category
+                        )}
                       </h3>
                     </div>
                     <span className="rounded-full bg-white px-2.5 py-1 text-xs font-black text-[#2b694d]">
