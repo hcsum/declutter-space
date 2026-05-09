@@ -367,9 +367,21 @@ const LandingPage = async ({ params }: Props) => {
                 desc: dict.home.bedroomDesc,
                 href: `/${locale}/how-to-declutter-your-bedroom`,
               },
-              { title: dict.home.kitchenTitle, desc: dict.home.kitchenDesc },
-              { title: dict.home.bathroomTitle, desc: dict.home.bathroomDesc },
-              { title: dict.home.homeOfficeTitle, desc: dict.home.homeOfficeDesc },
+              {
+                title: dict.home.kitchenTitle,
+                desc: dict.home.kitchenDesc,
+                href: `/${locale}/how-to-declutter-your-kitchen`,
+              },
+              {
+                title: dict.home.bathroomTitle,
+                desc: dict.home.bathroomDesc,
+                href: `/${locale}/how-to-declutter-your-bathroom`,
+              },
+              {
+                title: dict.home.homeOfficeTitle,
+                desc: dict.home.homeOfficeDesc,
+                href: `/${locale}/how-to-declutter-your-home-office`,
+              },
               {
                 title: dict.home.closetsTitle,
                 desc: dict.home.closetsDesc,

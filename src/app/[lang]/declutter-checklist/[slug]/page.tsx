@@ -50,6 +50,9 @@ export default async function ChecklistAreaPage({ params }: Props) {
 
   const isBedroom = slug === "bedroom";
   const isLivingRoom = slug === "living-room";
+  const isKitchen = slug === "kitchen";
+  const isBathroom = slug === "bathroom-laundry";
+  const isHomeOffice = slug === "home-office";
   const isClosets = slug === "closets";
 
   return (
@@ -101,6 +104,51 @@ export default async function ChecklistAreaPage({ params }: Props) {
                 {locale === "zh"
                   ? "先看客厅整理指南"
                   : "Read the full living room decluttering guide"}
+              </Link>
+              {locale === "zh"
+                ? "，再回来按清单执行。"
+                : " if you want the full step-by-step strategy first."}
+            </p>
+          )}
+          {isKitchen && (
+            <p className="mt-4 text-sm leading-6 text-[#59615d]">
+              <Link
+                href={`/${locale}/how-to-declutter-your-kitchen`}
+                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
+              >
+                {locale === "zh"
+                  ? "先看厨房整理指南"
+                  : "Read the full kitchen decluttering guide"}
+              </Link>
+              {locale === "zh"
+                ? "，再回来按清单执行。"
+                : " if you want the full step-by-step strategy first."}
+            </p>
+          )}
+          {isBathroom && (
+            <p className="mt-4 text-sm leading-6 text-[#59615d]">
+              <Link
+                href={`/${locale}/how-to-declutter-your-bathroom`}
+                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
+              >
+                {locale === "zh"
+                  ? "先看浴室整理指南"
+                  : "Read the full bathroom decluttering guide"}
+              </Link>
+              {locale === "zh"
+                ? "，再回来按清单执行。"
+                : " if you want the full step-by-step strategy first."}
+            </p>
+          )}
+          {isHomeOffice && (
+            <p className="mt-4 text-sm leading-6 text-[#59615d]">
+              <Link
+                href={`/${locale}/how-to-declutter-your-home-office`}
+                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
+              >
+                {locale === "zh"
+                  ? "先看家庭办公室整理指南"
+                  : "Read the full home office decluttering guide"}
               </Link>
               {locale === "zh"
                 ? "，再回来按清单执行。"

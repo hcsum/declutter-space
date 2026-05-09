@@ -9,6 +9,9 @@ const sitemapPaths = [
   "/decluttering-decision-guide",
   "/how-to-declutter-your-bedroom",
   "/how-to-declutter-your-living-room",
+  "/how-to-declutter-your-kitchen",
+  "/how-to-declutter-your-bathroom",
+  "/how-to-declutter-your-home-office",
   "/how-to-declutter-your-closet",
   ...getChecklistCategorySlugs().map((slug) => `/declutter-checklist/${slug}`),
 ];
