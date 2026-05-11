@@ -15,6 +15,7 @@ import { redirect } from "next/navigation";
 import { BrevoAdapter } from "@/lib/brevo";
 import { createUser1HToken, verifyUser1HToken } from "@/lib/jwt";
 import { createUser } from "./user";
+import { sanitizePostLoginNextPath } from "@/lib/google-auth";
 
 const brevo = BrevoAdapter.getInstance();
 
@@ -87,6 +88,7 @@ export async function signup(state: AuthFormState, formData: FormData) {
 export async function login(state: AuthFormState, formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
+  const nextPath = sanitizePostLoginNextPath(formData.get("nextPath") as string);
 
   const validatedFields = LoginFormSchema.safeParse({
     email,
@@ -113,7 +115,7 @@ export async function login(state: AuthFormState, formData: FormData) {
 
   await createSession(user.id);
 
-  redirect("/dashboard");
+  redirect(nextPath);
 }
 
 export async function logout() {
@@ -226,7 +228,7 @@ export async function verifyUserByEmail(token: string) {
     };
   }
   await createSession(decryptedToken.userId as string);
-  redirect("/dashboard");
+  redirect("/");
 }
 
 export async function sendVerificationEmail() {

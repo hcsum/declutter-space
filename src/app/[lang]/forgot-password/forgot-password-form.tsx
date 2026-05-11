@@ -1,7 +1,7 @@
 "use client";
 
 import { forgotPassword, resetPassword } from "@/actions/auth";
-import { buildGoogleSignInHref } from "@/lib/google-auth";
+import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { useActionState } from "react";
 
 export function ForgotPasswordForm({ token }: { token?: string }) {
@@ -33,15 +33,11 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
                 {state.message}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400 mt-4">
-                You can now{" "}
-                <a
-                  href={buildGoogleSignInHref("/dashboard")}
-                  className="text-blue-500 hover:underline dark:text-blue-400"
-                >
-                  login
-                </a>{" "}
-                with your new password.
+                You can now login with your new password.
               </p>
+              <div className="mt-4">
+                <GoogleSignInButton nextPath="/" className="w-full" label="Login" />
+              </div>
             </>
           )}
 
@@ -162,15 +158,12 @@ export function ForgotPasswordForm({ token }: { token?: string }) {
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-500 dark:text-gray-400 mt-4">
-          Remember your password?{" "}
-          <a
-            href={buildGoogleSignInHref("/dashboard")}
-            className="text-blue-500 hover:underline dark:text-blue-400"
-          >
-            Back to login
-          </a>
-        </p>
+        <div className="mt-4 space-y-3">
+          <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+            Remember your password?
+          </p>
+          <GoogleSignInButton nextPath="/" className="w-full" label="Back to login" />
+        </div>
       </div>
     </div>
   );

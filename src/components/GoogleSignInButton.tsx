@@ -1,5 +1,8 @@
-import Link from "next/link";
-import { buildGoogleSignInHref } from "@/lib/google-auth";
+"use client";
+
+import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { buildPostLoginCallbackPath } from "@/lib/google-auth";
 
 type GoogleSignInButtonProps = {
   nextPath?: string;
@@ -8,15 +11,24 @@ type GoogleSignInButtonProps = {
 };
 
 export default function GoogleSignInButton({
-  nextPath = "/dashboard",
+  nextPath = "/",
   className,
   label = "Continue with Google",
 }: GoogleSignInButtonProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   return (
-    <Link
-      href={buildGoogleSignInHref(nextPath)}
+    <button
+      type="button"
+      disabled={isSubmitting}
+      onClick={() => {
+        setIsSubmitting(true);
+        void signIn("google", {
+          callbackUrl: buildPostLoginCallbackPath(nextPath),
+        });
+      }}
       className={[
-        "inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600",
+        "inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-70 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600",
         className,
       ]
         .filter(Boolean)
@@ -47,6 +59,6 @@ export default function GoogleSignInButton({
         />
       </svg>
       {label}
-    </Link>
+    </button>
   );
 }

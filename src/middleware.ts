@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "./lib/session";
 import { defaultLocale, isValidLocale } from "./i18n/config";
+import { sanitizePostLoginNextPath } from "./lib/google-auth";
 
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = [
@@ -61,8 +62,10 @@ export default async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL("/", req.nextUrl));
     }
 
-    if (isPublic && session?.userId && !barePath.startsWith("/dashboard")) {
-      return NextResponse.redirect(new URL("/dashboard", req.nextUrl));
+    if (isPublic && session?.userId) {
+      return NextResponse.redirect(
+        new URL(sanitizePostLoginNextPath(pathname), req.nextUrl),
+      );
     }
 
     const url = req.nextUrl.clone();
@@ -78,9 +81,9 @@ export default async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL(`/${maybeLocale}`, req.nextUrl));
   }
 
-  if (isPublic && session?.userId && !barePath.startsWith("/dashboard")) {
+  if (isPublic && session?.userId) {
     return NextResponse.redirect(
-      new URL(`/${maybeLocale}/dashboard`, req.nextUrl),
+      new URL(sanitizePostLoginNextPath(pathname), req.nextUrl),
     );
   }
 

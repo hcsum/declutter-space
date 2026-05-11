@@ -4,12 +4,14 @@ import { AuthFormState } from "@/lib/definitions";
 import { useActionState } from "react";
 import GoogleSignInButton from "@/components/GoogleSignInButton";
 import { useI18n } from "@/i18n/i18n-provider";
+import { usePathname } from "next/navigation";
 
 interface AuthFormProps {
   formType: "login" | "signup";
   action?: (state: AuthFormState, formData: FormData) => Promise<AuthFormState>;
   disableEmail?: boolean;
   compact?: boolean;
+  nextPath?: string;
 }
 
 export default function AuthForm({
@@ -17,9 +19,11 @@ export default function AuthForm({
   action,
   disableEmail = true,
   compact = false,
+  nextPath,
 }: AuthFormProps) {
   const isSignup = formType === "signup";
   const { t, localePath } = useI18n();
+  const pathname = usePathname();
   type ActionFn = (
     state: AuthFormState,
     formData: FormData,
@@ -32,6 +36,7 @@ export default function AuthForm({
   );
 
   const formData = state?.formData || {};
+  const resolvedNextPath = nextPath ?? pathname ?? "/";
 
   return (
     <div className={compact ? "" : "min-h-[80vh] flex md:items-center md:justify-center bg-gray-50 dark:bg-gray-900 pb-16"}>
@@ -41,7 +46,11 @@ export default function AuthForm({
         </h1>
 
         <div className="space-y-3">
-          <GoogleSignInButton nextPath="/dashboard" className="w-full" label={t("auth.continueWithGoogle")} />
+          <GoogleSignInButton
+            nextPath={resolvedNextPath}
+            className="w-full"
+            label={t("auth.continueWithGoogle")}
+          />
           {!disableEmail && (
             <div className="flex items-center gap-2">
               <div className="flex-1 h-px bg-gray-200 dark:bg-gray-700" />
@@ -53,6 +62,7 @@ export default function AuthForm({
 
         {!disableEmail && (
           <form action={formAction} className="space-y-4">
+            <input type="hidden" name="nextPath" value={resolvedNextPath} />
             <fieldset
               disabled={disableEmail}
               aria-disabled={disableEmail}
