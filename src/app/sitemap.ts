@@ -1,6 +1,5 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/i18n/config";
-import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
 import { siteUrl } from "@/lib/site";
 
 const sitemapPaths = [
@@ -13,7 +12,6 @@ const sitemapPaths = [
   "/how-to-declutter-your-bathroom",
   "/how-to-declutter-your-home-office",
   "/how-to-declutter-your-closet",
-  ...getChecklistCategorySlugs().map((slug) => `/declutter-checklist/${slug}`),
 ];
 
 function localizedUrl(locale: string, path: string) {
