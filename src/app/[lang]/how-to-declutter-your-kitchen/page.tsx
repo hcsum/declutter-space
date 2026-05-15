@@ -5,7 +5,34 @@ import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
 
 type Props = { params: Promise<{ lang: string }> };
 
-function getCopy(locale: string) {
+type GuideCopy = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  introTitle: string;
+  introBody: string;
+  stepsTitle: string;
+  steps: Array<[string, string]>;
+  removeTitle: string;
+  removeItems: string[];
+  emotionTitle: string;
+  emotionBody: string;
+  toolTitle: string;
+  toolDesc: string;
+  toolPage: string;
+  mistakesTitle?: string;
+  mistakes: string[];
+  keepTitle?: string;
+  keepBody?: string;
+  quickResetTitle?: string;
+  quickResetSteps: string[];
+  faqTitle?: string;
+  faqs: Array<[string, string]>;
+};
+
+function getCopy(locale: string): GuideCopy {
   if (locale === "zh") {
     return {
       title: "如何整理厨房 | 厨房断舍离分步骤指南 | DeclutterYourHome",
@@ -44,20 +71,23 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 kitchen 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Kitchen Checklist 功能页",
+      mistakes: [],
+      quickResetSteps: [],
+      faqs: [],
     };
   }
 
   return {
-    title: "How to Declutter Your Kitchen | A Practical Kitchen Reset | DeclutterYourHome",
+    title: "How to Declutter Your Kitchen | Step-by-Step Kitchen Guide | DeclutterYourHome",
     description:
-      "Learn how to declutter your kitchen by clearing expired food, duplicate tools, idle appliances, and crowded counters so cooking feels easier and the space works better.",
+      "Learn how to declutter your kitchen step by step by clearing expired food, duplicate tools, cluttered counters, and low-value appliances so cooking gets easier.",
     eyebrow: "Kitchen Guide",
     heroTitle: "How to Declutter Your Kitchen Without Making Cooking Harder",
     heroSubtitle:
-      "A kitchen reset should make cooking easier, not more frustrating. The goal is not to hide everything away. It is to remove expired food, duplicates, and low-value clutter so the tools and ingredients you actually use are easier to reach.",
-    introTitle: "Kitchen clutter is often deferred-decision clutter",
+      "A good kitchen declutter should make everyday cooking easier, not turn the room into a showroom. The goal is to remove expired food, duplicate tools, and counter overflow so prep, cleanup, and meal routines feel smoother.",
+    introTitle: "Kitchen clutter is usually workflow clutter",
     introBody:
-      "Kitchens collect a specific kind of clutter: spices you might use someday, duplicate gadgets, lids without containers, containers without lids, extra mugs, party supplies, and appliances that once felt useful but no longer earn their footprint. The best kitchen reset usually starts by making real daily cooking easier, not by trying to create a showroom kitchen.",
+      "Kitchen clutter is rarely random. It usually builds around decision delays: spices you might use someday, duplicate gadgets, mugs you did not choose, lids without containers, containers without lids, and appliances that once felt helpful but now sit in the way. The strongest kitchen reset starts by protecting the real workflow of cooking, cleaning, and putting groceries away.",
     stepsTitle: "How to declutter your kitchen in 7 steps",
     steps: [
       ["1. Throw away what is clearly expired, broken, or unusable", "Start with expired food, stale spices, moldy ingredients, damaged storage containers, and chipped tableware. Kitchens usually contain an easy first wave of obvious noes."],
@@ -79,7 +109,30 @@ function getCopy(locale: string) {
     ],
     emotionTitle: "A better kitchen reduces friction, not personality",
     emotionBody:
-      "A good kitchen does not need to look minimal to feel calm. It just needs less friction. When the counters are clearer, the drawers close easily, and the ingredients you actually use are visible, cooking becomes less draining. The win is not fewer possessions for its own sake. The win is a kitchen that supports real life more smoothly.",
+      "A good kitchen does not need to look minimal to feel calm. It needs less friction. When the counters are clearer, the drawers close easily, and the ingredients you actually use are visible, cooking becomes less draining. The win is not fewer possessions for its own sake. The win is a kitchen that supports real life more smoothly.",
+    mistakesTitle: "Common kitchen decluttering mistakes",
+    mistakes: [
+      "Clearing the counters without fixing what is overflowing inside cabinets and drawers",
+      "Keeping appliances because they were expensive, even though they are rarely used",
+      "Organizing expired food instead of removing it first",
+      "Treating the kitchen like storage instead of a working room",
+    ],
+    keepTitle: "What should stay within easy reach in a kitchen",
+    keepBody:
+      "Keep the things you use in a normal week closest to where they are needed: your everyday dishes near the dishwasher or drying area, prep tools near the main work surface, and your most-used oils, spices, and utensils near the stove. Prime access should go to real habits, not idealized routines.",
+    quickResetTitle: "How to declutter your kitchen in 15 minutes",
+    quickResetSteps: [
+      "Throw away expired food and clear obvious trash from counters",
+      "Gather duplicate mugs, utensils, and containers into one place",
+      "Choose one problem zone to finish: fridge, pantry shelf, or utensil drawer",
+      "Put back only what supports daily cooking this week",
+    ],
+    faqTitle: "Kitchen decluttering FAQ",
+    faqs: [
+      ["How often should you declutter a kitchen?", "A light reset every week and a deeper declutter every few months usually works better than waiting for one huge overhaul."],
+      ["What is the fastest place to start in a messy kitchen?", "Start with expired food, duplicate containers, and crowded counters. Those three areas usually create the fastest visible change."],
+      ["How many small appliances should stay on the counter?", "Only the ones you use often enough that putting them away would slow down a real routine. Everything else should earn cabinet space or leave."],
+    ],
     toolTitle: "Start with the kitchen checklist",
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated kitchen checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
@@ -183,6 +236,67 @@ export default async function KitchenPage({ params }: Props) {
             {copy.emotionBody}
           </p>
         </section>
+
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <AreaChecklistSection
           areaSlug="kitchen"

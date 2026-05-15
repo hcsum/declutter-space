@@ -5,7 +5,34 @@ import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
 
 type Props = { params: Promise<{ lang: string }> };
 
-function getCopy(locale: string) {
+type GuideCopy = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  introTitle: string;
+  introBody: string;
+  stepsTitle: string;
+  steps: Array<[string, string]>;
+  removeTitle: string;
+  removeItems: string[];
+  emotionTitle: string;
+  emotionBody: string;
+  toolTitle: string;
+  toolDesc: string;
+  toolPage: string;
+  mistakesTitle?: string;
+  mistakes: string[];
+  keepTitle?: string;
+  keepBody?: string;
+  quickResetTitle?: string;
+  quickResetSteps: string[];
+  faqTitle?: string;
+  faqs: Array<[string, string]>;
+};
+
+function getCopy(locale: string): GuideCopy {
   if (locale === "zh") {
     return {
       title: "如何整理浴室 | 浴室断舍离分步骤指南 | DeclutterYourHome",
@@ -44,20 +71,23 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 bathroom checklist 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Bathroom Checklist 功能页",
+      mistakes: [],
+      quickResetSteps: [],
+      faqs: [],
     };
   }
 
   return {
-    title: "How to Declutter Your Bathroom | A Cleaner Daily Reset | DeclutterYourHome",
+    title: "How to Declutter Your Bathroom | Step-by-Step Bathroom Reset | DeclutterYourHome",
     description:
-      "Learn how to declutter your bathroom by clearing expired products, backup overflow, unused samples, and crowded storage so daily routines feel easier and cleaner.",
+      "Learn how to declutter your bathroom step by step by clearing expired products, sample overflow, crowded counters, and backup stock you do not need.",
     eyebrow: "Bathroom Guide",
     heroTitle: "How to Declutter Your Bathroom Without Running Out of Essentials",
     heroSubtitle:
-      "Bathroom clutter builds fast because the items are small, repetitive, and easy to justify keeping. The goal is not to throw out every backup. It is to make daily-use items easy to access while stopping overflow from taking over the space.",
-    introTitle: "Bathroom clutter is usually small-item clutter at scale",
+      "Bathroom clutter builds fast because the items are small, repetitive, and easy to justify keeping. A better bathroom declutter keeps daily-use products visible, limits overflow, and stops the room from feeling crowded before the day even starts.",
+    introTitle: "Bathroom clutter is usually backup clutter plus small-item buildup",
     introBody:
-      "Samples, duplicate toiletries, nearly expired products, old towels, empty bottles, and excess cleaning supplies can make a small bathroom feel crowded very quickly. The best bathroom reset usually comes from reducing volume first, not buying more organizers for things you already do not need.",
+      "Bathrooms fill up with things that look harmless on their own: samples, duplicate toiletries, nearly expired products, old towels, empty bottles, and too much backup stock. Because the room is small, these categories pile up fast. The best bathroom reset comes from reducing volume first, not from buying more organizers for products you already do not need.",
     stepsTitle: "How to declutter your bathroom in 7 steps",
     steps: [
       ["1. Throw away expired, spoiled, or clearly unused products", "Start with expired medication, sunscreen, skincare, makeup, samples, and anything that has changed texture, smell, or color."],
@@ -80,6 +110,29 @@ function getCopy(locale: string) {
     emotionTitle: "A better bathroom makes daily care feel lighter",
     emotionBody:
       "Bathrooms are small, but they shape your day in quiet ways. When the counters are crowded and every drawer search takes too long, the room adds friction to routines that should feel simple. Clearing that friction makes mornings and evenings feel smoother almost immediately.",
+    mistakesTitle: "Common bathroom decluttering mistakes",
+    mistakes: [
+      "Keeping backup stock mixed in with current-use products",
+      "Saving samples and travel-size items for trips that never come",
+      "Leaving too many products on the counter because they are small",
+      "Treating expired skincare and medicine like harmless clutter instead of time-sensitive clutter",
+    ],
+    keepTitle: "What should stay visible in a bathroom",
+    keepBody:
+      "Keep only the products you are actively using in your morning and evening routine within easy reach. Backups, guest items, and less-frequent products should stay separate so the room reflects today’s routine instead of your entire inventory.",
+    quickResetTitle: "How to declutter your bathroom in 15 minutes",
+    quickResetSteps: [
+      "Throw away expired products, empty bottles, and obvious trash",
+      "Pull all daily-use items together and move everything else off the counter",
+      "Choose one drawer or shelf and remove duplicates and samples",
+      "Put backups in one clearly limited zone instead of spreading them across the room",
+    ],
+    faqTitle: "Bathroom decluttering FAQ",
+    faqs: [
+      ["How many backup toiletries should you keep?", "Keep only what fits in one defined backup area. Once extras spill beyond that limit, they become clutter instead of convenience."],
+      ["Should bathroom counters be completely empty?", "No. They should hold the products you actually use every day. The goal is functional clarity, not a hotel-style photo set."],
+      ["What should you declutter first in a bathroom?", "Start with expired products, unused samples, and duplicate items. They are the fastest way to create space without affecting your routine."],
+    ],
     toolTitle: "Start with the bathroom checklist",
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated bathroom checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
@@ -183,6 +236,67 @@ export default async function BathroomPage({ params }: Props) {
             {copy.emotionBody}
           </p>
         </section>
+
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <AreaChecklistSection
           areaSlug="bathroom-laundry"

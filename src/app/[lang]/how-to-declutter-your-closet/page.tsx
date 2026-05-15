@@ -5,7 +5,34 @@ import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
 
 type Props = { params: Promise<{ lang: string }> };
 
-function getCopy(locale: string) {
+type GuideCopy = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  introTitle: string;
+  introBody: string;
+  stepsTitle: string;
+  steps: Array<[string, string]>;
+  removeTitle: string;
+  removeItems: string[];
+  emotionTitle: string;
+  emotionBody: string;
+  toolTitle: string;
+  toolDesc: string;
+  toolPage: string;
+  mistakesTitle?: string;
+  mistakes: string[];
+  keepTitle?: string;
+  keepBody?: string;
+  quickResetTitle?: string;
+  quickResetSteps: string[];
+  faqTitle?: string;
+  faqs: Array<[string, string]>;
+};
+
+function getCopy(locale: string): GuideCopy {
   if (locale === "zh") {
     return {
       title: "如何整理衣柜 | 衣柜断舍离与收纳指南 | DeclutterYourHome",
@@ -44,18 +71,21 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 closets 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Closets Checklist 功能页",
+      mistakes: [],
+      quickResetSteps: [],
+      faqs: [],
     };
   }
 
   return {
-    title: "How to Declutter Your Closet | A Smarter Closet Reset | DeclutterYourHome",
+    title: "How to Declutter Your Closet | Step-by-Step Closet Guide | DeclutterYourHome",
     description:
-      "Learn how to declutter your closet by removing clothes that do not fit, do not get worn, or no longer match your life so getting dressed feels easier every day.",
+      "Learn how to declutter your closet step by step by removing clothes you do not wear, pieces that no longer fit, and duplicates that make getting dressed harder.",
     eyebrow: "Closet Guide",
     heroTitle: "How to Declutter Your Closet Without Starting Over",
     heroSubtitle:
-      "Closet clutter is not just about volume. It is often about too many decisions, too many duplicates, and too many clothes that belong to a version of you that no longer matches your real life. A better closet reset makes getting dressed easier, not stricter.",
-    introTitle: "Closet clutter usually shows up as daily friction",
+      "Closet clutter is not just about having too many clothes. It is often about too many decisions, too many duplicates, and too many items tied to a version of you that no longer matches your real life. A better closet reset makes getting dressed easier, not stricter.",
+    introTitle: "Closet clutter usually shows up as decision fatigue",
     introBody:
       "A crowded closet drains energy in small ways: pieces that do not fit, items you never actually choose, expensive mistakes you feel guilty about, and categories full of near-duplicates. The goal is not to own less just for the sake of it. The goal is to reduce the friction between opening the closet and getting dressed for the life you live now.",
     stepsTitle: "How to declutter your closet in 7 steps",
@@ -80,6 +110,29 @@ function getCopy(locale: string) {
     emotionTitle: "A good closet should lower decision fatigue",
     emotionBody:
       "The best closets are not impressive because they hold more. They are useful because they hold less uncertainty. When the closet reflects your current body, routine, and style, getting dressed becomes faster and calmer instead of another small daily debate.",
+    mistakesTitle: "Common closet decluttering mistakes",
+    mistakes: [
+      "Trying on every item before removing the obvious noes",
+      "Keeping duplicate basics because they feel practical even when you never choose them",
+      "Organizing around fantasy clothes instead of real weekly outfits",
+      "Giving prime closet space to guilt purchases instead of daily favorites",
+    ],
+    keepTitle: "What deserves the easiest-to-reach closet space",
+    keepBody:
+      "Your most accessible space should belong to the clothes, shoes, and bags you wear in a normal week. Occasionwear, sentimental items, and seasonal overflow can stay, but they should not crowd the part of the closet that supports everyday dressing.",
+    quickResetTitle: "How to declutter your closet in 15 minutes",
+    quickResetSteps: [
+      "Pull out anything damaged, stained, or clearly uncomfortable",
+      "Choose one category to edit fast: tops, pants, shoes, or bags",
+      "Set aside the items you always skip when getting dressed",
+      "Return only the pieces that fit your current life and current body",
+    ],
+    faqTitle: "Closet decluttering FAQ",
+    faqs: [
+      ["What is the fastest way to declutter a closet?", "Start with damaged pieces, poor fits, and obvious non-wearers. Quick wins create momentum before you handle emotional clothing decisions."],
+      ["Should you declutter by item or by category?", "Category works better. Reviewing all your jackets, jeans, or shoes together makes duplicates and avoidance patterns much easier to see."],
+      ["What if everything still fits but the closet still feels crowded?", "Fit is only one filter. If you do not choose it, enjoy it, or need it in your real life, it can still be clutter even if it technically fits."],
+    ],
     toolTitle: "Start with the closets checklist",
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated closets checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
@@ -183,6 +236,67 @@ export default async function ClosetPage({ params }: Props) {
             {copy.emotionBody}
           </p>
         </section>
+
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <AreaChecklistSection
           areaSlug="closets"

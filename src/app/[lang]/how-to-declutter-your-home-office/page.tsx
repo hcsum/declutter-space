@@ -5,7 +5,34 @@ import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
 
 type Props = { params: Promise<{ lang: string }> };
 
-function getCopy(locale: string) {
+type GuideCopy = {
+  title: string;
+  description: string;
+  eyebrow: string;
+  heroTitle: string;
+  heroSubtitle: string;
+  introTitle: string;
+  introBody: string;
+  stepsTitle: string;
+  steps: Array<[string, string]>;
+  removeTitle: string;
+  removeItems: string[];
+  emotionTitle: string;
+  emotionBody: string;
+  toolTitle: string;
+  toolDesc: string;
+  toolPage: string;
+  mistakesTitle?: string;
+  mistakes: string[];
+  keepTitle?: string;
+  keepBody?: string;
+  quickResetTitle?: string;
+  quickResetSteps: string[];
+  faqTitle?: string;
+  faqs: Array<[string, string]>;
+};
+
+function getCopy(locale: string): GuideCopy {
   if (locale === "zh") {
     return {
       title: "如何整理家庭办公室 | 家庭办公区断舍离指南 | DeclutterYourHome",
@@ -44,17 +71,20 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 home office 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Home Office Checklist 功能页",
+      mistakes: [],
+      quickResetSteps: [],
+      faqs: [],
     };
   }
 
   return {
-    title: "How to Declutter Your Home Office | A Focus-Friendly Reset | DeclutterYourHome",
+    title: "How to Declutter Your Home Office | Step-by-Step Office Reset | DeclutterYourHome",
     description:
-      "Learn how to declutter your home office by sorting papers, cables, old electronics, drawer clutter, and visual distractions so the space supports deeper focus.",
+      "Learn how to declutter your home office step by step by sorting papers, cables, old electronics, and visual clutter so the room supports focused work.",
     eyebrow: "Home Office Guide",
     heroTitle: "How to Declutter Your Home Office Without Losing Important Stuff",
     heroSubtitle:
-      "Home office clutter is rarely random. It is usually made of things that feel potentially useful: papers to review, cables to match later, devices to fix eventually, and notes you do not want to forget. A better reset helps you keep what supports work and remove what keeps stealing attention.",
+      "Home office clutter is rarely random. It is usually made of things that feel potentially useful: papers to review, cables to match later, devices to fix eventually, and notes you do not want to forget. A better home office declutter keeps what supports work and removes what keeps stealing attention.",
     introTitle: "Home office clutter often disguises itself as productivity",
     introBody:
       "Paper stacks, old notebooks, spare chargers, dead electronics, freebie stationery, and unresolved admin tasks can all sit in a home office for months because they look work-related. The result is a space that feels busy before you even start. The most effective reset is not extreme minimalism. It is reducing visual and mental friction so the room supports focused work again.",
@@ -80,6 +110,29 @@ function getCopy(locale: string) {
     emotionTitle: "A better workspace reduces startup friction",
     emotionBody:
       "A useful home office does not need to be empty. It needs to make it easier to begin. What drains focus is often not one big mess, but dozens of small unfinished signals competing for attention. When those signals are reduced, concentration usually comes back faster than expected.",
+    mistakesTitle: "Common home office decluttering mistakes",
+    mistakes: [
+      "Keeping every paper in sight because it feels important",
+      "Letting cables and accessories accumulate without matching them to active devices",
+      "Using the desktop as a holding area for unrelated admin tasks",
+      "Decluttering the room without defining where current projects should live",
+    ],
+    keepTitle: "What should stay visible in a home office",
+    keepBody:
+      "Keep only the tools that support current work in plain sight: your main device, one notebook, a short list of active papers, and the supplies you use most often. If an item supports a project you are not touching this week, it probably belongs in stored reference space rather than on the desk.",
+    quickResetTitle: "How to declutter a home office in 15 minutes",
+    quickResetSteps: [
+      "Clear the desktop of anything unrelated to the work you are doing now",
+      "Sort visible papers into action, reference, and recycle",
+      "Gather all loose cables and remove the duplicates or mystery ones",
+      "Choose one drawer and group supplies by type instead of leaving them mixed together",
+    ],
+    faqTitle: "Home office decluttering FAQ",
+    faqs: [
+      ["What should stay on a home office desk?", "Only the tools that support your current work: your main device, daily notes, and a few active supplies. Everything else should either be stored or removed."],
+      ["How do you declutter papers without losing something important?", "Use three categories first: action, reference, and recycle. That reduces chaos immediately without forcing every paper into a final decision."],
+      ["Why does a home office get cluttered so fast?", "Because many work-related items feel potentially useful. If they are not tied to an active project or current workflow, they quietly become visual and mental noise."],
+    ],
     toolTitle: "Start with the home office checklist",
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated home office checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
@@ -183,6 +236,67 @@ export default async function HomeOfficePage({ params }: Props) {
             {copy.emotionBody}
           </p>
         </section>
+
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <AreaChecklistSection
           areaSlug="home-office"
