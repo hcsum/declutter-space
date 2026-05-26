@@ -1,8 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "./lib/session";
-import { defaultLocale, isValidLocale } from "./i18n/config";
+import { defaultLocale, isValidLocale, type Locale } from "./i18n/config";
 import { sanitizePostLoginNextPath } from "./lib/google-auth";
+
+const LOCALE_HEADER = "x-locale";
+
+function withLocaleHeader(res: NextResponse, locale: Locale): NextResponse {
+  res.headers.set(LOCALE_HEADER, locale);
+  return res;
+}
 
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = [
@@ -68,9 +75,15 @@ export default async function middleware(req: NextRequest) {
       );
     }
 
-    const url = req.nextUrl.clone();
-    url.pathname = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
-    return NextResponse.rewrite(url);
+    // Permanent redirect bare paths to the localized version so search engines
+    // see one canonical URL per page (avoids duplicate-content pairs like
+    // `/declutter-checklist` ↔ `/en/declutter-checklist`).
+    const localized = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
+    const search = req.nextUrl.search;
+    return NextResponse.redirect(
+      new URL(`${localized}${search}`, req.nextUrl),
+      308,
+    );
   }
 
   const barePath = getPathWithoutLocale(pathname);
@@ -87,7 +100,7 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  return NextResponse.next();
+  return withLocaleHeader(NextResponse.next(), maybeLocale);
 }
 
 export const config = {

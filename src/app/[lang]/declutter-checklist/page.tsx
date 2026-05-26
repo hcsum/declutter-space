@@ -2,7 +2,8 @@ import ClientPage from "./ClientPage";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import getDictionary from "@/i18n/getDictionary";
-import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
+import { defaultLocale, isValidLocale } from "@/i18n/config";
+import { buildLanguageAlternates } from "@/lib/seo";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -14,15 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: dict.checklist.metaTitle,
     description: dict.checklist.metaDescription,
-    alternates: {
-      canonical: `/${locale}/declutter-checklist`,
-      languages: Object.fromEntries(
-        locales.map((alternateLocale) => [
-          alternateLocale,
-          `/${alternateLocale}/declutter-checklist`,
-        ]),
-      ),
-    },
+    alternates: buildLanguageAlternates(locale, "/declutter-checklist"),
   };
 }
 

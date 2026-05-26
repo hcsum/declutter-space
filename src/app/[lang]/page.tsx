@@ -3,7 +3,8 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import getDictionary from "@/i18n/getDictionary";
-import { isValidLocale, defaultLocale, locales } from "@/i18n/config";
+import { isValidLocale, defaultLocale } from "@/i18n/config";
+import { buildLanguageAlternates } from "@/lib/seo";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -14,12 +15,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: dict.home.metaTitle,
     description: dict.home.metaDescription,
-    alternates: {
-      canonical: `/${locale}`,
-      languages: Object.fromEntries(
-        locales.map((alternateLocale) => [alternateLocale, `/${alternateLocale}`]),
-      ),
-    },
+    alternates: buildLanguageAlternates(locale, ""),
   };
 }
 

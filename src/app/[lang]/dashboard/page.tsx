@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { getItems } from "@/actions/items";
 import ItemTable from "@/components/ItemTable";
 import QuickAddItem from "@/components/QuickAddItem";
@@ -6,6 +7,10 @@ import NotVerified from "./user/notVerified";
 import getDictionary from "@/i18n/getDictionary";
 import { isValidLocale, defaultLocale } from "@/i18n/config";
 import "./styles.css";
+
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 const Dashboard = async ({
   params,

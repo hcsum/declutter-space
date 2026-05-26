@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import AreaChecklistSection from "../declutter-checklist/components/AreaChecklistSection";
-import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
+import { defaultLocale, isValidLocale } from "@/i18n/config";
+import { buildLanguageAlternates } from "@/lib/seo";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -148,15 +149,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: copy.title,
     description: copy.description,
-    alternates: {
-      canonical: `/${locale}/how-to-declutter-your-closet`,
-      languages: Object.fromEntries(
-        locales.map((alternateLocale) => [
-          alternateLocale,
-          `/${alternateLocale}/how-to-declutter-your-closet`,
-        ]),
-      ),
-    },
+    alternates: buildLanguageAlternates(locale, "/how-to-declutter-your-closet"),
   };
 }
 

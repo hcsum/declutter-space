@@ -43,9 +43,3 @@ export function buildPostLoginCallbackPath(nextPath: string = "/") {
     sanitizePostLoginNextPath(nextPath),
   )}`;
 }
-
-export function buildGoogleSignInHref(nextPath: string = "/") {
-  return `/api/auth/signin/google?callbackUrl=${encodeURIComponent(
-    buildPostLoginCallbackPath(nextPath),
-  )}`;
-}
