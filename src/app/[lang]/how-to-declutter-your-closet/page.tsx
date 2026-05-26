@@ -31,6 +31,11 @@ type GuideCopy = {
   quickResetSteps: string[];
   faqTitle?: string;
   faqs: Array<[string, string]>;
+  blockersTitle?: string;
+  blockersBody?: string;
+  relatedTitle?: string;
+  relatedIntro?: string;
+  relatedLinks?: Array<{ href: string; label: string }>;
 };
 
 function getCopy(locale: string): GuideCopy {
@@ -75,6 +80,17 @@ function getCopy(locale: string): GuideCopy {
       mistakes: [],
       quickResetSteps: [],
       faqs: [],
+      blockersTitle: "衣柜整理的情绪卡点（emotional blockers）",
+      blockersBody:
+        "衣柜里藏着最多的身份认同。\"等我减肥就能穿\" 的牛仔裤、\"这件很贵不能扔\" 的设计师外套、\"那段关系送的\" 的连衣裙、上一份工作的衬衫、过去某个版本的你的风格——每一件都不是关于衣服，是关于你自己。这就是为什么 sentimental clutter 在衣柜尤其重。Use it or lose it 加 \"我现在的身材\" 的判断同时用：你过去 12 个月没穿过的，不会因为再放一年就突然合适。",
+      relatedTitle: "相关阅读",
+      relatedIntro: "想拓展到房间外的话题：",
+      relatedLinks: [
+        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/how-to-declutter-your-bedroom", label: "如何整理卧室" },
+      ],
     };
   }
 
@@ -138,6 +154,17 @@ function getCopy(locale: string): GuideCopy {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated closets checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Closets Checklist page",
+    blockersTitle: "The emotional blockers behind closet clutter",
+    blockersBody:
+      "Closets hold more identity than any other room. \"When I lose weight\" jeans, \"this was so expensive\" designer pieces, dresses from a past relationship, shirts from a previous job, the wardrobe of a past version of you — none of it is about clothes. It is about self-image. This is why sentimental clutter is heaviest in closets. Apply use it or lose it alongside one honest filter: \"the body I have now.\" Clothes you have not worn in the past twelve months will not start fitting differently just because you wait another year.",
+    relatedTitle: "Related guides",
+    relatedIntro: "Pair this room reset with broader habit changes:",
+    relatedLinks: [
+      { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+      { href: "/how-to-declutter-your-bedroom", label: "How to declutter your bedroom" },
+    ],
   };
 }
 
@@ -291,12 +318,46 @@ export default async function ClosetPage({ params }: Props) {
           </section>
         )}
 
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="closets"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-closet`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

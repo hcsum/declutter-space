@@ -31,6 +31,11 @@ type GuideCopy = {
   quickResetSteps: string[];
   faqTitle?: string;
   faqs: Array<[string, string]>;
+  blockersTitle?: string;
+  blockersBody?: string;
+  relatedTitle?: string;
+  relatedIntro?: string;
+  relatedLinks?: Array<{ href: string; label: string }>;
 };
 
 function getCopy(locale: string): GuideCopy {
@@ -75,6 +80,17 @@ function getCopy(locale: string): GuideCopy {
       mistakes: [],
       quickResetSteps: [],
       faqs: [],
+      blockersTitle: "工作区杂物的情绪卡点（emotional blockers）",
+      blockersBody:
+        "家庭办公室的杂物，常常带着 \"我应该处理这个\" 的内疚信号——一堆没回的邮件打印件、看了一半的书、买了但没拆的工具书、上一份工作留下的笔记本。每一件都在视野边缘提醒你 \"还有事没做完\"，造成 decision fatigue 之前先消耗注意力。Use it or lose it 在这里就是：超过 90 天没碰过的 \"我会回来处理它\" 的纸张，几乎可以确定不会被处理——扫描或直接放手。",
+      relatedTitle: "相关阅读",
+      relatedIntro: "想拓展到房间外的话题：",
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
+        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+      ],
     };
   }
 
@@ -138,6 +154,17 @@ function getCopy(locale: string): GuideCopy {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated home office checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Home Office Checklist page",
+    blockersTitle: "The emotional blockers behind office clutter",
+    blockersBody:
+      "Office clutter carries the unspoken signal \"I should be dealing with this\" — the stack of unread mail, the half-read book, the notebook from a previous job, the printouts you meant to scan. Each item sits at the edge of your vision reminding you \"there is unfinished work here,\" draining attention before you even start. Use it or lose it lands hard in this room: anything you have not touched in 90 days under the heading \"I'll come back to this\" almost certainly never gets returned to. Scan and toss, or just toss.",
+    relatedTitle: "Related guides",
+    relatedIntro: "Pair this room reset with broader habit changes:",
+    relatedLinks: [
+      { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
+      { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+    ],
   };
 }
 
@@ -291,12 +318,46 @@ export default async function HomeOfficePage({ params }: Props) {
           </section>
         )}
 
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="home-office"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-home-office`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

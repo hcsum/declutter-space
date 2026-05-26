@@ -45,6 +45,25 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 bedroom 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Bedroom Checklist 功能页",
+      mistakesTitle: undefined as string | undefined,
+      mistakes: [] as string[],
+      keepTitle: undefined as string | undefined,
+      keepBody: undefined as string | undefined,
+      quickResetTitle: undefined as string | undefined,
+      quickResetSteps: [] as string[],
+      faqTitle: undefined as string | undefined,
+      faqs: [] as Array<[string, string]>,
+      blockersTitle: "卧室杂物的情绪卡点（emotional blockers）" as string | undefined,
+      blockersBody:
+        "卧室是 sentimental clutter 最容易藏的地方——床底的 doom pile（堆着 \"以后再决定\" 的盒子）、椅子上永远在 \"等会再叠\" 的衣服、抽屉里前任送的卡片、那件 \"减肥就能穿\" 的衣服。这些不是杂物的问题，是 identity 的问题。Use it or lose it 在这里几乎是终极测试：如果过去 12 个月你没有用过、穿过、需要过它，下一个 12 个月也不会。" as string | undefined,
+      relatedTitle: "相关阅读" as string | undefined,
+      relatedIntro: "想拓展到房间外的话题：" as string | undefined,
+      relatedLinks: [
+        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
+        { href: "/how-to-declutter-your-closet", label: "如何整理衣柜" },
+        { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+      ] as Array<{ href: string; label: string }> | undefined,
     };
   }
 
@@ -85,6 +104,40 @@ function getCopy(locale: string) {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated bedroom checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Bedroom Checklist page",
+    mistakesTitle: "Common bedroom decluttering mistakes" as string | undefined,
+    mistakes: [
+      "Buying storage bins before deciding what to remove",
+      "Stuffing the closet harder instead of editing what is inside",
+      "Treating under-bed space as long-term limbo for undecided items",
+      "Keeping clothes that fit a hoped-for future body instead of dressing the one you have now",
+    ],
+    keepTitle: "What deserves prime bedroom space" as string | undefined,
+    keepBody:
+      "Reserve the spots closest to where you sleep and dress for what genuinely serves daily life: clothes that fit and get worn this season, bedding that feels good against your skin, and the lamp and book you actually reach for at night. Aspirational items, sentimental holdovers, and \"just in case\" pieces belong out of the daily flow, not on the nightstand." as string | undefined,
+    quickResetTitle: "How to declutter your bedroom in 15 minutes" as string | undefined,
+    quickResetSteps: [
+      "Clear the floor of clothes, bags, and anything that does not belong",
+      "Empty the nightstand surface and put back only what you use at night",
+      "Pull ten obvious noes from the closet: wrong fit, stained, never worn",
+      "Look under the bed and remove anything you cannot name a use for",
+    ],
+    faqTitle: "Bedroom decluttering FAQ" as string | undefined,
+    faqs: [
+      ["What is the fastest way to declutter a bedroom?", "Clear the floor, reset the nightstand, and pull obvious noes from the closet. Those three moves change how the room feels within fifteen minutes, before you have to make any harder decisions."],
+      ["How do I declutter my bedroom when I feel overwhelmed?", "Pick one surface, not the whole room, and time-box yourself to ten minutes. Stop when the timer ends even if the rest is messy. A small visible win beats a perfect plan you do not start."],
+      ["What should you not keep in a bedroom?", "Working files, unfinished craft projects, exercise gear you do not use, broken electronics, and the chair that exists only to hold yesterday's clothes. Anything that signals \"there is work to do\" works against sleep and recovery."],
+    ] as Array<[string, string]>,
+    blockersTitle: "The emotional blockers behind bedroom clutter" as string | undefined,
+    blockersBody:
+      "The bedroom is where sentimental clutter hides best — the doom pile under the bed (a box of \"I'll decide later\"), the chair holding clothes you swear you'll fold, the drawer of cards from an ex, the \"when I lose weight\" jeans. None of it is really about objects. It is about identity. Use it or lose it becomes a final test in here: if the past twelve months did not bring it out, the next twelve will not either." as string | undefined,
+    relatedTitle: "Related guides" as string | undefined,
+    relatedIntro: "Pair this room reset with broader habit changes:" as string | undefined,
+    relatedLinks: [
+      { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items" },
+      { href: "/how-to-declutter-your-closet", label: "How to declutter your closet" },
+      { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+    ] as Array<{ href: string; label: string }> | undefined,
   };
 }
 
@@ -177,12 +230,107 @@ export default async function BedroomPage({ params }: Props) {
           </p>
         </section>
 
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="bedroom"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-bedroom`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

@@ -45,6 +45,25 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和 living room 功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开 Living Room Checklist 功能页",
+      mistakesTitle: undefined as string | undefined,
+      mistakes: [] as string[],
+      keepTitle: undefined as string | undefined,
+      keepBody: undefined as string | undefined,
+      quickResetTitle: undefined as string | undefined,
+      quickResetSteps: [] as string[],
+      faqTitle: undefined as string | undefined,
+      faqs: [] as Array<[string, string]>,
+      blockersTitle: "客厅杂物的情绪卡点（emotional blockers）" as string | undefined,
+      blockersBody:
+        "客厅杂物的核心情绪不是个人的，是共享的。\"这是 ta 的东西，我不能扔\"、\"孩子可能还要玩\"、\"我不想为这种小事吵架\"——这些都让客厅成为家里 decision fatigue 最重的房间。客厅的 \"just in case\" 经常是 \"以防有人来\"——一堆备用杯垫、不会用的盘子、为派对准备的椅子。如果半年都没用上，它服务的不是真实场景，而是想象中的某个时刻。" as string | undefined,
+      relatedTitle: "相关阅读" as string | undefined,
+      relatedIntro: "想拓展到房间外的话题：" as string | undefined,
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/how-to-declutter-your-kitchen", label: "如何整理厨房" },
+      ] as Array<{ href: string; label: string }> | undefined,
     };
   }
 
@@ -85,6 +104,40 @@ function getCopy(locale: string) {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated living room checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Living Room Checklist page",
+    mistakesTitle: "Common living room decluttering mistakes" as string | undefined,
+    mistakes: [
+      "Hiding clutter inside baskets without ever editing what is in them",
+      "Buying more decorative pillows and throws than the sofa can hold",
+      "Letting one category, like toys or hobby gear, take over the whole shared room",
+      "Saving the room for a big weekend overhaul instead of a short daily reset",
+    ],
+    keepTitle: "What earns a permanent spot in a living room" as string | undefined,
+    keepBody:
+      "Keep what supports the way the room is actually used: comfortable seating you sit in, one or two well-loved throws, the books and games that get picked up regularly, and the remotes and chargers you reach for every evening. Display pieces, sentimental decor, and \"someday\" stacks should be edited down to the few that still mean something, not the dozen that just survived past purges." as string | undefined,
+    quickResetTitle: "How to declutter your living room in 10 minutes" as string | undefined,
+    quickResetSteps: [
+      "Walk the room with a basket and remove anything that belongs in another space",
+      "Clear the coffee table down to a few intentional items",
+      "Fold the throws, round up the remotes, and put cables into one tray or drawer",
+      "Pick one overflow zone — toys, mail, magazines — and shrink it by half",
+    ],
+    faqTitle: "Living room decluttering FAQ" as string | undefined,
+    faqs: [
+      ["How often should you declutter a living room?", "A short daily reset of surfaces, plus a deeper edit every few weeks, beats waiting for one annual purge. Living rooms are shared and high-traffic, so they accumulate fast and benefit from frequent light touches."],
+      ["How do you keep a living room tidy with kids or roommates?", "Give the room one defined landing zone — a basket, lidded ottoman, or tray — and accept that it will get used. The goal is containment, not constant emptiness. Empty that one zone weekly instead of fighting clutter everywhere."],
+      ["What should a minimalist living room have?", "Comfortable seating, soft lighting, one clear surface for daily use, and a small edited mix of personal items. Minimal does not mean empty; it means every visible item has a reason to be there."],
+    ] as Array<[string, string]>,
+    blockersTitle: "The emotional blockers behind living room clutter" as string | undefined,
+    blockersBody:
+      "Living room clutter is rarely just one person's. \"That belongs to them, I can't toss it,\" \"the kids might still want to play with it,\" \"I don't want to argue over something this small\" — these are why the living room carries the heaviest decision fatigue in the home. The \"just in case\" here is often \"in case someone comes over\" — extra coasters, plates you do not use, chairs prepared for a party. If half a year goes by without it serving a real moment, it is serving an imagined one." as string | undefined,
+    relatedTitle: "Related guides" as string | undefined,
+    relatedIntro: "Pair this room reset with broader habit changes:" as string | undefined,
+    relatedLinks: [
+      { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+      { href: "/how-to-declutter-your-kitchen", label: "How to declutter your kitchen" },
+    ] as Array<{ href: string; label: string }> | undefined,
   };
 }
 
@@ -177,12 +230,107 @@ export default async function LivingRoomPage({ params }: Props) {
           </p>
         </section>
 
+        {copy.mistakes.length > 0 && copy.mistakesTitle && (
+          <section className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+            <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+              <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                {copy.mistakesTitle}
+              </h2>
+              <ul className="mt-5 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+                {copy.mistakes.map((item) => (
+                  <li key={item} className="rounded-2xl bg-[#f9faf2] px-4 py-3">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </article>
+
+            {copy.keepTitle && copy.keepBody && (
+              <aside className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+                  {copy.keepTitle}
+                </h2>
+                <p className="mt-4 text-base leading-7 text-[#335748]">
+                  {copy.keepBody}
+                </p>
+              </aside>
+            )}
+          </section>
+        )}
+
+        {copy.quickResetSteps.length > 0 && copy.quickResetTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.quickResetTitle}
+            </h2>
+            <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
+              {copy.quickResetSteps.map((step) => (
+                <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+        )}
+
+        {copy.faqs.length > 0 && copy.faqTitle && (
+          <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.faqTitle}
+            </h2>
+            <div className="mt-6 space-y-4">
+              {copy.faqs.map(([question, answer]) => (
+                <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+                  <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
+                  <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
+                    {answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="living-room"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-living-room`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

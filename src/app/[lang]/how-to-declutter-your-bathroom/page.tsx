@@ -31,6 +31,11 @@ type GuideCopy = {
   quickResetSteps: string[];
   faqTitle?: string;
   faqs: Array<[string, string]>;
+  blockersTitle?: string;
+  blockersBody?: string;
+  relatedTitle?: string;
+  relatedIntro?: string;
+  relatedLinks?: Array<{ href: string; label: string }>;
 };
 
 function getCopy(locale: string): GuideCopy {
@@ -75,6 +80,17 @@ function getCopy(locale: string): GuideCopy {
       mistakes: [],
       quickResetSteps: [],
       faqs: [],
+      blockersTitle: "浴室杂物的情绪卡点（emotional blockers）",
+      blockersBody:
+        "浴室的杂物常常以小但多的形式积累——\"还能挤一下\" 的洗发水、\"哪天用得上\" 的旅行装、收过来从没用的样品、贵但其实不适合自己肤质的护肤品。这些东西不是因为还有用而留着，而是因为扔它们带着 \"浪费\" 和 \"以防万一\" 的小负罪感。Use it or lose it 在浴室特别适用：开封后超过一年的护肤品基本已经氧化失效，留着只是占地方。",
+      relatedTitle: "相关阅读",
+      relatedIntro: "想拓展到房间外的话题：",
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/how-to-declutter-your-kitchen", label: "如何整理厨房" },
+      ],
     };
   }
 
@@ -138,6 +154,17 @@ function getCopy(locale: string): GuideCopy {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated bathroom checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Bathroom Checklist page",
+    blockersTitle: "The emotional blockers behind bathroom clutter",
+    blockersBody:
+      "Bathroom clutter accumulates as \"small but many\": the half-finished shampoo \"there's still some left,\" the travel-size bottles \"might use them on a trip someday,\" the free samples that arrived with no review, the expensive serum that did not work but feels wasteful to toss. None of it is staying because it is useful. It is staying because tossing it carries a small charge of \"waste\" or \"just in case.\" Use it or lose it applies here especially hard: most opened skincare oxidizes within twelve months, so the bottle you have been saving is already past its actual usefulness.",
+    relatedTitle: "Related guides",
+    relatedIntro: "Pair this room reset with broader habit changes:",
+    relatedLinks: [
+      { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+      { href: "/how-to-declutter-your-kitchen", label: "How to declutter your kitchen" },
+    ],
   };
 }
 
@@ -291,12 +318,46 @@ export default async function BathroomPage({ params }: Props) {
           </section>
         )}
 
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="bathroom-laundry"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-bathroom`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );

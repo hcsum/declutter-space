@@ -31,6 +31,11 @@ type GuideCopy = {
   quickResetSteps: string[];
   faqTitle?: string;
   faqs: Array<[string, string]>;
+  blockersTitle?: string;
+  blockersBody?: string;
+  relatedTitle?: string;
+  relatedIntro?: string;
+  relatedLinks?: Array<{ href: string; label: string }>;
 };
 
 function getCopy(locale: string): GuideCopy {
@@ -75,6 +80,17 @@ function getCopy(locale: string): GuideCopy {
       mistakes: [],
       quickResetSteps: [],
       faqs: [],
+      blockersTitle: "厨房整理的情绪卡点（emotional blockers）",
+      blockersBody:
+        "厨房虽然看起来是功能性最强的房间，但情绪卡点一点不少：礼物锅具的负罪感（\"是 ta 送的，扔了不好\"）、过期但 \"just in case\" 的香料、参加过烹饪潮流买的专用电器、某段关系里两个人的厨具混在一起。这些杂物的存在，不是因为你需要它们，而是因为决定它们的去留要消耗 decision fatigue。先承认这一点，再带着 use it or lose it 的角度走一遍——多数会一直被 \"以后再说\" 的东西，都可以现在就放手。",
+      relatedTitle: "相关阅读",
+      relatedIntro: "想拓展到房间外的话题：",
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
+        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/how-to-declutter-your-bathroom", label: "如何整理浴室" },
+      ],
     };
   }
 
@@ -138,6 +154,17 @@ function getCopy(locale: string): GuideCopy {
     toolDesc:
       "This interactive checklist shares the same live data as the dedicated kitchen checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
     toolPage: "Open the Kitchen Checklist page",
+    blockersTitle: "The emotional blockers behind kitchen clutter",
+    blockersBody:
+      "The kitchen looks like the most functional room in the house, but the emotional residue is real: gift cookware kept out of guilt (\"my mother-in-law gave us that\"), spices saved \"just in case\" they come back into rotation, single-use appliances bought during a cooking-trend phase, and the merged kitchen gear of a past relationship. None of it is staying because you need it — it is staying because deciding takes decision fatigue. Name the blocker first. Then apply use it or lose it: if the past 12 months did not bring it out, the next 12 probably will not either.",
+    relatedTitle: "Related guides",
+    relatedIntro: "Pair this room reset with broader habit changes:",
+    relatedLinks: [
+      { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
+      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+      { href: "/how-to-declutter-your-bathroom", label: "How to declutter your bathroom" },
+    ],
   };
 }
 
@@ -291,12 +318,46 @@ export default async function KitchenPage({ params }: Props) {
           </section>
         )}
 
+        {copy.blockersTitle && copy.blockersBody && (
+          <section className="rounded-[2rem] bg-[#fff4df] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#573611] md:text-3xl">
+              {copy.blockersTitle}
+            </h2>
+            <p className="mt-4 max-w-4xl text-base leading-7 text-[#7a5228]">
+              {copy.blockersBody}
+            </p>
+          </section>
+        )}
+
         <AreaChecklistSection
           areaSlug="kitchen"
           heading={copy.toolTitle}
           description={copy.toolDesc}
           nextPath={`/${locale}/how-to-declutter-your-kitchen`}
         />
+
+        {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
+          <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+            <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+              {copy.relatedTitle}
+            </h2>
+            {copy.relatedIntro && (
+              <p className="mt-3 text-base leading-7 text-[#335748]">{copy.relatedIntro}</p>
+            )}
+            <ul className="mt-5 grid gap-3 text-sm font-semibold md:grid-cols-2 md:text-base">
+              {copy.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={`/${locale}${link.href}`}
+                    className="block rounded-2xl bg-white/80 px-4 py-3 text-[#002d1c] hover:bg-white"
+                  >
+                    → {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </div>
     </main>
   );
