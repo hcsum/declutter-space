@@ -406,6 +406,58 @@ const LandingPage = async ({ params }: Props) => {
         </div>
       </section>
 
+      {/* Beyond Room by Room */}
+      <section className="max-w-7xl mx-auto px-8 py-section-gap" id="beyond-rooms">
+        <div className="max-w-3xl mx-auto text-center mb-12">
+          <h2 className="text-headline-lg font-headline-lg mb-4 text-on-surface dark:text-white">
+            {dict.home.beyondRoomsTitle}
+          </h2>
+          <p className="text-on-surface-variant dark:text-gray-400 text-body-lg">
+            {dict.home.beyondRoomsSubtitle}
+          </p>
+        </div>
+        <div className="grid gap-gutter md:grid-cols-2">
+          {[
+            {
+              title: dict.home.beyondList60Title,
+              desc: dict.home.beyondList60Desc,
+              href: `/${locale}/things-to-declutter`,
+            },
+            {
+              title: dict.home.beyondStopBuyingTitle,
+              desc: dict.home.beyondStopBuyingDesc,
+              href: `/${locale}/things-to-stop-buying`,
+            },
+            {
+              title: dict.home.beyondSentimentalTitle,
+              desc: dict.home.beyondSentimentalDesc,
+              href: `/${locale}/how-to-declutter-sentimental-items`,
+            },
+            {
+              title: dict.home.beyondAdhdTitle,
+              desc: dict.home.beyondAdhdDesc,
+              href: `/${locale}/adhd-cleaning-checklist`,
+            },
+          ].map((card) => (
+            <Link
+              key={card.href}
+              href={card.href}
+              className="bg-surface dark:bg-gray-700 rounded-2xl p-8 shadow-soft-depth border border-outline-variant dark:border-gray-600 hover:border-primary/30 hover:-translate-y-1 transition-all duration-300 group"
+            >
+              <h3 className="text-headline-md mb-3 text-on-surface dark:text-white group-hover:text-primary dark:group-hover:text-orange-400 transition-colors">
+                {card.title}
+              </h3>
+              <p className="text-on-surface-variant dark:text-gray-400 text-body-md mb-5">
+                {card.desc}
+              </p>
+              <span className="text-primary dark:text-orange-400 font-semibold group-hover:underline">
+                {dict.home.beyondReadGuide} →
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
       {/* The Psychology of Mindful Discernment */}
       <section className="max-w-7xl mx-auto px-8 py-section-gap" id="mindful-discernment">
         <div className="max-w-4xl mx-auto">
