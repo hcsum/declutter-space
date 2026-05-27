@@ -2,17 +2,10 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import AreaChecklistSection from "../components/AreaChecklistSection";
-import {
-  getChecklistCategoryBySlug,
-  getChecklistCategorySlugs,
-} from "@/lib/checklist/checklist";
+import { getChecklistCategoryBySlug } from "@/lib/checklist/checklist";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
-
-export async function generateStaticParams() {
-  return getChecklistCategorySlugs().map((slug) => ({ slug }));
-}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang, slug } = await params;
