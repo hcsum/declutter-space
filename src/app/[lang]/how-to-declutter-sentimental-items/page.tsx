@@ -196,6 +196,7 @@ function getCopy(locale: string): Copy {
     relatedIntro: "Sentimental decluttering does not happen in isolation. These guides connect to it:",
     relatedLinks: [
       { href: "/how-to-declutter-unwanted-gifts", label: "How to declutter unwanted gifts" },
+      { href: "/decluttering-after-a-death", label: "Decluttering after a death" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-bedroom", label: "How to declutter your bedroom" },

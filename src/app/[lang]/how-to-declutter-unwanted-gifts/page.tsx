@@ -209,6 +209,7 @@ function getCopy(locale: string): Copy {
     relatedIntro: "Gift guilt is usually the same knot as sentimental items and shopping habits. These go next:",
     relatedLinks: [
       { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items (without guilt)" },
+      { href: "/decluttering-after-a-death", label: "Decluttering after a death" },
       { href: "/things-to-stop-buying", label: "10 things to stop buying" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },
