@@ -434,6 +434,16 @@ const LandingPage = async ({ params }: Props) => {
               href: `/${locale}/how-to-declutter-sentimental-items`,
             },
             {
+              title: dict.home.beyondGiftsTitle,
+              desc: dict.home.beyondGiftsDesc,
+              href: `/${locale}/how-to-declutter-unwanted-gifts`,
+            },
+            {
+              title: dict.home.beyondLossTitle,
+              desc: dict.home.beyondLossDesc,
+              href: `/${locale}/decluttering-after-a-death`,
+            },
+            {
               title: dict.home.beyondAdhdTitle,
               desc: dict.home.beyondAdhdDesc,
               href: `/${locale}/adhd-cleaning-checklist`,
