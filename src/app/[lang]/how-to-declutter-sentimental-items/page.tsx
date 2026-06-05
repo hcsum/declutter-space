@@ -112,6 +112,7 @@ function getCopy(locale: string): Copy {
       relatedTitle: "相关阅读",
       relatedIntro: "整理 sentimental items 不是单独的工作。这些指南也会帮到你：",
       relatedLinks: [
+        { href: "/how-to-declutter-unwanted-gifts", label: "如何断舍离不想要的礼物" },
         { href: "/decluttering-decision-guide", label: "犹豫物品决策指南" },
         { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
         { href: "/how-to-declutter-your-bedroom", label: "如何整理卧室" },
@@ -194,6 +195,7 @@ function getCopy(locale: string): Copy {
     relatedTitle: "Related guides",
     relatedIntro: "Sentimental decluttering does not happen in isolation. These guides connect to it:",
     relatedLinks: [
+      { href: "/how-to-declutter-unwanted-gifts", label: "How to declutter unwanted gifts" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-bedroom", label: "How to declutter your bedroom" },

@@ -9,6 +9,7 @@ const sitemapPaths = [
   "/things-to-declutter",
   "/things-to-stop-buying",
   "/how-to-declutter-sentimental-items",
+  "/how-to-declutter-unwanted-gifts",
   "/adhd-cleaning-checklist",
   "/how-to-declutter-your-bedroom",
   "/how-to-declutter-your-living-room",

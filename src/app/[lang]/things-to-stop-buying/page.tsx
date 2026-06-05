@@ -134,6 +134,7 @@ function getCopy(locale: string): Copy {
         { href: "/how-to-declutter-your-closet", label: "如何整理衣柜" },
         { href: "/declutter-checklist", label: "互动整理清单" },
         { href: "/decluttering-decision-guide", label: "犹豫物品决策指南" },
+        { href: "/how-to-declutter-unwanted-gifts", label: "如何断舍离不想要的礼物" },
       ],
       labels: { stop: "停止买", instead: "替代行为" },
     };
@@ -235,6 +236,7 @@ function getCopy(locale: string): Copy {
       { href: "/how-to-declutter-your-closet", label: "How to declutter your closet" },
       { href: "/declutter-checklist", label: "Interactive declutter checklist" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
+      { href: "/how-to-declutter-unwanted-gifts", label: "How to declutter unwanted gifts" },
     ],
     labels: { stop: "Stop buying", instead: "Instead" },
   };
