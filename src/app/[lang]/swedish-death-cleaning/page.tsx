@@ -36,7 +36,7 @@ type Copy = {
   startLabel: string;
 };
 
-function getCopy(_locale: string): Copy {
+function getCopy(): Copy {
   return {
     title: "Swedish Death Cleaning: A Gentle Checklist (Döstädning) | DeclutterYourHome",
     description:
@@ -115,7 +115,7 @@ function getCopy(_locale: string): Copy {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
-  const copy = getCopy(locale);
+  const copy = getCopy();
 
   return {
     title: copy.title,
@@ -127,7 +127,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SwedishDeathCleaningPage({ params }: Props) {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
-  const copy = getCopy(locale);
+  const copy = getCopy();
 
   return (
     <main className="min-h-screen bg-[#f3f4ec] px-5 pb-20 pt-24 text-[#1a1c18] md:px-8">
