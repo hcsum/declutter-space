@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { decrypt } from "./lib/session";
-import { defaultLocale, isValidLocale, type Locale } from "./i18n/config";
+import { defaultLocale, isValidLocale } from "./i18n/config";
 import { sanitizePostLoginNextPath } from "./lib/google-auth";
-
-const LOCALE_HEADER = "x-locale";
-
-function withLocaleHeader(res: NextResponse, locale: Locale): NextResponse {
-  res.headers.set(LOCALE_HEADER, locale);
-  return res;
-}
 
 const protectedRoutes = ["/dashboard"];
 const publicRoutes = [
@@ -57,13 +50,23 @@ export default async function middleware(req: NextRequest) {
   const maybeLocale = segments[1];
   const hasLocale = isValidLocale(maybeLocale);
 
-  const cookie = (await cookies()).get("session")?.value;
-  const session = await decrypt(cookie);
-
   if (!hasLocale) {
     const barePath = pathname;
     const isProtected = protectedRoutes.some((r) => barePath.startsWith(r));
     const isPublic = publicRoutes.some((r) => barePath.startsWith(r));
+
+    if (!isProtected && !isPublic) {
+      // Keep marketing/content routes cacheable by skipping session work.
+      const localized = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
+      const search = req.nextUrl.search;
+      return NextResponse.redirect(
+        new URL(`${localized}${search}`, req.nextUrl),
+        308,
+      );
+    }
+
+    const cookie = (await cookies()).get("session")?.value;
+    const session = await decrypt(cookie);
 
     if (isProtected && !session?.userId) {
       return NextResponse.redirect(new URL("/", req.nextUrl));
@@ -75,9 +78,6 @@ export default async function middleware(req: NextRequest) {
       );
     }
 
-    // Permanent redirect bare paths to the localized version so search engines
-    // see one canonical URL per page (avoids duplicate-content pairs like
-    // `/declutter-checklist` ↔ `/en/declutter-checklist`).
     const localized = `/${defaultLocale}${pathname === "/" ? "" : pathname}`;
     const search = req.nextUrl.search;
     return NextResponse.redirect(
@@ -90,6 +90,13 @@ export default async function middleware(req: NextRequest) {
   const isProtected = protectedRoutes.some((r) => barePath.startsWith(r));
   const isPublic = publicRoutes.some((r) => barePath.startsWith(r));
 
+  if (!isProtected && !isPublic) {
+    return NextResponse.next();
+  }
+
+  const cookie = (await cookies()).get("session")?.value;
+  const session = await decrypt(cookie);
+
   if (isProtected && !session?.userId) {
     return NextResponse.redirect(new URL(`/${maybeLocale}`, req.nextUrl));
   }
@@ -100,7 +107,7 @@ export default async function middleware(req: NextRequest) {
     );
   }
 
-  return withLocaleHeader(NextResponse.next(), maybeLocale);
+  return NextResponse.next();
 }
 
 export const config = {
