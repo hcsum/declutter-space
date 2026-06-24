@@ -118,6 +118,7 @@ function getCopy(): Copy {
     relatedIntro: "Grief, sentimental things, and inherited gifts are the same knot. These go next:",
     relatedLinks: [
       { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items (without guilt)" },
+      { href: "/swedish-death-cleaning", label: "Swedish death cleaning: a gentle checklist" },
       { href: "/how-to-declutter-unwanted-gifts", label: "How to declutter unwanted gifts" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },

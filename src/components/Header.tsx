@@ -78,9 +78,7 @@ const Header: React.FC = () => {
     pathname === `/${locale}` ||
     pathname === `/${locale}/`;
   const isChecklist = pathname.includes("/declutter-checklist");
-  const isSecondLook =
-    pathname.includes("/decluttering-decision-guide") ||
-    pathname.includes("/keep-or-toss");
+  const isSecondLook = pathname.includes("/decluttering-decision-guide");
 
   return (
     <header className="fixed top-0 w-full z-50 border-b border-stone-200 dark:border-gray-700 bg-stone-50/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">

@@ -448,6 +448,16 @@ const LandingPage = async ({ params }: Props) => {
               desc: dict.home.beyondAdhdDesc,
               href: `/${locale}/adhd-cleaning-checklist`,
             },
+            {
+              title: "Swedish death cleaning",
+              desc: "A gentle döstädning checklist: pare down so no one else has to sort through a lifetime of your things.",
+              href: `/${locale}/swedish-death-cleaning`,
+            },
+            {
+              title: "Decluttering before a move",
+              desc: "A downsizing checklist so you only pay to move what belongs in the next home — no moving-day regret.",
+              href: `/${locale}/decluttering-before-a-move`,
+            },
           ].map((card) => (
             <Link
               key={card.href}

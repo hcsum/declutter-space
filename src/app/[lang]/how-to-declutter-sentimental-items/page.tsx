@@ -197,6 +197,7 @@ function getCopy(locale: string): Copy {
     relatedLinks: [
       { href: "/how-to-declutter-unwanted-gifts", label: "How to declutter unwanted gifts" },
       { href: "/decluttering-after-a-death", label: "Decluttering after a death" },
+      { href: "/swedish-death-cleaning", label: "Swedish death cleaning: a gentle checklist" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-bedroom", label: "How to declutter your bedroom" },

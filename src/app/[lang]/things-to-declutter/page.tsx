@@ -326,6 +326,7 @@ function getCopy(locale: string): Copy {
       { href: "/how-to-declutter-your-living-room", label: "How to declutter your living room" },
       { href: "/how-to-declutter-your-closet", label: "How to declutter your closet" },
       { href: "/how-to-declutter-your-home-office", label: "How to declutter your home office" },
+      { href: "/decluttering-before-a-move", label: "Decluttering before a move (downsizing)" },
       { href: "/declutter-checklist", label: "Interactive declutter checklist" },
       { href: "/decluttering-decision-guide", label: "Decision guide for hard items" },
     ],

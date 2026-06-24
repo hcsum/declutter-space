@@ -11,6 +11,8 @@ const sitemapPaths = [
   "/how-to-declutter-sentimental-items",
   "/how-to-declutter-unwanted-gifts",
   "/decluttering-after-a-death",
+  "/swedish-death-cleaning",
+  "/decluttering-before-a-move",
   "/adhd-cleaning-checklist",
   "/how-to-declutter-your-bedroom",
   "/how-to-declutter-your-living-room",
