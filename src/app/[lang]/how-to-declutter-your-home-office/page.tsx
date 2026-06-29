@@ -94,6 +94,81 @@ function getCopy(locale: string): GuideCopy {
     };
   }
 
+  if (locale === "ja") {
+    return {
+      title: "ホームオフィスの片付け方 | ステップで進めるワークスペース整理ガイド | DeclutterYourHome",
+      description:
+        "紙類、ケーブル、古い電子機器、視界のノイズを整理して、集中しやすいホームオフィスに戻す方法をステップごとに紹介します。",
+      eyebrow: "ホームオフィスガイド",
+      heroTitle: "大事な物を失わずにホームオフィスを片付ける方法",
+      heroSubtitle:
+        "ホームオフィスの clutter は偶然ではなく、たいてい『まだ使うかもしれない』物でできています。見直すべき紙、あとで合わせるケーブル、いつか直す機器、忘れたくないメモ。よい declutter は、仕事を支える物を残し、注意を奪う物を外すことです。",
+      introTitle: "ホームオフィスの clutter は productivity のふりをしやすい",
+      introBody:
+        "紙の山、古いノート、予備の充電器、動かない電子機器、freebie stationery、未処理の事務作業は、仕事っぽく見えるため何か月も残りやすいものです。その結果、仕事を始める前から部屋が忙しく感じられます。必要なのは極端な minimalism ではなく、視覚と認知の friction を減らして、集中できる部屋に戻すことです。",
+      stepsTitle: "ホームオフィスを片付ける 7 つのステップ",
+      steps: [
+        ["1. 紙類を action・reference・recycle に分ける", "紙を 1 枚ずつ感情的に判断し直す必要はありません。3 つの速いカテゴリだけで、机と引き出しの圧迫をすぐに下げられます。"],
+        ["2. 今の仕事を支えない物をデスクから外す", "普段使う道具と備品だけを残します。思い出の品、箱、使っていないノート、無関係の物は主な作業面から外しましょう。"],
+        ["3. cables・chargers・tech accessories を整える", "ホームオフィスが散らかる大きな理由の 1 つが、正体不明の cable と重複した charger です。今使っている物を残し、どの device にも役立たない物を見極めます。"],
+        ["4. 古い電子機器や壊れた機器に対処する", "古いマウス、壊れたヘッドホン、古いキーボード、中途半端に動く accessories は、『いつか直す』の名目で残りがちです。"],
+        ["5. 引き出しの clutter を種類ごとに分ける", "クリップ、電池、付せん、USB drive、名刺、説明書は小さくても、混ざると探すたびに流れを止めます。"],
+        ["6. 集中を切る visual distractions を減らす", "山積みのメモ、reminder の貼りすぎ、ほこりをかぶった機器、無関係の物は、仕事の前から頭の中を騒がせます。"],
+        ["7. workflow に合わせて戻す", "よく使う紙、device、ペン、充電器をいちばん手に取りやすい場所へ。流れを止める回数が少ないほど、部屋も維持しやすくなります。"],
+      ],
+      removeTitle: "ホームオフィスで最初に減らしたいもの",
+      removeItems: [
+        "もう不要な紙や printout",
+        "重複した、または正体不明の cable と charger",
+        "壊れた、または古くなった電子機器",
+        "使わない freebie stationery",
+        "実際の仕事に関係ない desktop clutter",
+        "引き出しに混ざった小さな accessories",
+      ],
+      emotionTitle: "よい workspace は始めるまでの friction を減らす",
+      emotionBody:
+        "役立つホームオフィスは空っぽである必要はありません。大切なのは、仕事を始めやすいことです。集中を奪うのは大きな散らかり 1 つではなく、未完了のサインが何十個も同時に見えている状態です。それらが減ると、思っている以上に早く集中が戻ることがあります。",
+      mistakesTitle: "ホームオフィスの片付けでよくある失敗",
+      mistakes: [
+        "重要そうに見えるからと、すべての紙を見える場所に置き続ける",
+        "使っている device に結び付けないまま cables や accessories を増やす",
+        "desktop を無関係の事務作業の置き場にする",
+        "今進行中の project の置き場所を決めないまま部屋だけ片付ける",
+      ],
+      keepTitle: "ホームオフィスで見える場所に置くべきもの",
+      keepBody:
+        "今の仕事を支える道具だけを見える場所に残しましょう。メインの device、ノート 1 冊、進行中の紙を少し、よく使う備品だけで十分です。今週触らない project の物は、机の上ではなく stored reference space に置くほうが合理的です。",
+      quickResetTitle: "15 分でホームオフィスを片付ける方法",
+      quickResetSteps: [
+        "今やっている仕事に関係ない物をデスクから外す",
+        "見えている紙を action・reference・recycle に分ける",
+        "ゆるい cables を全部集め、重複や mystery cable を除く",
+        "引き出しを 1 つ選び、備品を種類ごとにまとめる",
+      ],
+      faqTitle: "ホームオフィスの片付け FAQ",
+      faqs: [
+        ["ホームオフィスの机に残すべきものは？", "今の仕事を支える物だけです。メインの device、日々のメモ、少数の active supplies があれば十分で、それ以外は収納するか外しましょう。"],
+        ["大事な紙を失わずに片付けるには？", "まず action、reference、recycle の 3 分類にします。最終判断を急がなくても、混乱だけはすぐ減らせます。"],
+        ["なぜホームオフィスはすぐ散らかるの？", "仕事に関係ありそうな物の多くが『役立つかもしれない』顔をしているからです。active project や今の workflow に結び付いていない物は、静かに visual noise になります。"],
+      ],
+      toolTitle: "Home Office Checklist から始める",
+      toolDesc:
+        "このインタラクティブなチェックリストは、専用の Home Office Checklist ページと同じライブデータを使っています。どちらのページからでも項目のチェック、追加、進捗の保存ができます。",
+      toolPage: "Home Office Checklist ページを開く",
+      blockersTitle: "ホームオフィスの散らかりの奥にある感情的なつまずき",
+      blockersBody:
+        "オフィスの物には『これに向き合うべきだ』という無言のサインが宿ります。未読の郵便、読みかけの本、前職のノート、スキャンするつもりだった印刷物。どれも視界の端で『まだ終わっていない仕事がある』と伝え、始める前から注意力を削ります。ここでの『使うか、手放すか』はかなり厳しい基準です。『あとで戻る』という名目で 90 日触っていない物には、たいていもう戻りません。スキャンして手放すか、そのまま手放すかを決めましょう。",
+      relatedTitle: "関連ガイド",
+      relatedIntro: "部屋の外まで整えたいなら：",
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD フレンドリーな掃除チェックリスト" },
+        { href: "/how-to-declutter-sentimental-items", label: "思い出の品を片付ける方法" },
+        { href: "/things-to-stop-buying", label: "clutter-free な家のために買うのをやめたい 10 のもの" },
+        { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
+      ],
+    };
+  }
+
   return {
     title: "How to Declutter Your Home Office | Step-by-Step Office Reset | DeclutterYourHome",
     description:

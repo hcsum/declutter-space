@@ -7,11 +7,7 @@ import { useI18n } from "@/i18n/i18n-provider";
 export default function AppFooter() {
   const pathname = usePathname();
   const { t, localePath } = useI18n();
-  if (
-    pathname.startsWith("/declutter-checklist") ||
-    pathname.startsWith("/en/declutter-checklist") ||
-    pathname.startsWith("/zh/declutter-checklist")
-  ) {
+  if (/^\/(?:[a-z]{2}\/)?declutter-checklist(?:\/|$)/.test(pathname)) {
     return null;
   }
 

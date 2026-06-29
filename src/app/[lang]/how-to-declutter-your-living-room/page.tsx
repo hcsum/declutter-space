@@ -67,6 +67,81 @@ function getCopy(locale: string) {
     };
   }
 
+  if (locale === "ja") {
+    return {
+      title: "リビングの片付け方 | 心地よく整えるリビングリセットガイド | DeclutterYourHome",
+      description:
+        "表に出ている物、ブランケット、リモコン、おもちゃ、あふれた日用品を見直して、リビングを落ち着いて使いやすい空間に戻す方法を紹介します。",
+      eyebrow: "リビングガイド",
+      heroTitle: "がらんとさせずにリビングを片付ける方法",
+      heroSubtitle:
+        "リビングは家族みんなの一時置き場になりやすい場所です。目指すのは何もない部屋ではなく、視界のノイズを減らし、共有 surface を整え、休むこと・話すこと・いつもの暮らしを支える物だけを残すことです。",
+      introTitle: "リビングの clutter は shared-space clutter になりやすい",
+      introBody:
+        "寝室と違って、リビングの clutter は複数人ぶんが重なって生まれることが多いです。ブランケット、リモコン、おもちゃ、本、バックパック、充電ケーブル、通りがかりに置かれた物。効くリセットは、収納を足すことよりも、見えている物を減らし、この部屋が本当に必要とする物にシンプルな home を作ることです。",
+      stepsTitle: "リビングを片付ける 7 つのステップ",
+      steps: [
+        ["1. リビングに属さない物を外に出す", "靴、食器、書類、バックパック、上着、梱包材から始めます。まずは通り道の clutter を取り除きましょう。"],
+        ["2. surface を先にリセットする", "ローテーブル、テレビ台、サイドテーブル、ソファの肘掛けは clutter がたまりやすい場所です。ここを空けると最速で見た目が変わります。"],
+        ["3. リモコン、充電器、小さな電子機器に 1 つの home を作る", "小さい物でも、置き場所が決まらないと低いレベルの散らかりが続きます。トレー、バスケット、引き出しのどれか 1 つで十分です。"],
+        ["4. クッション、ブランケット、decorative extras を減らす", "居心地のよい部屋にも編集は必要です。実際に使う物、好きな物、空間に合う物だけを残し、あとは外します。"],
+        ["5. 本、ゲーム、おもちゃの overflow を抑える", "生活感のある部屋でも落ち着きは作れます。今使っている物だけ近くに残し、残りは surface pile ではなく意図ある収納へ移します。"],
+        ["6. 一時的な物の landing zone を 1 つ作る", "バスケット、ふた付きオットマン、トレーがあれば、日々の小さな clutter が部屋全体に広がりにくくなります。"],
+        ["7. 5 分の daily reset で維持する", "リビングは人の出入りが多い共有空間です。週末の一気片付けを待つより、毎日の短いリセットのほうが効果的です。"],
+      ],
+      removeTitle: "リビングで最初に減らしたいもの",
+      removeItems: [
+        "いつも片付かないローテーブルの clutter",
+        "もう意味を感じない decor",
+        "多すぎるクッションとブランケット",
+        "古いケーブル、切れた電池、予備の充電器",
+        "この部屋でほとんど使われない子どものおもちゃ",
+        "読み返さない雑誌やカタログ",
+      ],
+      emotionTitle: "よいリビングは staged ではなく breathable であるべき",
+      emotionBody:
+        "多くのリビングが散らかって見えるのは、どれか 1 つが間違っているからではなく、どのカテゴリも少しずつ限界を超えているからです。クッションが少し多い、ケーブルが少し多い、おもちゃが少し多い、本が少し多い。その積み重ねで、部屋はいつも『まだ片付け途中』に見えてしまいます。目指すのは空っぽさではなく、くつろぐ前に毎回片付けなくてよい温かい部屋です。",
+      toolTitle: "Living Room Checklist から始める",
+      toolDesc:
+        "このインタラクティブなチェックリストは、専用の Living Room Checklist ページと同じライブデータを使っています。どちらのページからでも項目のチェック、追加、進捗の保存ができます。",
+      toolPage: "Living Room Checklist ページを開く",
+      mistakesTitle: "リビングの片付けでよくある失敗" as string | undefined,
+      mistakes: [
+        "中身を見直さず、バスケットの中に隠すだけにする",
+        "ソファが受け止められる以上のクッションやブランケットを増やす",
+        "おもちゃや趣味道具など 1 カテゴリに共有空間を占拠させる",
+        "毎日の短いリセットをせず、週末の大掛かりな片付けに期待する",
+      ],
+      keepTitle: "リビングに常設する価値があるもの" as string | undefined,
+      keepBody:
+        "この部屋の実際の使い方を支える物を残しましょう。ちゃんと座る椅子やソファ、よく使うブランケットを 1 〜 2 枚、手に取られている本やゲーム、毎晩使うリモコンや充電器。display 用の物、sentimental な decor、『いつか』の山は、意味が残っている少数まで絞るのがコツです。" as string | undefined,
+      quickResetTitle: "10 分でリビングを片付ける方法" as string | undefined,
+      quickResetSteps: [
+        "バスケットを持って一周し、別の部屋に属する物を集める",
+        "ローテーブルを数点の intentional items まで減らす",
+        "ブランケットをたたみ、リモコンを集め、ケーブルを 1 つのトレーか引き出しに入れる",
+        "おもちゃ、郵便物、雑誌など overflow している 1 ゾーンを半分にする",
+      ],
+      faqTitle: "リビングの片付け FAQ" as string | undefined,
+      faqs: [
+        ["リビングはどれくらいの頻度で片付けるべき？", "surface の短い daily reset と、数週間に一度の少し深い見直しが、年に一度の大 purge を待つよりずっと現実的です。共有空間なのでたまるのも早いからです。"],
+        ["子どもやルームメイトがいてもリビングを保つには？", "バスケット、ふた付きオットマン、トレーなど landing zone を 1 つ決めて、その使用を前提にします。目標は常に空にすることではなく containment です。その 1 か所だけを週 1 回空にすれば十分です。"],
+        ["ミニマルなリビングには何が必要？", "座り心地のよい seating、やわらかい照明、日常使いのための clear surface、そして少数に絞った personal items です。minimal は empty ではなく、見えている物すべてに理由がある状態です。"],
+      ] as Array<[string, string]>,
+      blockersTitle: "リビングの散らかりの奥にある感情的なつまずき" as string | undefined,
+      blockersBody:
+        "リビングの物は、たいてい一人だけの物ではありません。『これはあの人の物だから勝手に捨てられない』『子どもがまだ遊ぶかもしれない』『こんな小さなことで揉めたくない』。だからリビングは家の中でいちばん決断疲れが重くなりやすい場所です。ここでの『念のため』は『誰かが来たときのために』であることも多いです。半年使っていないなら、それは現実の暮らしではなく想像上の場面に仕えている物かもしれません。" as string | undefined,
+      relatedTitle: "関連ガイド" as string | undefined,
+      relatedIntro: "部屋の外まで整えたいなら：" as string | undefined,
+      relatedLinks: [
+        { href: "/adhd-cleaning-checklist", label: "ADHD フレンドリーな掃除チェックリスト" },
+        { href: "/things-to-stop-buying", label: "clutter-free な家のために買うのをやめたい 10 のもの" },
+        { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
+        { href: "/how-to-declutter-your-kitchen", label: "キッチンの片付け方" },
+      ] as Array<{ href: string; label: string }> | undefined,
+    };
+  }
+
   return {
     title: "How to Declutter Your Living Room | A Calm, Comfortable Reset | DeclutterYourHome",
     description:

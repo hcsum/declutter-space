@@ -5,9 +5,10 @@ import type { Locale } from "./config";
 import { defaultLocale } from "./config";
 import type { Dictionary } from "./getDictionary";
 import en from "./en.json";
+import ja from "./ja.json";
 import zh from "./zh.json";
 
-const dicts: Record<Locale, Dictionary> = { en, zh };
+const dicts: Record<Locale, unknown> = { en, zh, ja };
 
 interface I18nContextValue {
   locale: Locale;
@@ -40,6 +41,29 @@ function getNestedValue(obj: Record<string, unknown>, path: string): string {
   return typeof current === "string" ? current : path;
 }
 
+function mergeDictionary(base: unknown, override: unknown): unknown {
+  if (Array.isArray(base)) return Array.isArray(override) ? override : base;
+  if (
+    base &&
+    typeof base === "object" &&
+    override &&
+    typeof override === "object" &&
+    !Array.isArray(override)
+  ) {
+    const result: Record<string, unknown> = {
+      ...(base as Record<string, unknown>),
+    };
+
+    for (const [key, value] of Object.entries(override as Record<string, unknown>)) {
+      result[key] = mergeDictionary(result[key], value);
+    }
+
+    return result;
+  }
+
+  return override ?? base;
+}
+
 export function I18nProvider({
   locale,
   children,
@@ -47,7 +71,7 @@ export function I18nProvider({
   locale: Locale;
   children: React.ReactNode;
 }) {
-  const dict = dicts[locale] ?? dicts.en;
+  const dict = mergeDictionary(en, dicts[locale] ?? en) as Dictionary;
 
   const value = useMemo<I18nContextValue>(() => {
     function t(key: string): string {

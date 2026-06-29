@@ -80,6 +80,15 @@ const Header: React.FC = () => {
   const isChecklist = pathname.includes("/declutter-checklist");
   const isSecondLook = pathname.includes("/decluttering-decision-guide");
 
+  const homeLabel = locale === "ja" ? "ホーム" : "Home";
+  const languageLabel = locale === "ja" ? "言語" : locale === "zh" ? "语言" : "Language";
+
+  function getLocaleLabel(targetLocale: Locale, compact = false) {
+    if (targetLocale === "en") return compact ? "EN" : "English";
+    if (targetLocale === "zh") return compact ? "中文" : "中文";
+    return compact ? "日本語" : "日本語";
+  }
+
   return (
     <header className="fixed top-0 w-full z-50 border-b border-stone-200 dark:border-gray-700 bg-stone-50/90 dark:bg-gray-900/90 backdrop-blur-md shadow-sm">
       <div className="flex items-center justify-between px-4 py-3 md:px-8">
@@ -98,7 +107,7 @@ const Header: React.FC = () => {
                 : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
             }
           >
-            Home
+            {homeLabel}
           </Link>
           <Link
             href={localePath("/declutter-checklist")}
@@ -151,7 +160,7 @@ const Header: React.FC = () => {
                       : "text-stone-600 dark:text-stone-300"
                   }`}
                 >
-                  {loc === "en" ? "EN" : "中文"}
+                  {getLocaleLabel(loc, true)}
                 </button>
               ))}
             </div>
@@ -217,7 +226,7 @@ const Header: React.FC = () => {
                 }`}
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                Home
+                {homeLabel}
               </Link>
               <Link
                 href={localePath("/declutter-checklist")}
@@ -246,7 +255,7 @@ const Header: React.FC = () => {
             <div className="mt-4 rounded-2xl bg-stone-100/80 p-3 dark:bg-gray-700/70">
               <div className="mb-3 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-stone-500 dark:text-gray-400">
                 <LanguageIcon className="h-4 w-4" />
-                Language
+                {languageLabel}
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {locales.map((loc) => (
@@ -262,7 +271,7 @@ const Header: React.FC = () => {
                         : "bg-transparent text-stone-700 hover:bg-white/80 dark:text-gray-200 dark:hover:bg-gray-800/80"
                     }`}
                   >
-                    {loc === "en" ? "English" : "中文"}
+                    {getLocaleLabel(loc)}
                   </button>
                 ))}
               </div>

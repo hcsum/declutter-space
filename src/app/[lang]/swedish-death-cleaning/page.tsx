@@ -36,7 +36,83 @@ type Copy = {
   startLabel: string;
 };
 
-function getCopy(): Copy {
+function getCopy(locale: string): Copy {
+  if (locale === "ja") {
+    return {
+      title: "Swedish Death Cleaning（スウェディッシュ・デス・クリーニング）のやさしいチェックリスト | DeclutterYourHome",
+      description:
+        "Swedish death cleaning（スウェディッシュ・デス・クリーニング / döstädning）は不吉な片付けではなく、大切な人に判断を丸投げしないための整理です。始める順番、思い出の品の扱い方、年齢を問わず小さく始める方法をやさしくまとめました。",
+      eyebrow: "Swedish Death Cleaning",
+      heroTitle: "Swedish Death Cleaning のやさしいチェックリスト",
+      heroSubtitle:
+        "Dostadning は、自分の持ち物を少しずつ整えて、大切な人が人生分の持ち物をあとで仕分けしなくて済むようにする、ゆっくりでやさしい実践です。高齢でなくても、病気でなくても始められます。必要なのは『何を残す価値があるか』を決めることだけです。",
+      introTitle: "死そのものの話ではない。負担を残さないための話",
+      introBody:
+        "親や親族が亡くなったあとに家を片付けた経験がある人なら、dostadning の意味はすぐ分かります。悲しみの中で何か月も、時には1年近くかけて1人で片付け、コンテナを借り、物を見るたびに『なぜこれを残していたのだろう』と迷う。そんな体験が何度も語られます。Margareta Magnusson の The Gentle Art of Swedish Death Cleaning で広く知られるようになったこの考え方は、要するに、その仕分けを自分で今のうちに少しずつやっておくことです。大切な人に『家』を残し、『プロジェクト』を残さないために。名前ほど暗いものではなく、高齢者だけのものでもありません。友人や親の死をきっかけに、30代、40代、50代で始める人も多く、『名前は知らなかったけれど、もうやっていた』と気づく人もいます。Magnusson が何度も戻る問いはシンプルです。『これを持ち続けて、誰かがより幸せになるだろうか？』正直な答えが no なら、それは手放す候補です。",
+      stepsTitle: "進める順番",
+      stepsIntro:
+        "Dostadning は意図的に進めます。いちばん難しく感情の強いカテゴリは最後に回し、その前に勢いと自分の判断への信頼を積み上げます。",
+      steps: [
+        {
+          title: "1. まずは感情の薄い量の多い物から",
+          body: "感情がほとんど乗っていない場所から始めます。ガレージ、地下室、重複したキッチンツール、リネン類、使っていない家電、ケーブルの引き出しなど。ここは感情が少なく量が多いため、勢いがつきやすく、目に見えるスペースも早く空きます。",
+          start: "収納スペースを1つ選び、壊れた物・重複している物・1年使っていない物を取り除く。",
+        },
+        {
+          title: "2. 服と日常使いの物",
+          body: "次にワードローブや日用品へ進みます。『いつかの生活』のために保管している服ではなく、『今の生活』に合う物を残します。まだ役立つうちに残りは寄付しましょう。",
+          start: "1年以上着ていない服を全部出し、もう着ない物は寄付する。",
+        },
+        {
+          title: "3. 家具や大きな物",
+          body: "本当に使っている大きな家具と、ただ部屋を埋めているだけの家具を分けます。本当に欲しい家族がいるなら今のうちに譲り、そうでなければ売るか寄付します。悲しみの中にいる誰かへ、後の判断を押しつけないことが大事です。",
+          start: "誰も使っていない大型家具を書き出し、譲る・売るを始める。",
+        },
+        {
+          title: "4. 書類。そして忘れられがちなデジタルの山",
+          body: "紙の書類だけでは半分です。r/declutter で多くの人が本当に心配しているのはデジタル面で、『自分がいなくなったら、パートナーは口座や重要アカウントにアクセスできるのか？』ということです。写真をフォルダに整理し、誰にも見られたくないものは削除し、重要なアカウントへどうアクセスするかを書き残します。これは dostadning の中でも特に愛情のある部分です。人生最悪の週に、家族へ書類とパスワード探しをさせずに済みます。",
+          start: "主要アカウント、パスワードやアクセス方法、連絡先、重要書類の保管場所を1つの文書にまとめる。",
+        },
+        {
+          title: "5. 思い出の品は最後に、やさしく",
+          body: "写真、手紙、記念品、家宝。ここは最後に回します。判断の練習を積んでから向き合うほうがうまくいきます。本当に記憶を運んでくれる少数だけ残し、残りは写真にします。もちろん、自分のために持っていたい物を残しても構いません。",
+          start: "思い出の品は代表的な1箱だけ残し、残りは手放す前に写真を撮る。",
+        },
+        {
+          title: "6. いちばん私的な物のための『捨ててほしい箱』",
+          body: "Magnusson 自身の助言の1つです。日記や私信など、自分だけの物を入れる箱を1つ作り、『自分がいなくなったら読まずに処分してほしい』と明記します。そうすれば今は持っていてよく、他人に見つけさせずに済みます。",
+          start: "私的な物専用の箱を1つ用意し、『読まずに処分』とラベルを付ける。",
+        },
+      ],
+      principlesTitle: "やさしく続けるための2つの考え方",
+      principlesBody: "Dostadning は不吉な締め切りではなく、ゆっくりで親切な整理の方法です。この2つの考え方が、その空気を保ってくれます。",
+      principle1Heading: "これを持ち続けて、誰かがより幸せになるだろうか？",
+      principle1Body:
+        "この方法全体は、ほぼこの1問に集約できます。『役に立つかもしれない』でも『お金がかかった』でもなく、それを持ち続けることで本当に誰かの生活が良くなるかどうかです。箱の中で待つだけの物なら、もう役目は終えているかもしれません。",
+      principle2Heading: "こっそり1人で進めず、家族と話しながらやる",
+      principle2Body:
+        "Death cleaning の静かな核心は会話です。家族に『これ、今ほしい？』と聞けるのは、答えの背景にある思い出も聞ける今だからです。誰も望まない物は、罪悪感なく手放せます。一方で、受け取る側だった人たちからは『親が全部ひそかに片付けてしまい、自分たちが思い出をたどる機会を奪われたように感じた』という声もあります。解決策は全部残すことではなく、話すことです。そして『あなたは私が残した物を持ち続ける義務はない』と、はっきり伝えることです。",
+      faqTitle: "よくある質問",
+      faqs: [
+        ["Swedish death cleaning は高齢者だけのものですか？", "いいえ。Magnusson は50歳ごろから始めることを勧めていますが、この習慣はどの年齢にも合います。大切な物だけを残すほど、今の暮らしも軽くなります。death cleaning は、長い目線を持った decluttering と考えると分かりやすいです。"],
+        ["KonMari とはどう違いますか？", "KonMari は『ときめくか』を基準にし、短期間に強く進めることが多い方法です。dostadning はもっとゆっくりで、他者への配慮が軸です。『自分がいなくなったあと、これを残してもよいか』を問い、数か月から数年かけてカテゴリごとに進めます。"],
+        ["圧倒されるときは、どこから始めればいいですか？", "いちばん感情の薄いカテゴリからです。ガレージ、重複品、ジャンク引き出しなど。簡単な勝ちが勢いを作り、そのあとで思い出の品に向き合いやすくなります。難しい物は decision guide も役立ちます。"],
+        ["思い出の品はどうすればいいですか？", "最後に回し、よく代表する少数だけ残して、残りは写真にします。記憶は棚のスペースではなく、あなた自身や写真の中にも残ります。やさしく進める方法は、思い出の品の片付けガイドも参考になります。"],
+        ["年老いた親にどうやって始めてもらえばいいですか？", "やさしく、そして一気にやろうとしないことです。多くの親は『自分が死んだあとで片付けてくれればいい』と構えたり、何かを手放す提案だけで不安定になったりします。強く押すと逆効果です。比較的うまくいきやすいのは、『自分が今ほしい物だけ譲ってもらう』『寄付の手配はこちらがやる』『人生全体の整理としてではなく、負担の少ない1カテゴリだけ一緒にやる』ことです。強制はできませんが、yes と言いやすくはできます。"],
+      ],
+      relatedTitle: "関連記事",
+      relatedIntro: "Death cleaning では、思い出の品、遺品、日常の判断がすべてつながります。次に読むならこちら:",
+      relatedLinks: [
+        { href: "/how-to-declutter-sentimental-items", label: "罪悪感を減らしながら思い出の品を片付ける方法" },
+        { href: "/decluttering-after-a-death", label: "身近な人が亡くなった後の片付け" },
+        { href: "/decluttering-before-a-move", label: "引っ越し前の片付けと downsizing" },
+        { href: "/decluttering-decision-guide", label: "判断に迷う物の decision guide" },
+        { href: "/declutter-checklist", label: "インタラクティブ片付けチェックリスト" },
+      ],
+      startLabel: "ここから始める",
+    };
+  }
+
   return {
     title: "Swedish Death Cleaning: A Gentle Checklist (Döstädning) | DeclutterYourHome",
     description:
@@ -115,7 +191,7 @@ function getCopy(): Copy {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
-  const copy = getCopy();
+  const copy = getCopy(locale);
 
   return {
     title: copy.title,
@@ -127,7 +203,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SwedishDeathCleaningPage({ params }: Props) {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
-  const copy = getCopy();
+  const copy = getCopy(locale);
 
   return (
     <main className="min-h-screen bg-[#f3f4ec] px-5 pb-20 pt-24 text-[#1a1c18] md:px-8">
