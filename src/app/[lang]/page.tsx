@@ -89,7 +89,7 @@ const LandingPage = async ({ params }: Props) => {
                 ["断捨離", "まず大きな方向を変えたい人向け。『何を残すか』ではなく『何を入れないか、何を手放すか』から考える。"],
                 ["片付け", "今日すぐ部屋を動かしたい人向け。床、机、キッチン、リビングなど、今見えている散らかりを小さく減らす。"],
                 ["生前整理", "年齢に限らず、これからの暮らしを軽くしたい人向け。残される側の負担も含めて物を見直す。"],
-                ["ADHD 片付け", "気合いより仕組みが必要な人向け。micro-task、time-boxing、doom box で始めやすくする。"],
+                ["ADHD 片付け", "気合いより仕組みが必要な人向け。小さなタスク、時間を区切る、とりあえず箱で始めやすくする。"],
               ].map(([title, body]) => (
                 <div key={title} className="rounded-[1.75rem] bg-[#f7f3ec] p-6 shadow-sm ring-1 ring-black/5">
                   <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#173223]">{title}</h2>
