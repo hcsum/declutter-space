@@ -1,14 +1,15 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { LanguageIcon } from "@heroicons/react/24/outline";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useI18n } from "@/i18n/i18n-provider";
-import { isValidLocale, locales, type Locale } from "@/i18n/config";
+import { locales } from "@/i18n/config";
+import { getLocalizedPathname } from "@/i18n/getLocalizedPathname";
 
 export default function ChecklistLocaleSwitcher() {
   const pathname = usePathname();
-  const router = useRouter();
   const { t, locale } = useI18n();
   const [isOpen, setIsOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -24,19 +25,10 @@ export default function ChecklistLocaleSwitcher() {
     return () => document.removeEventListener("mousedown", handlePointerDown);
   }, []);
 
-  function switchLocale(newLocale: Locale) {
-    const segments = pathname.split("/");
-    const maybeLocale = segments[1];
-
-    if (isValidLocale(maybeLocale)) {
-      segments[1] = newLocale;
-      setIsOpen(false);
-      router.push(segments.join("/"));
-      return;
-    }
-
-    setIsOpen(false);
-    router.push(`/${newLocale}${pathname === "/" ? "" : pathname}`);
+  function getLocaleLabel(targetLocale: (typeof locales)[number]) {
+    if (targetLocale === "en") return "EN";
+    if (targetLocale === "zh") return "中文";
+    return "日本語";
   }
 
   return (
@@ -57,19 +49,20 @@ export default function ChecklistLocaleSwitcher() {
             const isActive = locale === targetLocale;
 
             return (
-              <button
+              <Link
                 key={targetLocale}
-                type="button"
-                onClick={() => switchLocale(targetLocale)}
+                href={getLocalizedPathname(pathname, targetLocale)}
+                onClick={() => setIsOpen(false)}
                 className={[
                   "block w-full rounded-xl px-3 py-2 text-left text-sm font-bold transition-colors",
                   isActive
                     ? "bg-[#002d1c] text-white"
                     : "text-[#2b694d] hover:bg-[#edefe7]",
                 ].join(" ")}
+                aria-current={isActive ? "page" : undefined}
               >
-                {targetLocale === "en" ? "EN" : "中文"}
-              </button>
+                {getLocaleLabel(targetLocale)}
+              </Link>
             );
           })}
         </div>

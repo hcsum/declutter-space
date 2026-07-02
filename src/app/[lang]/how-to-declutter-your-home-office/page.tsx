@@ -77,9 +77,29 @@ function getCopy(locale: string): GuideCopy {
       toolDesc:
         "下面这份互动清单和家庭办公室清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开家庭办公室清单功能页",
-      mistakes: [],
-      quickResetSteps: [],
-      faqs: [],
+      mistakesTitle: "家庭办公室整理里最常见的错误",
+      mistakes: [
+        "因为“可能还要用”，让所有纸张都持续暴露在视线里",
+        "桌面清空了，却没有给正在进行的项目设明确位置",
+        "线缆、配件和旧设备长期混在一起，不对应任何现役设备",
+        "把办公桌当成各种杂务和快递的中转站",
+      ],
+      keepTitle: "工作区最该留在眼前的东西",
+      keepBody:
+        "桌面上真正该常驻的，是支持当前工作的设备、一本在用的笔记本、少量进行中的纸张，以及你每天会拿到的文具。其余东西哪怕看起来“和工作有关”，只要不支持这周的工作，就不值得留在主视野里。",
+      quickResetTitle: "15 分钟家庭办公室复位法",
+      quickResetSteps: [
+        "把桌面上和当前工作无关的东西全部移开",
+        "把纸张先分成待处理、参考和回收三类",
+        "集中所有散落线缆，挑出重复和来历不明的",
+        "只整理一个抽屉或一个文件堆，把同类配件放到一起",
+      ],
+      faqTitle: "家庭办公室整理常见问题",
+      faqs: [
+        ["桌面上应该只留什么？", "只留支持当前工作流的东西：主设备、当天会看的笔记、进行中的少量纸张，以及常用文具。其他都应该退出主工作面。"],
+        ["重要纸张很多，怎么整理才不怕丢？", "先不要做最终裁决，先分成待处理、参考和回收三类。这样先降混乱，再决定具体归档方式。"],
+        ["为什么工作区总是很快又乱？", "因为很多东西都伪装成“工作需要”。但只要它不服务当前项目，它就只是视觉噪音，会在开始工作前先消耗你。"],
+      ],
       blockersTitle: "工作区杂物的情绪卡点",
       blockersBody:
         "家庭办公室的杂物，常常带着 \"我应该处理这个\" 的内疚信号——一堆没回的邮件打印件、看了一半的书、买了但没拆的工具书、上一份工作留下的笔记本。每一件都在视野边缘提醒你 \"还有事没做完\"，在造成决策疲劳之前就先消耗了注意力。这里的标准可以更直接一点：超过 90 天没碰过、还想着\"我会回来处理它\"的纸张，几乎可以确定不会被处理——扫描或直接放手。",
@@ -87,9 +107,9 @@ function getCopy(locale: string): GuideCopy {
       relatedIntro: "想拓展到房间外的话题：",
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
-        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
-        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
-        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/decluttering-decision-guide", label: "犹豫物品决策指南" },
+        { href: "/how-to-declutter-your-kitchen", label: "如何整理厨房" },
+        { href: "/how-to-declutter-your-living-room", label: "如何整理客厅" },
       ],
     };
   }
@@ -162,9 +182,9 @@ function getCopy(locale: string): GuideCopy {
       relatedIntro: "部屋の外まで整えたいなら：",
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD フレンドリーな掃除チェックリスト" },
-        { href: "/how-to-declutter-sentimental-items", label: "思い出の品を片付ける方法" },
-        { href: "/things-to-stop-buying", label: "散らからない家のために買うのをやめたい 10 のもの" },
-        { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
+        { href: "/decluttering-decision-guide", label: "迷う物の判断ガイド" },
+        { href: "/how-to-declutter-your-kitchen", label: "キッチンの片付け方" },
+        { href: "/how-to-declutter-your-living-room", label: "リビングの片付け方" },
       ],
     };
   }
@@ -236,9 +256,9 @@ function getCopy(locale: string): GuideCopy {
     relatedIntro: "Pair this room reset with broader habit changes:",
     relatedLinks: [
       { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
-      { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items" },
-      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
-      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
+      { href: "/decluttering-decision-guide", label: "Decluttering decision guide" },
+      { href: "/how-to-declutter-your-kitchen", label: "How to declutter your kitchen" },
+      { href: "/how-to-declutter-your-living-room", label: "How to declutter your living room" },
     ],
   };
 }

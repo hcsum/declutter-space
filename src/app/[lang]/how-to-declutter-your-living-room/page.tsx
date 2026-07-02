@@ -45,14 +45,29 @@ function getCopy(locale: string) {
       toolDesc:
         "下面这份互动清单和客厅清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开客厅清单功能页",
-      mistakesTitle: undefined as string | undefined,
-      mistakes: [] as string[],
-      keepTitle: undefined as string | undefined,
-      keepBody: undefined as string | undefined,
-      quickResetTitle: undefined as string | undefined,
-      quickResetSteps: [] as string[],
-      faqTitle: undefined as string | undefined,
-      faqs: [] as Array<[string, string]>,
+      mistakesTitle: "客厅整理里最常见的错误" as string | undefined,
+      mistakes: [
+        "只把杂物塞进篮子里，却不减少真正留在客厅的数量",
+        "让茶几和电视柜重新变成临时落脚点",
+        "让单一类别长期占领客厅，例如玩具、快递或充电线",
+        "指望周末一次大整理，而不是每天 5 分钟复位",
+      ] as string[],
+      keepTitle: "什么值得长期留在客厅" as string | undefined,
+      keepBody:
+        "值得长期放在客厅的，是支持这个共享空间真实用途的东西：舒适座位、常用盖毯、经常会被拿起的书或游戏、每天会用到的遥控器和充电器。剩下那些只是暂时停留、却不断扩张的东西，都应该离开客厅表面。" as string | undefined,
+      quickResetTitle: "10 分钟客厅复位法" as string | undefined,
+      quickResetSteps: [
+        "拿一个篮子绕客厅一圈，把不属于客厅的东西先收走",
+        "把茶几和边几清到只剩少量有意留下的物品",
+        "集中遥控器、充电线和小电子设备，统一放进一个托盘或抽屉",
+        "把玩具、杂志或邮件中最外溢的一块区域缩小一半",
+      ] as string[],
+      faqTitle: "客厅整理常见问题" as string | undefined,
+      faqs: [
+        ["客厅应该多久整理一次？", "客厅是共享高频空间，最适合每天短复位、每几周做一次更深的筛选。等到周末再一次性收拾，通常只会让杂物继续堆。"],
+        ["有孩子或室友时怎么维持客厅整洁？", "给临时物品一个明确缓冲区，例如一个篮子或有盖收纳凳。目标不是永远空无一物，而是让临时杂物有单一落点，不在整个房间蔓延。"],
+        ["极简客厅是不是要把东西都藏起来？", "不是。好的客厅不是看起来空，而是看得见的东西都有理由留在这里。你应该保留生活感，但减少无序感。"],
+      ] as Array<[string, string]>,
       blockersTitle: "客厅杂物的情绪卡点" as string | undefined,
       blockersBody:
         "客厅杂物的核心情绪不是个人的，而是共享的。\"这是 ta 的东西，我不能扔\"、\"孩子可能还要玩\"、\"我不想为这种小事吵架\"——这些都让客厅成为家里决策疲劳最重的房间。客厅里的\"留着以防万一\"，常常其实是\"以防有人来\"——一堆备用杯垫、不会用的盘子、为派对准备的椅子。如果半年都没用上，它服务的不是真实场景，而是想象中的某个时刻。" as string | undefined,
@@ -60,9 +75,9 @@ function getCopy(locale: string) {
       relatedIntro: "想拓展到房间外的话题：" as string | undefined,
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
-        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
-        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
         { href: "/how-to-declutter-your-kitchen", label: "如何整理厨房" },
+        { href: "/how-to-declutter-your-home-office", label: "如何整理家庭办公室" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
       ] as Array<{ href: string; label: string }> | undefined,
     };
   }
@@ -135,9 +150,9 @@ function getCopy(locale: string) {
       relatedIntro: "部屋の外まで整えたいなら：" as string | undefined,
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD フレンドリーな掃除チェックリスト" },
-        { href: "/things-to-stop-buying", label: "散らからない家のために買うのをやめたい 10 のもの" },
-        { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
         { href: "/how-to-declutter-your-kitchen", label: "キッチンの片付け方" },
+        { href: "/how-to-declutter-your-home-office", label: "ホームオフィスの片付け方" },
+        { href: "/things-to-stop-buying", label: "散らからない家のために買うのをやめたい 10 のもの" },
       ] as Array<{ href: string; label: string }> | undefined,
     };
   }
@@ -209,9 +224,9 @@ function getCopy(locale: string) {
     relatedIntro: "Pair this room reset with broader habit changes:" as string | undefined,
     relatedLinks: [
       { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
-      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
-      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-kitchen", label: "How to declutter your kitchen" },
+      { href: "/how-to-declutter-your-home-office", label: "How to declutter your home office" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
     ] as Array<{ href: string; label: string }> | undefined,
   };
 }

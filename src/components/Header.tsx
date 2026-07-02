@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { useLightDarkMode } from "./LightDarkModeContext";
 import { useI18n } from "@/i18n/i18n-provider";
-import { Locale, locales, isValidLocale } from "@/i18n/config";
+import { Locale, locales } from "@/i18n/config";
+import { getLocalizedPathname } from "@/i18n/getLocalizedPathname";
 import {
   MoonIcon,
   SunIcon,
@@ -19,7 +20,6 @@ import { logout } from "@/actions/auth";
 
 const Header: React.FC = () => {
   const pathname = usePathname();
-  const router = useRouter();
   const { mode, toggleMode } = useLightDarkMode();
   const { t, locale, localePath } = useI18n();
   const { setOpen: setLoginOpen } = useLoginDialog();
@@ -61,17 +61,6 @@ const Header: React.FC = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
-
-  function switchLocale(newLocale: Locale) {
-    const segments = pathname.split("/");
-    const maybeLocale = segments[1];
-    if (isValidLocale(maybeLocale)) {
-      segments[1] = newLocale;
-      router.push(segments.join("/"));
-    } else {
-      router.push(`/${newLocale}${pathname === "/" ? "" : pathname}`);
-    }
-  }
 
   const isHome =
     pathname === "/" ||
@@ -151,17 +140,18 @@ const Header: React.FC = () => {
             </button>
             <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[80px]">
               {locales.map((loc) => (
-                <button
+                <Link
                   key={loc}
-                  onClick={() => switchLocale(loc)}
+                  href={getLocalizedPathname(pathname, loc)}
                   className={`block w-full text-left px-3 py-1.5 text-sm hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors ${
                     locale === loc
                       ? "text-orange-700 dark:text-orange-400 font-semibold"
                       : "text-stone-600 dark:text-stone-300"
                   }`}
+                  aria-current={locale === loc ? "page" : undefined}
                 >
                   {getLocaleLabel(loc, true)}
-                </button>
+                </Link>
               ))}
             </div>
           </div>
@@ -259,20 +249,19 @@ const Header: React.FC = () => {
               </div>
               <div className="grid grid-cols-2 gap-2">
                 {locales.map((loc) => (
-                  <button
+                  <Link
                     key={loc}
-                    onClick={() => {
-                      setIsMobileMenuOpen(false);
-                      switchLocale(loc);
-                    }}
+                    href={getLocalizedPathname(pathname, loc)}
                     className={`rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
                       locale === loc
                         ? "bg-white text-orange-700 shadow-sm dark:bg-gray-800 dark:text-orange-300"
                         : "bg-transparent text-stone-700 hover:bg-white/80 dark:text-gray-200 dark:hover:bg-gray-800/80"
                     }`}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    aria-current={locale === loc ? "page" : undefined}
                   >
                     {getLocaleLabel(loc)}
-                  </button>
+                  </Link>
                 ))}
               </div>
             </div>

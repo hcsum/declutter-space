@@ -77,9 +77,29 @@ function getCopy(locale: string): GuideCopy {
       toolDesc:
         "下面这份互动清单和厨房清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开厨房清单功能页",
-      mistakes: [],
-      quickResetSteps: [],
-      faqs: [],
+      mistakesTitle: "厨房整理里最常见的错误",
+      mistakes: [
+        "只清台面，不去处理橱柜和抽屉里的溢出",
+        "因为花过钱，就长期保留几乎不用的小家电",
+        "先买收纳用品，再面对过期食品和重复工具",
+        "把厨房当仓库，而不是做饭和备餐的工作区",
+      ],
+      keepTitle: "厨房最该留在手边的东西",
+      keepBody:
+        "最顺手的位置应该留给真实一周里高频使用的东西：常用餐具、备餐工具、主力锅具、正在轮换的调味料和油。那些只是“可能会用”的器具、赠品杯和重复工具，不值得抢占做饭动线。",
+      quickResetTitle: "15 分钟厨房复位法",
+      quickResetSteps: [
+        "丢掉明显过期的食品、调味料和台面垃圾",
+        "把重复的杯子、保鲜盒和小工具先集中到一处",
+        "只选一个问题区完成：冰箱一层、食品柜一格或一个抽屉",
+        "把真正这周会用到的东西放回最顺手的位置",
+      ],
+      faqTitle: "厨房整理常见问题",
+      faqs: [
+        ["厨房最该先从哪里开始？", "从过期食品、重复保鲜盒和拥挤台面开始。这三块最容易立刻创造空间，也最直接影响做饭体验。"],
+        ["台面是不是越空越好？", "不是。台面应该只留真正高频的日常必需品，目标是留出备餐空间，而不是把所有东西都藏起来。"],
+        ["小家电该留多少在外面？", "只留那些你足够常用、收起来反而会影响真实做饭流程的。其他电器要么进柜，要么离开。"],
+      ],
       blockersTitle: "厨房整理的情绪卡点",
       blockersBody:
         "厨房虽然看起来是功能性最强的房间，但情绪卡点一点不少：礼物锅具的负罪感（\"是 ta 送的，扔了不好\"）、过期但 \"以防万一\" 的香料、参加过烹饪潮流买的专用电器、某段关系里两个人的厨具混在一起。这些杂物的存在，不是因为你需要它们，而是因为决定它们的去留要消耗决策精力。先承认这一点，再带着 \"用，或者放手\" 的角度走一遍——多数会一直被 \"以后再说\" 的东西，都可以现在就放手。",
@@ -87,9 +107,9 @@ function getCopy(locale: string): GuideCopy {
       relatedIntro: "想拓展到房间外的话题：",
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
-        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
-        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
         { href: "/how-to-declutter-your-bathroom", label: "如何整理浴室" },
+        { href: "/how-to-declutter-your-home-office", label: "如何整理家庭办公室" },
+        { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
       ],
     };
   }
@@ -162,9 +182,9 @@ function getCopy(locale: string): GuideCopy {
       relatedIntro: "部屋の外まで整えたいなら：",
       relatedLinks: [
         { href: "/adhd-cleaning-checklist", label: "ADHD フレンドリーな掃除チェックリスト" },
-        { href: "/things-to-stop-buying", label: "clutter-free な家のために買うのをやめたい 10 のもの" },
-        { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
         { href: "/how-to-declutter-your-bathroom", label: "浴室の片付け方" },
+        { href: "/how-to-declutter-your-home-office", label: "ホームオフィスの片付け方" },
+        { href: "/things-to-stop-buying", label: "clutter-free な家のために買うのをやめたい 10 のもの" },
       ],
     };
   }
@@ -236,9 +256,9 @@ function getCopy(locale: string): GuideCopy {
     relatedIntro: "Pair this room reset with broader habit changes:",
     relatedLinks: [
       { href: "/adhd-cleaning-checklist", label: "ADHD-friendly cleaning checklist" },
-      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
-      { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-bathroom", label: "How to declutter your bathroom" },
+      { href: "/how-to-declutter-your-home-office", label: "How to declutter your home office" },
+      { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
     ],
   };
 }
