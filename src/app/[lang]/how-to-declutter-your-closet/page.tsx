@@ -41,16 +41,16 @@ type GuideCopy = {
 function getCopy(locale: string): GuideCopy {
   if (locale === "zh") {
     return {
-      title: "如何整理衣柜 | 衣柜断舍离与收纳指南 | DeclutterYourHome",
+      title: "如何整理衣柜 | 衣服筛选与衣橱整理指南 | DeclutterYourHome",
       description:
-        "学习如何整理衣柜，筛掉不合身、不舒服、重复和不再适合现在生活的衣服，让穿衣更轻松，空间也更清爽。",
-      eyebrow: "衣柜整理指南",
-      heroTitle: "如何整理衣柜，不用推倒重来",
+        "学习如何整理衣柜，筛掉不合身、不舒服、重复和不再适合现在生活的衣服，减少每天穿衣决策，提升衣物可见度。",
+      eyebrow: "衣物筛选与衣橱整理指南",
+      heroTitle: "如何整理衣柜，减少每天穿衣决策",
       heroSubtitle:
-        "衣柜整理最难的地方，通常不是东西太多，而是每一件都在代表某种可能性。真正有效的断舍离，不是彻底推翻你的衣橱，而是让它重新服务现在的身体、现在的生活节奏和现在的你。",
-      introTitle: "衣柜杂乱，常常是决策疲劳的累积",
+        "衣柜整理最难的地方，通常不是空间不够，而是每一件衣服都像在代表某种可能性。真正有效的断舍离，不是把房间全部重做，而是筛出哪些衣服真的服务现在的身体、风格和每周穿搭。",
+      introTitle: "衣柜问题，本质上是衣物编辑问题",
       introBody:
-        "不合身却舍不得丢的衣服、价格不低但总是不穿的单品、重复却永远先跳过的基础款，都会让每天穿衣变成微小但持续的消耗。整理衣柜最有效的角度，不是追求更少，而是减少“每次打开都要重新判断”的摩擦。",
+        "不合身却舍不得丢的衣服、价格不低但总是不穿的单品、重复却永远先跳过的基础款，都会让每天穿衣变成微小但持续的消耗。整理衣柜最有效的角度，不是先想房间看起来多整齐，而是减少“每次打开门都要重新判断一次”的摩擦，让好穿、常穿、适合现在生活的衣服更容易被看见。",
       stepsTitle: "整理衣柜的 7 个步骤",
       steps: [
         ["1. 先从明显不会再穿的衣服开始", "不合身、破损、有明显污渍、严重起球的衣服先直接拿出来，不要一开始就挑战最难决定的物品。"],
@@ -77,18 +77,38 @@ function getCopy(locale: string): GuideCopy {
       toolDesc:
         "下面这份互动清单和衣柜清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开衣柜清单功能页",
-      mistakes: [],
-      quickResetSteps: [],
-      faqs: [],
+      mistakesTitle: "衣柜整理里最常见的错误",
+      mistakes: [
+        "在清掉明显不会穿的衣服前，就开始研究复杂收纳法",
+        "按“理想中的自己”整理，而不是按真实一周的穿衣习惯整理",
+        "把贵但不穿的衣服继续放在最顺手的位置",
+        "一件件零散判断，而不是按品类看出重复和空缺",
+      ],
+      keepTitle: "衣柜一等位置该留给什么",
+      keepBody:
+        "最顺手的位置应该留给真实一周里最常穿的衣服、鞋子和包。那些只适合特殊场合、只服务过去身份、或只是因为花过钱才被留下的衣服，可以留下但不该占据每天出门前最宝贵的决策带宽。",
+      quickResetTitle: "15 分钟衣柜快筛法",
+      quickResetSteps: [
+        "先拿出明显不合身、破损、起球或有污渍的衣服",
+        "只选一个品类快筛，例如上衣、裤子、鞋子或包",
+        "把那些每次看到都会跳过的衣服单独挑出来",
+        "只把真正适合现在身体和现在生活的衣服挂回显眼位置",
+      ],
+      faqTitle: "衣柜整理常见问题",
+      faqs: [
+        ["整理衣柜最快从哪里开始？", "从明显不会再穿的衣服开始：不合身、破损、起球严重、明显不舒服的。先拿下这些，后面的情绪决策会轻很多。"],
+        ["应该一件件看，还是按类别整理？", "按类别更有效。把所有牛仔裤、外套或鞋子放在一起，你才看得清重复、空缺和自己真正会选什么。"],
+        ["如果都还能穿，为什么衣柜还是很挤？", "能穿不等于你会穿。只要它不被选择、不适合现在生活、或每次都让你犹豫，它就已经在制造穿衣摩擦了。"],
+      ],
       blockersTitle: "衣柜整理的情绪卡点",
       blockersBody:
         "衣柜里藏着最多的身份认同。\"等我减肥就能穿\" 的牛仔裤、\"这件很贵不能扔\" 的设计师外套、\"那段关系送的\" 的连衣裙、上一份工作的衬衫、过去某个版本的你的风格——每一件都不是关于衣服，是关于你自己。这就是为什么情感杂物在衣柜尤其重。\"用，或者放手\" 加 \"我现在的身材\" 的判断同时用：你过去 12 个月没穿过的，不会因为再放一年就突然合适。",
       relatedTitle: "相关阅读",
-      relatedIntro: "想拓展到房间外的话题：",
+      relatedIntro: "如果你接下来要处理的是不同层级的问题：",
       relatedLinks: [
         { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
         { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
-        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/decluttering-decision-guide", label: "犹豫物品决策指南" },
         { href: "/how-to-declutter-your-bedroom", label: "如何整理卧室" },
       ],
     };
@@ -96,16 +116,16 @@ function getCopy(locale: string): GuideCopy {
 
   if (locale === "ja") {
     return {
-      title: "クローゼットの片付け方 | ステップで進めるクローゼット整理ガイド | DeclutterYourHome",
+      title: "クローゼットの片付け方 | 服を選びやすくするクローゼット整理ガイド | DeclutterYourHome",
       description:
         "着ていない服、サイズが合わない服、重複した服を減らして、毎日の着替えをもっと楽にするクローゼット整理の進め方を紹介します。",
-      eyebrow: "クローゼットガイド",
-      heroTitle: "全部やり直さずにクローゼットを片付ける方法",
+      eyebrow: "服の見直しガイド",
+      heroTitle: "毎朝の服選びを軽くするクローゼット整理",
       heroSubtitle:
-        "クローゼットの散らかりは、服が多いことだけが原因ではありません。判断の多さ、似た服の重複、今の暮らしに合わない過去の自分の名残が、毎朝の支度を重くします。よいリセットは、厳しくすることではなく、着替えやすくすることです。",
-      introTitle: "クローゼットの散らかりは判断疲れとして現れやすい",
+        "クローゼットの散らかりは、服が多いことだけが原因ではありません。判断の多さ、似た服の重複、今の暮らしに合わない過去の自分の名残が、毎朝の支度を重くします。よいリセットは、部屋を片付けることではなく、服を選びやすくすることです。",
+      introTitle: "クローゼット問題は、収納不足より服の編集不足",
       introBody:
-        "詰まったクローゼットは小さな形でエネルギーを奪います。サイズが合わない服、毎回見送る服、もったいなくて残した高い買い物、ほとんど同じアイテムが何枚もあるカテゴリ。目標はただ数を減らすことではなく、扉を開けてから今の暮らしに合う服を選ぶまでの摩擦を減らすことです。",
+        "詰まったクローゼットは小さな形でエネルギーを奪います。サイズが合わない服、毎回見送る服、もったいなくて残した高い買い物、ほとんど同じアイテムが何枚もあるカテゴリ。ここでの目標は部屋全体を整えることではなく、扉を開けてから今の暮らしに合う服を選ぶまでの摩擦を減らすことです。",
       stepsTitle: "クローゼットを片付ける 7 つのステップ",
       steps: [
         ["1. まず明らかに不要な物から始める", "サイズが合わない、傷んでいる、シミがある、強く消耗している服を先に抜きます。感情の重い判断の前に、簡単な判断で勢いをつけましょう。"],
@@ -170,16 +190,16 @@ function getCopy(locale: string): GuideCopy {
   }
 
   return {
-    title: "How to Declutter Your Closet | Step-by-Step Closet Guide | DeclutterYourHome",
+    title: "How to Declutter Your Closet | Make Getting Dressed Easier | DeclutterYourHome",
     description:
-      "Learn how to declutter your closet step by step by removing clothes you do not wear, pieces that no longer fit, and duplicates that make getting dressed harder.",
-    eyebrow: "Closet Guide",
-    heroTitle: "How to Declutter Your Closet Without Starting Over",
+      "Learn how to declutter your closet by removing clothes you do not wear, pieces that no longer fit, and duplicates that make outfit decisions harder.",
+    eyebrow: "Clothing Edit Guide",
+    heroTitle: "How to Declutter Your Closet and Reduce Outfit Decisions",
     heroSubtitle:
       "Closet clutter is not just about having too many clothes. It is often about too many decisions, too many duplicates, and too many items tied to a version of you that no longer matches your real life. A better closet reset makes getting dressed easier, not stricter.",
-    introTitle: "Closet clutter usually shows up as decision fatigue",
+    introTitle: "Closet clutter is clothing-editing clutter",
     introBody:
-      "A crowded closet drains energy in small ways: pieces that do not fit, items you never actually choose, expensive mistakes you feel guilty about, and categories full of near-duplicates. The goal is not to own less just for the sake of it. The goal is to reduce the friction between opening the closet and getting dressed for the life you live now.",
+      "A crowded closet drains energy in small ways: pieces that do not fit, items you never actually choose, expensive mistakes you feel guilty about, and categories full of near-duplicates. The goal is not to own less just for the sake of it. The goal is to reduce the friction between opening the closet and choosing clothes for the life you live now.",
     stepsTitle: "How to declutter your closet in 7 steps",
     steps: [
       ["1. Start with the clear noes", "Pull out anything that does not fit, is damaged, stained, or heavily worn. Start with easy decisions before you tackle emotional ones."],

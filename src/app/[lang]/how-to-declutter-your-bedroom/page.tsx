@@ -9,21 +9,21 @@ type Props = { params: Promise<{ lang: string }> };
 function getCopy(locale: string) {
   if (locale === "zh") {
     return {
-      title: "如何整理卧室 | 卧室断舍离分步骤指南 | DeclutterYourHome",
+      title: "如何整理卧室 | 卧室复位与睡眠空间整理指南 | DeclutterYourHome",
       description:
-        "学习如何一步步整理卧室，先清理地面、床头柜、衣柜和床底，再处理那些占空间却不再服务你生活的物品。",
-      eyebrow: "卧室整理指南",
-      heroTitle: "如何分步整理卧室",
+        "学习如何整理卧室，先清理地面、床头柜、床边表面和床底杂物，让卧室重新变回适合休息、起床和放松的房间。",
+      eyebrow: "卧室空间整理指南",
+      heroTitle: "如何整理卧室，让房间重新适合休息",
       heroSubtitle:
-        "如果卧室总让你觉得乱、挤、睡不踏实，别从收纳盒开始。先把真正不该继续留在卧室里的东西移出去，再让这个房间重新服务睡眠、晨间节奏和当下的你。",
-      introTitle: "卧室整理最先带来的，不只是整洁",
+        "如果卧室总让你觉得乱、挤、睡不踏实，别先想怎么买收纳盒。先把地面、床边、床底和那些本来就不该留在卧室里的东西清出去，让这个房间重新服务睡眠、起床和放松。",
+      introTitle: "卧室整理的重点，是让房间不再像待办事项堆",
       introBody:
-        "卧室是你一天开始和结束的地方，所以这里的杂乱通常比别的房间更容易放大压力。地上的衣服、堆满的床头柜、床底的旧物、一直没处理的旧衣服，都会让这个房间更像待办事项集合，而不是让人恢复精力的空间。整理卧室时，先从最影响睡眠和视觉负担的地方下手，变化通常会来得最快。",
+        "卧室是你一天开始和结束的地方，所以这里的杂乱比别的房间更容易放大压力。地上的衣物、堆满的床头柜、床边线缆、床底旧物和临时放下的杯子纸张，会让这个房间一直像没收尾的现场。整理卧室时，先处理最影响睡眠和视觉负担的区域，通常比一开始就折腾衣橱系统更快见效。",
       stepsTitle: "整理卧室的 7 个步骤",
       steps: [
         ["1. 先清空地面和明显的表面杂物", "把地上的衣物、袋子、纸张、空杯子和不属于卧室的东西先移走。先解决视觉噪音，房间会立刻轻一点。"],
         ["2. 只保留真正支持睡眠的床边物品", "床头柜上只留你晚上和早上真的会用到的东西，比如灯、书、眼镜、耳塞或充电器。其余都移走。"],
-        ["3. 快速筛掉衣柜里明显不会再穿的衣服", "先从最容易判断的开始：不合身、起球严重、有污渍、标签几年没剪、因为干洗太麻烦而一直不穿的衣服。"],
+        ["3. 处理卧室里长期停留却不该停留的衣物", "椅子上的衣服、床尾堆放的外套、地上的洗净衣物，都先回到衣柜、洗衣篮或别的房间。卧室先恢复动线，比深挖每件衣服更重要。"],
         ["4. 检查床底，不要让它变成延迟决策区", "床底最容易堆放“先留着看看”的东西。看不见不代表没有负担。把真正不用的移出，把需要保留的装进明确分类。"],
         ["5. 处理让你起床就分心的视觉负担", "过多的抱枕、积灰装饰、杂乱线缆、长期不用的椅子堆衣区，都会让卧室更像待办列表，而不是休息空间。"],
         ["6. 把“过去版本的你”的物品单独挑出来", "旧校服、旧工作风格的衣服、昂贵但买错的单品、带有情绪包袱的纪念物，先集中放一处，别混在日常物品里。"],
@@ -32,53 +32,68 @@ function getCopy(locale: string) {
       removeTitle: "卧室里最该优先清掉的东西",
       removeItems: [
         "三个月没碰过的床头柜物品",
-        "过去一年都不合身的衣服",
+        "床边和地面上长期停留的杂物",
+        "床底长期闲置又说不清用途的东西",
         "积灰又不再背的包",
-        "床底长期闲置物",
+        "让房间显得拥挤的多余抱枕和装饰",
         "睡不舒服却还在勉强用的枕头或床品",
-        "让你愧疚但不会再穿的昂贵购买",
       ],
       emotionTitle: "卧室杂物通常不只是杂物",
       emotionBody:
-        "卧室比客厅和厨房更容易积累情绪型物品：旧关系留下的东西、旧身份留下的衣服、旧计划留下的未完成承诺。它们占用的不只是空间，也会占用你睡前和起床后的注意力。卧室整理做得好，通常不是因为你买了更多收纳工具，而是因为你更清楚什么该留下。",
+        "卧室比客厅和厨房更容易积累情绪型物品：旧关系留下的东西、旧身份留下的衣服、旧计划留下的未完成承诺。它们占用的不只是空间，也会占用你睡前和起床后的注意力。卧室整理做得好，通常不是因为你买了更多收纳工具，而是因为你更清楚什么该留在这个房间里。",
       toolTitle: "现在就开始卧室清单",
       toolDesc:
         "下面这份互动清单和卧室清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
       toolPage: "打开卧室清单功能页",
-      mistakesTitle: undefined as string | undefined,
-      mistakes: [] as string[],
-      keepTitle: undefined as string | undefined,
-      keepBody: undefined as string | undefined,
-      quickResetTitle: undefined as string | undefined,
-      quickResetSteps: [] as string[],
-      faqTitle: undefined as string | undefined,
-      faqs: [] as Array<[string, string]>,
+      mistakesTitle: "卧室整理里最常见的错误" as string | undefined,
+      mistakes: [
+        "还没清掉地面和床边杂物，就先去买收纳盒",
+        "把椅子、床尾和床头柜当成永久缓冲区",
+        "让工作文件、快递和杂物长期停留在卧室里",
+        "把床底变成“以后再决定”的长期仓库",
+      ] as string[],
+      keepTitle: "卧室最该留给什么" as string | undefined,
+      keepBody:
+        "离床最近、最顺手的位置，应该留给真正支持睡眠和起床节奏的东西：舒服的床品、每天会用的灯、眼镜、书、充电器，以及少量当季常穿衣物。任何让房间看起来像还没收尾的东西，都不值得占卧室的一等位置。" as string | undefined,
+      quickResetTitle: "15 分钟卧室复位法" as string | undefined,
+      quickResetSteps: [
+        "把地上的衣物、袋子和不属于卧室的东西全部移开",
+        "清空床头柜表面，只放回睡前和起床会用到的物品",
+        "把椅子、床尾和床边堆放的衣物分别送回衣柜或洗衣篮",
+        "看一眼床底，拿走任何你说不清用途的东西",
+      ] as string[],
+      faqTitle: "卧室整理常见问题" as string | undefined,
+      faqs: [
+        ["最快让卧室看起来整洁的方法是什么？", "先清地面、再清床头柜、最后处理床边和床底。卧室最明显的变化几乎都来自这几块，而不是先整理抽屉内部。"],
+        ["卧室里最不该长期放什么？", "工作文件、快递盒、杂乱线缆、昨天的衣服堆、长期不用的健身器材和“以后再决定”的箱子。这些都会把卧室变成待办现场。"],
+        ["如果卧室太乱让我不想开始怎么办？", "只选一个最小范围，例如床头柜表面或床边一块地面，先做 10 分钟。卧室页的目标不是一次做到完美，而是先把这个房间从视觉噪音里拉出来。"],
+      ] as Array<[string, string]>,
       blockersTitle: "卧室杂物的情绪卡点" as string | undefined,
       blockersBody:
         "卧室是情感杂物最容易藏的地方——床底堆着 \"以后再决定\" 的盒子、椅子上永远在 \"等会再叠\" 的衣服、抽屉里前任送的卡片、那件 \"减肥就能穿\" 的衣服。这些不是杂物的问题，是自我认同的问题。\"用，或者放手\" 在这里几乎是终极测试：如果过去 12 个月你没有用过、穿过、需要过它，下一个 12 个月也不会。" as string | undefined,
       relatedTitle: "相关阅读" as string | undefined,
-      relatedIntro: "想拓展到房间外的话题：" as string | undefined,
+      relatedIntro: "如果你接下来要处理的是不同问题：" as string | undefined,
       relatedLinks: [
-        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
         { href: "/how-to-declutter-your-closet", label: "如何整理衣柜" },
+        { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
         { href: "/adhd-cleaning-checklist", label: "ADHD 友好的家务清单" },
-        { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
+        { href: "/how-to-declutter-your-living-room", label: "如何整理客厅" },
       ] as Array<{ href: string; label: string }> | undefined,
     };
   }
 
   if (locale === "ja") {
     return {
-      title: "寝室の片付け方 | ステップで進める寝室の断捨離ガイド | DeclutterYourHome",
+      title: "寝室の片付け方 | 眠りやすい空間へ戻す寝室リセットガイド | DeclutterYourHome",
       description:
-        "床、ナイトテーブル、クローゼット、ベッド下収納を順番に見直しながら、寝室を落ち着いて眠りやすい空間へ整える方法をステップごとに紹介します。",
-      eyebrow: "寝室ガイド",
-      heroTitle: "寝室を無理なく片付ける 7 つのステップ",
+        "床、ナイトテーブル、ベッドまわり、ベッド下収納を順番に見直しながら、寝室を落ち着いて眠りやすい空間へ整える方法を紹介します。",
+      eyebrow: "寝室リセットガイド",
+      heroTitle: "寝室を休める部屋に戻す 7 つのステップ",
       heroSubtitle:
-        "寝室がごちゃついて見えたり、落ち着いて休めなかったりするなら、最初にやるべきは収納用品を増やすことではありません。眠ること、回復すること、朝の支度に本当に必要なものだけを残し、この部屋の役割を取り戻しましょう。",
-      introTitle: "寝室が整うと、部屋以上の変化が起こる",
+        "寝室がごちゃついて見えたり、落ち着いて休めなかったりするなら、最初にやるべきは収納用品を増やすことではありません。床、ベッドまわり、視界に入り続ける表面を整えて、眠るための部屋としての役割を取り戻しましょう。",
+      introTitle: "寝室の片付けは、服より先に部屋を戻すこと",
       introBody:
-        "寝室は一日の始まりと終わりを過ごす場所なので、ここにある散らかりはほかの部屋以上に重く感じやすいものです。床に置いた服、物が多いナイトテーブル、あふれたベッド下収納、もう着ない服が混じったクローゼットは、眠る前も起きた直後も小さなストレスになります。いちばん効くのは収納を足すことではなく、負担を増やしているものを取り除くことです。",
+        "寝室は一日の始まりと終わりを過ごす場所なので、ここにある散らかりはほかの部屋以上に重く感じやすいものです。床に置いた服、物が多いナイトテーブル、あふれたベッド下収納、見えるままのコードや雑貨は、眠る前も起きた直後も小さなストレスになります。ここで最初に効くのは、クローゼット全体を作り直すことではなく、部屋そのものを静かに戻すことです。",
       stepsTitle: "寝室を片付ける 7 つのステップ",
       steps: [
         ["1. まず床と目につく散らかりを片付ける", "床の服、バッグ、紙類、カップ、寝室に置く理由のないものから先にどかします。視界のノイズが減るだけで、すぐに動きやすくなります。"],
@@ -143,16 +158,16 @@ function getCopy(locale: string) {
   }
 
   return {
-    title: "How to Declutter Your Bedroom | A Step-by-Step Guide | DeclutterYourHome",
+    title: "How to Declutter Your Bedroom | Reset a Restful Sleep Space | DeclutterYourHome",
     description:
-      "Learn how to declutter your bedroom step by step by clearing floors, nightstands, closets, and under-bed storage so your room feels calmer, lighter, and easier to sleep in.",
-    eyebrow: "Bedroom Guide",
-    heroTitle: "How to Declutter Your Bedroom, Step by Step",
+      "Learn how to declutter your bedroom by clearing floors, nightstands, bed-adjacent clutter, and under-bed storage so the room feels calmer and easier to rest in.",
+    eyebrow: "Bedroom Reset Guide",
+    heroTitle: "How to Declutter Your Bedroom So It Feels Restful Again",
     heroSubtitle:
-      "If your bedroom feels crowded, visually noisy, or hard to relax in, do not start with storage bins. Start by removing what no longer belongs in a room meant for sleep, recovery, and your morning routine.",
-    introTitle: "A calmer bedroom changes more than the room",
+      "If your bedroom feels crowded, visually noisy, or hard to relax in, do not start with storage bins. Start by clearing the floor, the bed zone, and the surfaces that keep signaling unfinished life in a room meant for sleep and recovery.",
+    introTitle: "Bedroom decluttering is really a room reset",
     introBody:
-      "Your bedroom is where your day begins and ends, so clutter here tends to feel heavier than clutter elsewhere. Clothes on the floor, crowded nightstands, under-bed overflow, and old clothes you never wear again all create visual friction before sleep and first thing in the morning. The fastest wins usually come from removing what adds stress, not from adding more storage.",
+      "Your bedroom is where your day begins and ends, so clutter here tends to feel heavier than clutter elsewhere. Clothes on the floor, crowded nightstands, under-bed overflow, visible cords, and random drop-zone items all create friction before sleep and first thing in the morning. The fastest wins usually come from resetting the room itself, not from rebuilding your closet system first.",
     stepsTitle: "How to declutter your bedroom in 7 steps",
     steps: [
       ["1. Clear the floor and obvious surface clutter first", "Start with clothes on the floor, bags, paper, cups, and anything that does not belong in the bedroom. Removing visual noise creates quick momentum."],
