@@ -15,6 +15,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: dict.checklist.metaTitle,
     description: dict.checklist.metaDescription,
+    keywords: [
+      "declutter checklist",
+      "decluttering checklist",
+      "room by room declutter checklist",
+      "home declutter checklist",
+      "free declutter checklist",
+    ],
     alternates: buildLanguageAlternates(locale, "/declutter-checklist"),
   };
 }
