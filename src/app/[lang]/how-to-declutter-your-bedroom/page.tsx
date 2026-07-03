@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import AreaChecklistSection from "../declutter-checklist/components/AreaChecklistSection";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
 import { buildLanguageAlternates } from "@/lib/seo";
 
@@ -392,12 +391,20 @@ export default async function BedroomPage({ params }: Props) {
           </section>
         )}
 
-        <AreaChecklistSection
-          areaSlug="bedroom"
-          heading={copy.toolTitle}
-          description={copy.toolDesc}
-          nextPath={`/${locale}/how-to-declutter-your-bedroom`}
-        />
+        <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
+          <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">
+            {copy.toolTitle}
+          </h2>
+          <p className="mt-4 max-w-3xl text-base leading-7 text-[#335748]">
+            {copy.toolDesc}
+          </p>
+          <Link
+            href={`/${locale}/declutter-checklist/bedroom`}
+            className="mt-6 inline-flex items-center rounded-full bg-[#002d1c] px-6 py-3 text-sm font-bold text-white"
+          >
+            {copy.toolPage}
+          </Link>
+        </section>
 
         {copy.relatedTitle && copy.relatedLinks && copy.relatedLinks.length > 0 && (
           <section className="rounded-[2rem] bg-[#dcebdd] px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">

@@ -318,7 +318,7 @@
   },
   "checklist": {
     "metaTitle": "Decluttering Checklist | Free Room-by-Room Declutter Checklist | DeclutterYourHome",
-    "metaDescription": "Use this free decluttering checklist to organize your home room by room, track daily tasks, and build decluttering habits that are easier to maintain.",
+    "metaDescription": "Use this free decluttering checklist to organize your home room by room, track daily tasks, and download a printable PDF version to check off by hand.",
     "sidebarSubtitle": "Let's declutter your home today",
     "navChecklist": "Declutter Checklist",
     "navProgress": "Track your progress",
@@ -415,7 +415,9 @@
     "items": "items",
     "yourFile": "your file",
     "uploadReplaceSuccess": "Replaced your current lists from {file}. Previously crossed items were kept and merged with the new import.",
-    "uploadMergeSuccess": "Merged {count} lists from {file} into your current lists."
+    "uploadMergeSuccess": "Merged {count} lists from {file} into your current lists.",
+    "downloadPdf": "Download PDF",
+    "printFooterNote": "Downloaded from declutteryourhome.net"
   },
   "bedroom": {
     "metaTitle": "How to Declutter Your Bedroom | DeclutterYourHome",

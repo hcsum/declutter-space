@@ -3,7 +3,10 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AreaChecklistSection from "../components/AreaChecklistSection";
 import { getChecklistCategoryBySlug } from "@/lib/checklist/checklist";
+import { getAreaContent } from "@/lib/checklist/area-content";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
+import { buildBreadcrumbSchema, buildLanguageAlternates } from "@/lib/seo";
+import { JsonLd } from "@/components/json-ld";
 
 type Props = { params: Promise<{ lang: string; slug: string }> };
 
@@ -16,25 +19,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return {};
   }
 
+  const areaCopy = getAreaContent(slug, locale);
+
   const title =
     locale === "zh"
       ? `${category.category}断舍离清单 | DeclutterYourHome`
       : `${category.category} Declutter Checklist | DeclutterYourHome`;
   const description =
-    locale === "zh"
+    areaCopy?.metaDescription ??
+    (locale === "zh"
       ? `用这份${category.category}断舍离清单逐项整理、勾选和保存进度，把这个区域慢慢恢复成更轻松好用的空间。`
-      : `Use this ${category.category.toLowerCase()} declutter checklist to work through one area at a time, check off tasks, and keep your progress saved.`;
+      : `Use this ${category.category.toLowerCase()} declutter checklist to work through one area at a time, check off tasks, and keep your progress saved.`);
 
   return {
     title,
     description,
-    robots: {
-      index: false,
-      follow: true,
-    },
-    alternates: {
-      canonical: `/${locale}/declutter-checklist/${slug}`,
-    },
+    alternates: buildLanguageAlternates(locale, `/declutter-checklist/${slug}`),
   };
 }
 
@@ -45,6 +45,10 @@ export default async function ChecklistAreaPage({ params }: Props) {
 
   if (!category) notFound();
 
+  const areaCopy = getAreaContent(slug, locale);
+  const homeLabel = locale === "ja" ? "ホーム" : "Home";
+  const checklistLabel = locale === "zh" ? "断舍离清单" : locale === "ja" ? "断捨離チェックリスト" : "Declutter Checklist";
+
   const isBedroom = slug === "bedroom";
   const isLivingRoom = slug === "living-room";
   const isKitchen = slug === "kitchen";
@@ -54,9 +58,16 @@ export default async function ChecklistAreaPage({ params }: Props) {
 
   return (
     <main className="min-h-screen bg-[#f3f4ec] px-5 pb-20 pt-24 text-[#1a1c18] md:px-8">
+      <JsonLd
+        data={buildBreadcrumbSchema(locale, [
+          { name: homeLabel, path: "/" },
+          { name: checklistLabel, path: "/declutter-checklist" },
+          { name: category.category, path: `/declutter-checklist/${slug}` },
+        ])}
+      />
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
         <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-10 md:py-10">
-          <div className="mb-4">
+          <div className="print-hidden mb-4">
             <Link
               href={`/${locale}/declutter-checklist`}
               className="inline-flex items-center rounded-full bg-[#f3f4ec] px-3 py-2 text-sm font-semibold text-[#2b694d] transition-colors hover:bg-[#e7eadf]"
@@ -73,9 +84,10 @@ export default async function ChecklistAreaPage({ params }: Props) {
               : `${category.category} Declutter Checklist`}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-[#414844] md:text-lg">
-            {locale === "zh"
-              ? `从这个区域开始，逐项清理真正占空间、占注意力、却没有继续服务你生活的东西。勾选、补充和保存进度，慢慢把 ${category.category} 变得更轻松好用。`
-              : `Focus on one space, clear what no longer earns its place, and keep your progress moving. This dedicated ${category.category.toLowerCase()} checklist gives you a practical place to start.`}
+            {areaCopy?.intro ??
+              (locale === "zh"
+                ? `从这个区域开始，逐项清理真正占空间、占注意力、却没有继续服务你生活的东西。勾选、补充和保存进度，慢慢把 ${category.category} 变得更轻松好用。`
+                : `Focus on one space, clear what no longer earns its place, and keep your progress moving. This dedicated ${category.category.toLowerCase()} checklist gives you a practical place to start.`)}
           </p>
           {isBedroom && (
             <p className="mt-4 text-sm leading-6 text-[#59615d]">
@@ -177,9 +189,10 @@ export default async function ChecklistAreaPage({ params }: Props) {
               : `Start Your ${category.category} Reset`
           }
           description={
-            locale === "zh"
+            areaCopy?.resetDescription ??
+            (locale === "zh"
               ? "先完成 1 到 3 项也很好。关键不是一次做完，而是让这个区域今天比昨天更轻一点。"
-              : "Even clearing one to three items counts. The goal is not a perfect reset in one sitting, but a space that feels lighter than it did yesterday."
+              : "Even clearing one to three items counts. The goal is not a perfect reset in one sitting, but a space that feels lighter than it did yesterday.")
           }
           nextPath={`/${locale}/declutter-checklist/${slug}`}
         />

@@ -270,16 +270,27 @@ export default function AreaChecklistSection({
               {description}
             </p>
           </div>
-          <div className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#2b694d] shadow-sm">
-            {completedCount}/{allItems.length} {t("checklist.items")}
+          <div className="flex items-center gap-2">
+            <div className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#2b694d] shadow-sm">
+              {completedCount}/{allItems.length} {t("checklist.items")}
+            </div>
+            <button
+              type="button"
+              onClick={() => window.print()}
+              className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#00432a]"
+            >
+              {t("checklist.downloadPdf")}
+            </button>
           </div>
         </div>
 
-        <ChecklistCloudBanner
-          isLoggedIn={isLoggedIn}
-          cloudStatus={cloudStatus}
-          nextPath={nextPath}
-        />
+        <div className="print-hidden">
+          <ChecklistCloudBanner
+            isLoggedIn={isLoggedIn}
+            cloudStatus={cloudStatus}
+            nextPath={nextPath}
+          />
+        </div>
 
         <article className="rounded-[2rem] bg-[#f3f4ec] p-6 md:p-8">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
@@ -321,7 +332,7 @@ export default function AreaChecklistSection({
                   <button
                     type="button"
                     onClick={() => confirmRemoveItem(item.id, item.text)}
-                    className="rounded-full bg-[#f9faf2] px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#7a3222]"
+                    className="print-hidden rounded-full bg-[#f9faf2] px-2.5 py-1 text-[11px] font-black uppercase tracking-[0.16em] text-[#7a3222]"
                     aria-label={`${t("checklist.remove")} ${item.text}`}
                   >
                     {t("checklist.remove")}
@@ -331,7 +342,7 @@ export default function AreaChecklistSection({
             })}
           </div>
 
-          <form onSubmit={addCustomItem} className="mt-6">
+          <form onSubmit={addCustomItem} className="print-hidden mt-6">
             <div className="flex gap-2 rounded-2xl bg-white p-2">
               <input
                 type="text"

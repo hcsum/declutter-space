@@ -1,10 +1,16 @@
 import type { MetadataRoute } from "next";
 import { locales, defaultLocale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
+import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
+
+const checklistAreaPaths = getChecklistCategorySlugs().map(
+  (slug) => `/declutter-checklist/${slug}`,
+);
 
 const sitemapPaths = [
   "",
   "/declutter-checklist",
+  ...checklistAreaPaths,
   "/decluttering-decision-guide",
   "/things-to-declutter",
   "/things-to-stop-buying",
@@ -40,7 +46,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
         url: localizedUrl(locale, path),
         lastModified,
         changeFrequency: "weekly" as const,
-        priority: path === "" ? 1 : 0.8,
+        priority: path === "" ? 1 : checklistAreaPaths.includes(path) ? 0.6 : 0.8,
         alternates: { languages },
       };
     }),

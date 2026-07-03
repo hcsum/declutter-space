@@ -318,7 +318,7 @@
   },
   "checklist": {
     "metaTitle": "断舍离清单 | 按房间整理清单 - DeclutterYourHome",
-    "metaDescription": "免费断舍离清单，帮你按房间整理家务与收纳任务。逐项追踪、持续整理，建立更容易坚持的断舍离习惯。",
+    "metaDescription": "免费断舍离清单，帮你按房间整理家务与收纳任务，支持下载可打印 PDF 版本，逐项勾选、持续整理。",
     "sidebarSubtitle": "从今天开始断舍离",
     "navChecklist": "断舍离清单",
     "navProgress": "追踪你的进度",
@@ -415,7 +415,9 @@
     "items": "个项目",
     "yourFile": "你的文件",
     "uploadReplaceSuccess": "已用 {file} 替换当前清单。之前勾选过的项目已保留，并合并到新的导入中。",
-    "uploadMergeSuccess": "已将 {file} 中的 {count} 个清单合并到当前清单。"
+    "uploadMergeSuccess": "已将 {file} 中的 {count} 个清单合并到当前清单。",
+    "downloadPdf": "下载 PDF",
+    "printFooterNote": "下载自 declutteryourhome.net"
   },
   "bedroom": {
     "metaTitle": "如何整理卧室 | DeclutterYourHome",

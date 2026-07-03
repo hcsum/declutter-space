@@ -63,7 +63,7 @@
   },
   "checklist": {
     "metaTitle": "片付けチェックリスト | 部屋別に進める無料ガイド | DeclutterYourHome",
-    "metaDescription": "部屋別に進める無料の片付けチェックリスト。毎日の小さなタスクを積み上げながら、家全体の整理を続けやすくします。",
+    "metaDescription": "部屋別に進める無料の片付けチェックリスト。印刷できるPDF版もダウンロードでき、手書きでチェックしながら進められます。",
     "navChecklist": "片付けチェックリスト",
     "navProgress": "進捗を見る",
     "navUpload": "自分のリストを読み込む",
@@ -160,6 +160,8 @@
     "items": "項目",
     "yourFile": "あなたのファイル",
     "uploadReplaceSuccess": "{file} から現在のリストを置き換えました。これまでチェック済みだった項目は保持され、新しい取り込み内容に統合されています。",
-    "uploadMergeSuccess": "{file} から {count} 件のリストを現在のリストに統合しました。"
+    "uploadMergeSuccess": "{file} から {count} 件のリストを現在のリストに統合しました。",
+    "downloadPdf": "PDFをダウンロード",
+    "printFooterNote": "declutteryourhome.net からダウンロード"
   }
 }

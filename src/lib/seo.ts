@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { locales, defaultLocale, type Locale } from "@/i18n/config";
+import { siteUrl } from "@/lib/site";
 
 /**
  * Build canonical + hreflang alternates for a localized page.
@@ -22,5 +23,42 @@ export function buildLanguageAlternates(
   return {
     canonical: `/${locale}${normalizedPath}`,
     languages,
+  };
+}
+
+export function buildFaqPageSchema(
+  faqs: readonly { question: string; answer: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((faq) => ({
+      "@type": "Question",
+      name: faq.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: faq.answer,
+      },
+    })),
+  };
+}
+
+/**
+ * `path` should start with `/` and NOT include the locale prefix, matching
+ * `buildLanguageAlternates`. Pass `[]` for the site root crumb.
+ */
+export function buildBreadcrumbSchema(
+  locale: Locale,
+  crumbs: { name: string; path: string }[],
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: crumbs.map((crumb, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: crumb.name,
+      item: `${siteUrl}/${locale}${crumb.path === "/" ? "" : crumb.path}`,
+    })),
   };
 }

@@ -146,3 +146,39 @@ body.no-scroll #app-view {
 }
 
 /* Removed overlay variant; using mask-based fade */
+
+/* Printable declutter checklist: hide app chrome, keep just the checklist itself */
+@media print {
+  .print-hidden {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  body {
+    background: #fff !important;
+  }
+
+  main {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: #fff !important;
+  }
+
+  * {
+    box-shadow: none !important;
+    color: #000 !important;
+    background: #fff !important;
+  }
+
+  input[type="checkbox"] {
+    accent-color: #000 !important;
+    border: 1px solid #000 !important;
+  }
+}
+
+.print-only {
+  display: none;
+}
