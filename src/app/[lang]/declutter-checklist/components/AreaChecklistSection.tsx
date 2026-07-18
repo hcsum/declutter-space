@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { useDialogState } from "@/components/DialogProvider";
 import { useI18n } from "@/i18n/i18n-provider";
 import {
@@ -49,6 +49,8 @@ export default function AreaChecklistSection({
   );
   const [hasSeenMomentumDialog, setHasSeenMomentumDialog] = useState(false);
   const [hasLoadedStorage, setHasLoadedStorage] = useState(false);
+  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false);
+  const pdfContentRef = useRef<HTMLDivElement | null>(null);
 
   const checklistState = useMemo(
     () => ({
@@ -261,6 +263,61 @@ export default function AreaChecklistSection({
     });
   }
 
+  async function downloadPdf() {
+    if (!visibleCategory || !pdfContentRef.current || isGeneratingPdf) return;
+
+    setIsGeneratingPdf(true);
+    try {
+      trackEvent("download_pdf", {
+        source: "checklist_area",
+        area: areaSlug,
+      });
+
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const canvas = await html2canvas(pdfContentRef.current, {
+        backgroundColor: "#f9faf2",
+        scale: Math.min(2, window.devicePixelRatio || 1.5),
+        useCORS: true,
+      });
+      const imageData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF({
+        orientation: "portrait",
+        unit: "mm",
+        format: "a4",
+      });
+      const pageWidth = 210;
+      const pageHeight = 297;
+      const imageHeight = (canvas.height * pageWidth) / canvas.width;
+
+      let renderedHeight = 0;
+      pdf.addImage(imageData, "PNG", 0, 0, pageWidth, imageHeight);
+      renderedHeight += pageHeight;
+
+      while (renderedHeight < imageHeight) {
+        pdf.addPage();
+        pdf.addImage(
+          imageData,
+          "PNG",
+          0,
+          -renderedHeight,
+          pageWidth,
+          imageHeight,
+        );
+        renderedHeight += pageHeight;
+      }
+
+      pdf.save(`${areaSlug}-declutter-checklist.pdf`);
+    } catch (error) {
+      console.error("Failed to generate checklist PDF", error);
+      window.print();
+    } finally {
+      setIsGeneratingPdf(false);
+    }
+  }
+
   if (!visibleCategory) return null;
 
   return (
@@ -281,14 +338,9 @@ export default function AreaChecklistSection({
             </div>
             <button
               type="button"
-              onClick={() => {
-                trackEvent("download_pdf", {
-                  source: "checklist_area",
-                  area: areaSlug,
-                });
-                window.print();
-              }}
-              className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#00432a]"
+              onClick={downloadPdf}
+              disabled={isGeneratingPdf}
+              className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#00432a] disabled:cursor-wait disabled:opacity-60"
             >
               {t("checklist.downloadPdf")}
             </button>
@@ -376,6 +428,77 @@ export default function AreaChecklistSection({
             </div>
           </form>
         </article>
+      </div>
+      <div
+        aria-hidden="true"
+        className="pointer-events-none fixed left-[-9999px] top-0 w-[794px] overflow-hidden"
+      >
+        <div
+          ref={pdfContentRef}
+          className="bg-[#f9faf2] px-12 py-10 font-sans text-[#1a1c18]"
+        >
+          <div className="rounded-[28px] bg-white p-9 shadow-sm ring-1 ring-[#dfe4d7]">
+            <div className="flex items-start justify-between gap-8 border-b border-[#dfe4d7] pb-7">
+              <div className="min-w-0">
+                <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#59615d]">
+                  {t("checklist.downloadPdf")}
+                </p>
+                <h1 className="mt-3 text-[34px] font-black leading-tight text-[#002d1c]">
+                  {heading}
+                </h1>
+                <p className="mt-3 text-[15px] leading-7 text-[#414844]">
+                  {description}
+                </p>
+              </div>
+              <div className="shrink-0 rounded-2xl bg-[#edefe7] px-5 py-4 text-center text-[#2b694d]">
+                <div className="text-[28px] font-black leading-none">
+                  {completedCount}/{allItems.length}
+                </div>
+                <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em]">
+                  {t("checklist.items")}
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-7 grid grid-cols-2 gap-3">
+              {sortedItems.map((item) => {
+                const entryKey = buildEntryKey(visibleCategory.key, item.id);
+                const isChecked = todayHistorySet.has(entryKey);
+
+                return (
+                  <div
+                    key={item.id}
+                    className="flex min-h-14 items-start gap-3 rounded-2xl bg-[#f3f4ec] px-4 py-3"
+                  >
+                    <div
+                      className={[
+                        "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 text-[12px] font-black",
+                        isChecked
+                          ? "border-[#2b694d] bg-[#2b694d] text-white"
+                          : "border-[#93a096] bg-white text-white",
+                      ].join(" ")}
+                    >
+                      {isChecked ? "x" : ""}
+                    </div>
+                    <div
+                      className={[
+                        "text-[13px] font-semibold leading-5 text-[#28302c]",
+                        isChecked ? "opacity-60 line-through" : "",
+                      ].join(" ")}
+                    >
+                      {item.text}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div className="mt-8 flex items-center justify-between border-t border-[#dfe4d7] pt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#6d766f]">
+              <span>{visibleCategory.category}</span>
+              <span>{t("checklist.printFooterNote")}</span>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   );

@@ -601,16 +601,6 @@ export default function ClientPage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => {
-                  trackEvent("download_pdf", { source: "checklist_hub" });
-                  window.print();
-                }}
-                className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#00432a]"
-              >
-                {t("checklist.downloadPdf")}
-              </button>
-              <button
-                type="button"
                 onClick={() => setIsEditMode((prev) => !prev)}
                 className={[
                   "print-hidden rounded-full px-4 py-2 text-xs font-bold transition-colors",
