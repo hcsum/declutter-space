@@ -6,6 +6,7 @@ import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDialogState } from "@/components/DialogProvider";
 import { useI18n } from "@/i18n/i18n-provider";
 import { logout } from "@/actions/auth";
+import { trackEvent } from "@/lib/analytics";
 import ChecklistCloudBanner from "./components/ChecklistCloudBanner";
 import ChecklistLocaleSwitcher from "./components/ChecklistLocaleSwitcher";
 import {
@@ -184,6 +185,10 @@ export default function ClientPage() {
 
   function toggleItem(categoryKey: string, itemId: string) {
     const entryKey = buildEntryKey(categoryKey, itemId);
+    // Only the check direction is a signal of use; unchecking is a correction.
+    if (!todayHistorySet.has(entryKey)) {
+      trackEvent("check_item", { source: "checklist_hub", category: categoryKey });
+    }
     if (hasLoadedStorage && !hasSeenMomentumDialog) {
       setHasSeenMomentumDialog(true);
       setDialogContent({
@@ -596,7 +601,10 @@ export default function ClientPage() {
             <div className="flex items-center gap-2">
               <button
                 type="button"
-                onClick={() => window.print()}
+                onClick={() => {
+                  trackEvent("download_pdf", { source: "checklist_hub" });
+                  window.print();
+                }}
                 className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#00432a]"
               >
                 {t("checklist.downloadPdf")}

@@ -14,6 +14,7 @@ import {
   RemovedItemsByCategory,
 } from "@/lib/checklist/checklist";
 import { useChecklistPersistence } from "@/lib/checklist/useChecklistPersistence";
+import { trackEvent } from "@/lib/analytics";
 import ChecklistCloudBanner from "./ChecklistCloudBanner";
 
 type DraftsByCategory = Record<string, string>;
@@ -134,6 +135,10 @@ export default function AreaChecklistSection({
     if (!visibleCategory) return;
 
     const entryKey = buildEntryKey(visibleCategory.key, itemId);
+    // Only the check direction is a signal of use; unchecking is a correction.
+    if (!todayHistorySet.has(entryKey)) {
+      trackEvent("check_item", { source: "checklist_area", area: areaSlug });
+    }
     if (hasLoadedStorage && !hasSeenMomentumDialog) {
       setHasSeenMomentumDialog(true);
       setDialogContent({
@@ -276,7 +281,13 @@ export default function AreaChecklistSection({
             </div>
             <button
               type="button"
-              onClick={() => window.print()}
+              onClick={() => {
+                trackEvent("download_pdf", {
+                  source: "checklist_area",
+                  area: areaSlug,
+                });
+                window.print();
+              }}
               className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#00432a]"
             >
               {t("checklist.downloadPdf")}
