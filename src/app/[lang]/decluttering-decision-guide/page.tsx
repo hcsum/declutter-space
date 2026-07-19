@@ -162,7 +162,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
-  const copy = seoContent[locale];
+  const copy = seoContent[locale as keyof typeof seoContent] ?? seoContent.en;
 
   return (
     <>

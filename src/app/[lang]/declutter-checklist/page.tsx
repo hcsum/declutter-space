@@ -17,15 +17,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return {
     title: dict.checklist.metaTitle,
     description: dict.checklist.metaDescription,
-    keywords: [
-      "declutter checklist",
-      "decluttering checklist",
-      "room by room declutter checklist",
-      "home declutter checklist",
-      "free declutter checklist",
-      "declutter checklist pdf",
-      "printable declutter checklist",
-    ],
+    keywords:
+      locale === "es"
+        ? [
+            "lista de orden y limpieza",
+            "checklist de limpieza",
+            "lista de limpieza para imprimir",
+            "plan de limpieza semanal",
+            "rutina de limpieza del hogar",
+            "lista de limpieza pdf",
+            "cómo ordenar la casa",
+          ]
+        : [
+            "declutter checklist",
+            "decluttering checklist",
+            "room by room declutter checklist",
+            "home declutter checklist",
+            "free declutter checklist",
+            "declutter checklist pdf",
+            "printable declutter checklist",
+          ],
     alternates: buildLanguageAlternates(locale, "/declutter-checklist"),
   };
 }
@@ -37,7 +48,8 @@ export default async function Page({ params }: Props) {
   const seoContent =
     checklistSeoContent[locale as keyof typeof checklistSeoContent] ??
     checklistSeoContent.en;
-  const homeLabel = locale === "ja" ? "ホーム" : "Home";
+  const homeLabel =
+    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
 
   return (
     <>

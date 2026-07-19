@@ -40,6 +40,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "まず床とシューズラックから片付けましょう。何もまたがずに歩ける玄関は、家全体の片付けを続けやすくします。",
     },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el recibidor: zapatos que ya no usas, betún caducado, llaves sueltas y las cestas «para todo» que acaban acumulando de todo.",
+      intro:
+        "El recibidor se llena rápido porque todo lo que aún no tiene sitio se deja aquí primero. Esta lista se centra en los zapatos que ya no te pones, los paraguas sin arreglo y los llaveros y cestas que acaban convertidos en un montón de cosas sueltas.",
+      resetDescription:
+        "Despeja primero el suelo y el zapatero. Poder entrar en casa sin esquivar nada marca el tono para el resto de la vivienda.",
+    },
   },
   bedroom: {
     en: {
@@ -65,6 +73,14 @@ export const areaContent: AreaContentBySlug = {
         "寝室は決めきれていないことを思い出させる場所ではなく、よく眠るための空間であるべきです。このチェックリストはナイトテーブル、クローゼット、引き出しを順番に片付け、サイズの合わなくなった服や寿命を迎えた枕まで扱います。",
       resetDescription:
         "まずナイトテーブルと、開けるのを避けている引き出しから始めましょう。毎朝リセットしやすい寝室は、そのまま片付いた状態を保ちやすくなります。",
+    },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el dormitorio: almohadas gastadas, lo que se acumula en la mesilla, ropa que ya no te vale y cosas que guardas por culpa.",
+      intro:
+        "El dormitorio debería ayudarte a dormir, no recordarte decisiones que no has tomado. Esta lista recorre la mesilla, el armario y los cajones, desde la ropa que ya no te vale hasta las almohadas que llevan demasiado tiempo en uso.",
+      resetDescription:
+        "Empieza por la mesilla y por el cajón que evitas abrir. Un dormitorio fácil de recoger cada mañana es un dormitorio que se mantiene.",
     },
   },
   kitchen: {
@@ -92,6 +108,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "キッチン全体ではなく、まず引き出し一つか棚一段だけ選びましょう。ガラクタ引き出しから片付けると、料理がしやすくなります。",
     },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar la cocina: vajilla desportillada, especias caducadas, electrodomésticos rotos y utensilios repetidos que llenan los cajones.",
+      intro:
+        "La cocina acumula duplicados más rápido que cualquier otra habitación, una espátula de más y una taza regalada cada vez. Esta lista cubre la vajilla desportillada, lo caducado de la despensa y los aparatos que dejaron de merecer sitio en la encimera.",
+      resetDescription:
+        "Elige un cajón o una balda, no la cocina entera. Vaciar el cajón «de todo un poco» hace que cocinar deje de ser una carrera de obstáculos.",
+    },
   },
   "living-room": {
     en: {
@@ -117,6 +141,14 @@ export const areaContent: AreaContentBySlug = {
         "リビングは他の部屋の散らかりが最終的に表に出てくる場所です。このチェックリストは壊れた装飾品、埃をかぶったお土産、共用の薬箱にある期限切れの薬、誰も本気で残したくないチラシを対象にしています。",
       resetDescription:
         "収納に手をつける前に、まずローテーブルや棚など一つの台を片付けましょう。目に見えてすっきりすると、その先も進めやすくなります。",
+    },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el salón: adornos rotos, cables y discos, medicamentos caducados y las superficies donde acaba todo lo demás.",
+      intro:
+        "El salón es donde el desorden de las demás habitaciones queda a la vista. Esta lista se centra en adornos rotos, recuerdos llenos de polvo, medicinas caducadas del cajón común y folletos que nadie quería guardar.",
+      resetDescription:
+        "Despeja una superficie, la mesa de centro o una balda, antes de tocar los armarios. Un salón visiblemente más despejado hace más fácil todo lo que venga después.",
     },
   },
   balcony: {
@@ -144,6 +176,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "まず生きている物とそうでない物を仕分けましょう。実際に立てるベランダは、いつか復活させようと思っている鉢植え数個より価値があります。",
     },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar la terraza: plantas secas, fertilizante caducado, barreños agrietados y trastos que nunca volvieron a entrar en casa.",
+      intro:
+        "Las terrazas se convierten en trastero sin querer, una maceta abandonada y un acuario olvidado cada vez. Esta lista cubre lo que realmente está seco, agrietado o caducado ahí fuera, no solo lo que tiene polvo.",
+      resetDescription:
+        "Separa primero lo que está vivo de lo que no. Una terraza donde puedas estar vale más que unas macetas que llevas meses queriendo recuperar.",
+    },
   },
   smartphone: {
     en: {
@@ -169,6 +209,14 @@ export const areaContent: AreaContentBySlug = {
         "デジタルの散らかりは物理的な散らかりと同じ仕組みですが、目に見える場所を取らないだけです。このチェックリストは不要なメール配信の解除、対応しない通知のミュート、意味を持たなくなった連絡先やチャットを手放すことに焦点を当てています。",
       resetDescription:
         "スマホ全体ではなく、まず一つのアプリか受信箱を選びましょう。10分の配信解除は、同じ散らかりを1時間スクロールするより効果があります。",
+    },
+    es: {
+      metaDescription:
+        "Lista gratuita de limpieza digital para el móvil: conversaciones muertas, correos promocionales, notificaciones de apps que no usas y contactos con los que nunca hablas.",
+      intro:
+        "El desorden digital funciona igual que el físico, solo que no ocupa espacio visible. Esta lista cubre darse de baja del ruido, silenciar notificaciones que nunca atiendes y soltar contactos y grupos que no aportan nada.",
+      resetDescription:
+        "Elige una app o una bandeja de entrada, no el móvil entero. Diez minutos dándote de baja rinden más que una hora pasando por encima del mismo desorden.",
     },
   },
   "life-philosophy": {
@@ -196,6 +244,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "ここには毎日のノルマはありません。タスクをこなすためではなく、じっくり考える余裕があるときにこのリストに戻ってきてください。",
     },
+    es: {
+      metaDescription:
+        "Una lista serena para soltar lo que ya no te sirve: relaciones que solo restan, hábitos sostenidos por obligación y la mentalidad de acumular.",
+      intro:
+        "No todo lo que conviene soltar es un objeto. Esta lista es para lo más difícil y menos tangible: relaciones que solo toman, hábitos que mantienes por obligación y la idea de que guardarlo todo es más seguro que dejarlo ir.",
+      resetDescription:
+        "Aquí no hay cuota diaria. Vuelve a esta lista cuando tengas espacio mental para pensarla, no cuando vayas con prisa tachando tareas.",
+    },
   },
   "bathroom-laundry": {
     en: {
@@ -221,6 +277,14 @@ export const areaContent: AreaContentBySlug = {
         "バスルームの散らかりの多くは、期限を確認していない物です。前シーズンの日焼け止め、もらったけれど使っていない試供品、数か月前に乾いてしまった化粧品などです。",
       resetDescription:
         "まず使用期限のある物から始めましょう。期限切れの製品は節約にはならず、ただ棚を占領しているだけです。",
+    },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el baño y el lavadero: protector solar viejo, maquillaje reseco, muestras de cosmética y accesorios del pelo dados de sí.",
+      intro:
+        "El desorden del baño son sobre todo cosas con fecha de caducidad que nadie ha mirado: el protector solar de la temporada pasada, muestras que cogiste y nunca usaste y maquillaje que se secó hace meses.",
+      resetDescription:
+        "Empieza por todo lo que tenga fecha de caducidad. Los productos pasados no te están ahorrando dinero, solo ocupan balda.",
     },
   },
   "home-office": {
@@ -248,6 +312,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "引き出しより先にデスクの上を片付けましょう。実際に作業できるデスクは、開けることのない整った引き出しより価値があります。",
     },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el despacho: bolígrafos gastados, agendas de años pasados, exceso de papelería y papeles guardados por si acaso.",
+      intro:
+        "Un despacho en casa se llena de material que compraste una vez y ahora solo almacenas: rotuladores secos, agendas de un año que ya has dejado atrás y tarjetas de visita de gente a la que nunca vas a llamar.",
+      resetDescription:
+        "Despeja la mesa antes que los cajones. Una mesa donde puedas trabajar de verdad vale más que un cajón perfectamente ordenado que nunca abres.",
+    },
   },
   closets: {
     en: {
@@ -274,6 +346,14 @@ export const areaContent: AreaContentBySlug = {
       resetDescription:
         "迷う物より先に、簡単に手放せる物から片付けましょう。もう着ないと分かっている服は、もう一シーズン様子を見る必要はありません。",
     },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar el armario: ropa que ya no te vale, zapatos sin estrenar, prendas con la etiqueta puesta y cosas que guardas por culpa.",
+      intro:
+        "Los armarios esconden decisiones fáciles detrás de una barra llena: ropa que dejó de valerte hace un año, zapatos que hacen daño y etiquetas que nunca cortaste. Esta lista empieza por ahí, no por lo sentimental.",
+      resetDescription:
+        "Resuelve los noes fáciles antes que las dudas difíciles. La ropa que ya sabes que no te vas a volver a poner no necesita otra temporada para decidirse.",
+    },
   },
   "kids-items": {
     en: {
@@ -299,6 +379,14 @@ export const areaContent: AreaContentBySlug = {
         "子どものものが増えやすいのは、頼んでもいないプレゼントやパーティーの記念品として届く物が多いからです。このチェックリストは乾いてしまった画材、手放す前に撮影しておきたい作品、着なくなったコスチュームを対象にしています。",
       resetDescription:
         "手放すかどうか決める前に、残したい作品は写真に撮っておきましょう。写真は棚を占領せず、思い出はそのまま残ります。",
+    },
+    es: {
+      metaDescription:
+        "Lista gratuita para ordenar las cosas de los niños: material de manualidades reseco, dibujos sin fotografiar, disfraces gastados y detalles de cumpleaños olvidados.",
+      intro:
+        "Las cosas de los niños se acumulan rápido porque gran parte llega como regalo o como detalle de fiesta que nadie pidió. Esta lista cubre el material reseco, los dibujos que merece la pena fotografiar antes de soltarlos y los disfraces que ya no dan para más.",
+      resetDescription:
+        "Fotografía los dibujos que quieras conservar antes de decidir qué se va. Una foto no ocupa balda y mantiene el recuerdo intacto.",
     },
   },
 };

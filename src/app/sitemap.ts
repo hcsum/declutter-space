@@ -1,16 +1,21 @@
 import type { MetadataRoute } from "next";
-import { locales, defaultLocale } from "@/i18n/config";
+import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
+import { ES_ONLY_PATHS } from "@/lib/seo";
 
 const checklistAreaPaths = getChecklistCategorySlugs().map(
   (slug) => `/declutter-checklist/${slug}`,
 );
 
-const sitemapPaths = [
-  "",
-  "/declutter-checklist",
-  ...checklistAreaPaths,
+/** Paths that exist in every locale, Spanish included. */
+const allLocalePaths = ["", "/declutter-checklist", ...checklistAreaPaths];
+
+/**
+ * English-slug pages with no Spanish copy yet. They ship for en / zh / ja only,
+ * so the Spanish rollout doesn't publish machine-thin duplicates.
+ */
+const nonSpanishPaths = [
   "/decluttering-decision-guide",
   "/things-to-declutter",
   "/things-to-stop-buying",
@@ -28,27 +33,50 @@ const sitemapPaths = [
   "/how-to-declutter-your-closet",
 ];
 
+const nonSpanishLocales = locales.filter((locale) => locale !== "es");
+
 function localizedUrl(locale: string, path: string) {
   return `${siteUrl}/${locale}${path}`;
+}
+
+function priorityFor(path: string) {
+  if (path === "") return 1;
+  if (checklistAreaPaths.includes(path)) return 0.6;
+  return 0.8;
+}
+
+function entriesFor(
+  path: string,
+  pathLocales: readonly Locale[],
+  lastModified: Date,
+): MetadataRoute.Sitemap {
+  const languages: Record<string, string> = Object.fromEntries(
+    pathLocales.map((alt) => [alt, localizedUrl(alt, path)]),
+  );
+  const xDefault = pathLocales.includes(defaultLocale)
+    ? defaultLocale
+    : pathLocales[0];
+  languages["x-default"] = localizedUrl(xDefault, path);
+
+  return pathLocales.map((locale) => ({
+    url: localizedUrl(locale, path),
+    lastModified,
+    changeFrequency: "weekly" as const,
+    priority: priorityFor(path),
+    alternates: { languages },
+  }));
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const lastModified = new Date();
 
-  return sitemapPaths.flatMap((path) =>
-    locales.map((locale) => {
-      const languages: Record<string, string> = Object.fromEntries(
-        locales.map((alt) => [alt, localizedUrl(alt, path)]),
-      );
-      languages["x-default"] = localizedUrl(defaultLocale, path);
-
-      return {
-        url: localizedUrl(locale, path),
-        lastModified,
-        changeFrequency: "weekly" as const,
-        priority: path === "" ? 1 : checklistAreaPaths.includes(path) ? 0.6 : 0.8,
-        alternates: { languages },
-      };
-    }),
-  );
+  return [
+    ...allLocalePaths.flatMap((path) => entriesFor(path, locales, lastModified)),
+    ...nonSpanishPaths.flatMap((path) =>
+      entriesFor(path, nonSpanishLocales, lastModified),
+    ),
+    ...ES_ONLY_PATHS.flatMap((path) =>
+      entriesFor(path, ["es"], lastModified),
+    ),
+  ];
 }

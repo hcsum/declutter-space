@@ -26,20 +26,67 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ? `${category.category}断舍离清单 | DeclutterYourHome`
       : locale === "ja"
         ? `${category.category}片付けチェックリスト | DeclutterYourHome`
-        : `${category.category} Declutter Checklist | DeclutterYourHome`;
+        : locale === "es"
+          ? `Lista para ordenar: ${category.category} | DeclutterYourHome`
+          : `${category.category} Declutter Checklist | DeclutterYourHome`;
   const description =
     areaCopy?.metaDescription ??
     (locale === "zh"
       ? `用这份${category.category}断舍离清单逐项整理、勾选和保存进度，把这个区域慢慢恢复成更轻松好用的空间。`
       : locale === "ja"
         ? `${category.category}片付けチェックリストで一つずつ片付け、チェックを付けながら進捗を保存できます。`
-        : `Use this ${category.category.toLowerCase()} declutter checklist to work through one area at a time, check off tasks, and keep your progress saved.`);
+        : locale === "es"
+          ? `Usa esta lista para ordenar ${category.category.toLowerCase()} punto por punto, marca lo que vayas haciendo y guarda tu progreso.`
+          : `Use this ${category.category.toLowerCase()} declutter checklist to work through one area at a time, check off tasks, and keep your progress saved.`);
 
   return {
     title,
     description,
     alternates: buildLanguageAlternates(locale, `/declutter-checklist/${slug}`),
   };
+}
+
+/**
+ * Room guides that pair with a checklist area. Spanish uses its own
+ * keyword-led slugs, and only covers the areas that have a Spanish guide.
+ */
+const guideLinksByLocale: Record<
+  string,
+  Record<string, { href: string; label: string; suffix: string }>
+> = {
+  en: {
+    bedroom: { href: "/how-to-declutter-your-bedroom", label: "Read the full bedroom decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+    "living-room": { href: "/how-to-declutter-your-living-room", label: "Read the full living room decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+    kitchen: { href: "/how-to-declutter-your-kitchen", label: "Read the full kitchen decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+    "bathroom-laundry": { href: "/how-to-declutter-your-bathroom", label: "Read the full bathroom decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+    "home-office": { href: "/how-to-declutter-your-home-office", label: "Read the full home office decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+    closets: { href: "/how-to-declutter-your-closet", label: "Read the full closet decluttering guide", suffix: " if you want the full step-by-step strategy first." },
+  },
+  zh: {
+    bedroom: { href: "/how-to-declutter-your-bedroom", label: "先看卧室整理指南", suffix: "，再回来按清单执行。" },
+    "living-room": { href: "/how-to-declutter-your-living-room", label: "先看客厅整理指南", suffix: "，再回来按清单执行。" },
+    kitchen: { href: "/how-to-declutter-your-kitchen", label: "先看厨房整理指南", suffix: "，再回来按清单执行。" },
+    "bathroom-laundry": { href: "/how-to-declutter-your-bathroom", label: "先看浴室整理指南", suffix: "，再回来按清单执行。" },
+    "home-office": { href: "/how-to-declutter-your-home-office", label: "先看家庭办公室整理指南", suffix: "，再回来按清单执行。" },
+    closets: { href: "/how-to-declutter-your-closet", label: "先看衣柜整理指南", suffix: "，再回来按清单执行。" },
+  },
+  ja: {
+    bedroom: { href: "/how-to-declutter-your-bedroom", label: "寝室の片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+    "living-room": { href: "/how-to-declutter-your-living-room", label: "リビングの片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+    kitchen: { href: "/how-to-declutter-your-kitchen", label: "キッチンの片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+    "bathroom-laundry": { href: "/how-to-declutter-your-bathroom", label: "バスルームの片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+    "home-office": { href: "/how-to-declutter-your-home-office", label: "ホームオフィスの片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+    closets: { href: "/how-to-declutter-your-closet", label: "クローゼットの片付けガイドを先に読む", suffix: "、そのあとこのチェックリストに戻ってきてください。" },
+  },
+  es: {
+    bedroom: { href: "/como-ordenar-la-habitacion", label: "Lee antes la guía para ordenar la habitación", suffix: " si prefieres tener la estrategia completa antes de empezar." },
+    kitchen: { href: "/como-ordenar-la-cocina", label: "Lee antes la guía para ordenar la cocina", suffix: " si prefieres tener la estrategia completa antes de empezar." },
+    closets: { href: "/como-ordenar-armarios", label: "Lee antes la guía para ordenar armarios", suffix: " si prefieres tener la estrategia completa antes de empezar." },
+  },
+};
+
+function getGuideLink(slug: string, locale: string) {
+  return guideLinksByLocale[locale]?.[slug];
 }
 
 export default async function ChecklistAreaPage({ params }: Props) {
@@ -50,15 +97,18 @@ export default async function ChecklistAreaPage({ params }: Props) {
   if (!category) notFound();
 
   const areaCopy = getAreaContent(slug, locale);
-  const homeLabel = locale === "ja" ? "ホーム" : "Home";
-  const checklistLabel = locale === "zh" ? "断舍离清单" : locale === "ja" ? "断捨離チェックリスト" : "Declutter Checklist";
+  const homeLabel =
+    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
+  const checklistLabel =
+    locale === "zh"
+      ? "断舍离清单"
+      : locale === "ja"
+        ? "断捨離チェックリスト"
+        : locale === "es"
+          ? "Lista de orden y limpieza"
+          : "Declutter Checklist";
 
-  const isBedroom = slug === "bedroom";
-  const isLivingRoom = slug === "living-room";
-  const isKitchen = slug === "kitchen";
-  const isBathroom = slug === "bathroom-laundry";
-  const isHomeOffice = slug === "home-office";
-  const isClosets = slug === "closets";
+  const guideLink = getGuideLink(slug, locale);
 
   return (
     <main className="min-h-screen bg-[#f3f4ec] px-5 pb-20 pt-24 text-[#1a1c18] md:px-8">
@@ -77,7 +127,13 @@ export default async function ChecklistAreaPage({ params }: Props) {
               className="inline-flex items-center rounded-full bg-[#f3f4ec] px-3 py-2 text-sm font-semibold text-[#2b694d] transition-colors hover:bg-[#e7eadf]"
             >
               <span>
-                {locale === "zh" ? "总清单" : locale === "ja" ? "全チェックリスト" : "Full checklist"}
+                {locale === "zh"
+                  ? "总清单"
+                  : locale === "ja"
+                    ? "全チェックリスト"
+                    : locale === "es"
+                      ? "Lista completa"
+                      : "Full checklist"}
               </span>
             </Link>
           </div>
@@ -89,7 +145,9 @@ export default async function ChecklistAreaPage({ params }: Props) {
               ? `${category.category}断舍离清单`
               : locale === "ja"
                 ? `${category.category}片付けチェックリスト`
-                : `${category.category} Declutter Checklist`}
+                : locale === "es"
+                  ? `Lista para ordenar: ${category.category}`
+                  : `${category.category} Declutter Checklist`}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-[#414844] md:text-lg">
             {areaCopy?.intro ??
@@ -97,120 +155,19 @@ export default async function ChecklistAreaPage({ params }: Props) {
                 ? `从这个区域开始，逐项清理真正占空间、占注意力、却没有继续服务你生活的东西。勾选、补充和保存进度，慢慢把 ${category.category} 变得更轻松好用。`
                 : locale === "ja"
                   ? `この場所から始めて、場所や注意力を奪っているのにもう役に立っていない物を一つずつ片付けましょう。チェックを付けて、追加して、進捗を保存しながら${category.category}を少しずつ使いやすくしていきます。`
-                  : `Focus on one space, clear what no longer earns its place, and keep your progress moving. This dedicated ${category.category.toLowerCase()} checklist gives you a practical place to start.`)}
+                  : locale === "es"
+                    ? `Céntrate en una zona, saca lo que ya no se gana su sitio y ve guardando el progreso. Esta lista de ${category.category.toLowerCase()} te da un punto de partida concreto.`
+                    : `Focus on one space, clear what no longer earns its place, and keep your progress moving. This dedicated ${category.category.toLowerCase()} checklist gives you a practical place to start.`)}
           </p>
-          {isBedroom && (
+          {guideLink && (
             <p className="mt-4 text-sm leading-6 text-[#59615d]">
               <Link
-                href={`/${locale}/how-to-declutter-your-bedroom`}
+                href={`/${locale}${guideLink.href}`}
                 className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
               >
-                {locale === "zh"
-                  ? "先看卧室整理指南"
-                  : locale === "ja"
-                    ? "寝室の片付けガイドを先に読む"
-                    : "Read the full bedroom decluttering guide"}
+                {guideLink.label}
               </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
-            </p>
-          )}
-          {isLivingRoom && (
-            <p className="mt-4 text-sm leading-6 text-[#59615d]">
-              <Link
-                href={`/${locale}/how-to-declutter-your-living-room`}
-                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
-              >
-                {locale === "zh"
-                  ? "先看客厅整理指南"
-                  : locale === "ja"
-                    ? "リビングの片付けガイドを先に読む"
-                    : "Read the full living room decluttering guide"}
-              </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
-            </p>
-          )}
-          {isKitchen && (
-            <p className="mt-4 text-sm leading-6 text-[#59615d]">
-              <Link
-                href={`/${locale}/how-to-declutter-your-kitchen`}
-                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
-              >
-                {locale === "zh"
-                  ? "先看厨房整理指南"
-                  : locale === "ja"
-                    ? "キッチンの片付けガイドを先に読む"
-                    : "Read the full kitchen decluttering guide"}
-              </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
-            </p>
-          )}
-          {isBathroom && (
-            <p className="mt-4 text-sm leading-6 text-[#59615d]">
-              <Link
-                href={`/${locale}/how-to-declutter-your-bathroom`}
-                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
-              >
-                {locale === "zh"
-                  ? "先看浴室整理指南"
-                  : locale === "ja"
-                    ? "バスルームの片付けガイドを先に読む"
-                    : "Read the full bathroom decluttering guide"}
-              </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
-            </p>
-          )}
-          {isHomeOffice && (
-            <p className="mt-4 text-sm leading-6 text-[#59615d]">
-              <Link
-                href={`/${locale}/how-to-declutter-your-home-office`}
-                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
-              >
-                {locale === "zh"
-                  ? "先看家庭办公室整理指南"
-                  : locale === "ja"
-                    ? "ホームオフィスの片付けガイドを先に読む"
-                    : "Read the full home office decluttering guide"}
-              </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
-            </p>
-          )}
-          {isClosets && (
-            <p className="mt-4 text-sm leading-6 text-[#59615d]">
-              <Link
-                href={`/${locale}/how-to-declutter-your-closet`}
-                className="font-semibold text-[#2b694d] underline decoration-[#b7d1c4] underline-offset-4"
-              >
-                {locale === "zh"
-                  ? "先看衣柜整理指南"
-                  : locale === "ja"
-                    ? "クローゼットの片付けガイドを先に読む"
-                    : "Read the full closet decluttering guide"}
-              </Link>
-              {locale === "zh"
-                ? "，再回来按清单执行。"
-                : locale === "ja"
-                  ? "、そのあとこのチェックリストに戻ってきてください。"
-                  : " if you want the full step-by-step strategy first."}
+              {guideLink.suffix}
             </p>
           )}
         </section>
@@ -222,7 +179,9 @@ export default async function ChecklistAreaPage({ params }: Props) {
               ? `开始整理${category.category}`
               : locale === "ja"
                 ? `${category.category}のリセットを始める`
-                : `Start Your ${category.category} Reset`
+                : locale === "es"
+                  ? `Empieza a ordenar: ${category.category}`
+                  : `Start Your ${category.category} Reset`
           }
           description={
             areaCopy?.resetDescription ??
@@ -230,7 +189,9 @@ export default async function ChecklistAreaPage({ params }: Props) {
               ? "先完成 1 到 3 项也很好。关键不是一次做完，而是让这个区域今天比昨天更轻一点。"
               : locale === "ja"
                 ? "まず 1〜3 個片付けるだけでも十分です。大切なのは一度で完璧に終わらせることではなく、この場所を昨日より少し軽くすることです。"
-                : "Even clearing one to three items counts. The goal is not a perfect reset in one sitting, but a space that feels lighter than it did yesterday.")
+                : locale === "es"
+                  ? "Aunque solo saques una o tres cosas, cuenta. El objetivo no es dejarlo perfecto de una sentada, sino que la zona pese un poco menos que ayer."
+                  : "Even clearing one to three items counts. The goal is not a perfect reset in one sitting, but a space that feels lighter than it did yesterday.")
           }
           nextPath={`/${locale}/declutter-checklist/${slug}`}
         />

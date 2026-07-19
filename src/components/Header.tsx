@@ -69,12 +69,21 @@ const Header: React.FC = () => {
   const isChecklist = pathname.includes("/declutter-checklist");
   const isSecondLook = pathname.includes("/decluttering-decision-guide");
 
-  const homeLabel = locale === "ja" ? "ホーム" : "Home";
-  const languageLabel = locale === "ja" ? "言語" : locale === "zh" ? "语言" : "Language";
+  const homeLabel =
+    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
+  const languageLabel =
+    locale === "ja"
+      ? "言語"
+      : locale === "zh"
+        ? "语言"
+        : locale === "es"
+          ? "Idioma"
+          : "Language";
 
   function getLocaleLabel(targetLocale: Locale, compact = false) {
     if (targetLocale === "en") return compact ? "EN" : "English";
     if (targetLocale === "zh") return compact ? "中文" : "中文";
+    if (targetLocale === "es") return compact ? "ES" : "Español";
     return compact ? "日本語" : "日本語";
   }
 

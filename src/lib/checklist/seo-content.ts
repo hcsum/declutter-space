@@ -248,6 +248,80 @@ export const checklistSeoContent = {
       },
     ],
   },
+  es: {
+    guideLabel: "Cómo usar esta lista",
+    guideTitle:
+      "Una lista de orden y limpieza funciona mejor si vas habitación por habitación",
+    guideIntro:
+      "Esta página no es solo un listado enorme de cosas que tirar. Es una lista práctica para ordenar la casa avanzando de una zona en una zona, dejar registrado lo que has hecho hoy y volver mañana sin perder el ritmo. Puedes descargarla en PDF para imprimirla y marcarla a mano.",
+    guidePoints: [
+      {
+        title: "Empieza por una habitación, no por toda la casa",
+        body: "Elige una zona: el dormitorio, la cocina, el baño, el salón, los armarios o el despacho. Un objetivo más pequeño hace que termines la sesión, y eso es lo que sostiene el hábito.",
+      },
+      {
+        title: "Usa la lista primero para las decisiones fáciles",
+        body: "Empieza por lo evidente: productos caducados, cosas repetidas, objetos rotos y lo que llevas mucho tiempo sin usar. Estas decisiones rápidas despejan la vista y hacen que las difíciles cuesten menos después.",
+      },
+      {
+        title: "Guarda el progreso y crea una rutina repetible",
+        body: "Las marcas de cada día van creando una rutina de orden ligera. Aunque solo saques una o tres cosas por sesión, es suficiente si vuelves con constancia.",
+      },
+    ],
+    roomTitle: "Guías para ordenar la casa por zonas",
+    roomIntro:
+      "Si quieres algo más que una lista, estas guías explican por dónde empezar en cada espacio y cómo decidir más rápido.",
+    roomLinks: [
+      {
+        href: "/rutina-de-limpieza-del-hogar",
+        label: "Rutina de limpieza del hogar",
+        desc: "Un plan diario, semanal y mensual para mantener la casa sin dedicarle el sábado entero.",
+      },
+      {
+        href: "/como-ordenar-armarios",
+        label: "Cómo ordenar armarios",
+        desc: "Saca lo que no te vale, lo repetido y lo que guardas por culpa, y deja el armario fácil de usar cada mañana.",
+      },
+      {
+        href: "/como-ordenar-la-cocina",
+        label: "Cómo ordenar la cocina",
+        desc: "Cajones, armarios y despensa: quita duplicados, caducados y aparatos que no usas.",
+      },
+      {
+        href: "/como-ordenar-la-habitacion",
+        label: "Cómo ordenar la habitación",
+        desc: "Despeja el suelo, la mesilla y lo que se acumula debajo de la cama, en sesiones cortas.",
+      },
+    ],
+    faqTitle: "Preguntas frecuentes sobre la lista de orden y limpieza",
+    faqs: [
+      {
+        question: "¿Por dónde empiezo a ordenar la casa?",
+        answer:
+          "Empieza por la habitación que más te estorba en el día a día y, dentro de ella, por lo visible: lo caducado, lo repetido y lo que claramente no quieres. Coger ritmo importa más que encontrar el punto de partida perfecto.",
+      },
+      {
+        question: "¿Cuántas cosas debería sacar en una sesión?",
+        answer:
+          "No hay número mágico. Una pasada centrada por un cajón, una balda o una categoría es suficiente si puedes terminarla y volver mañana.",
+      },
+      {
+        question: "¿La lista es gratis?",
+        answer:
+          "Sí. La lista de orden y limpieza es gratuita y está pensada para que sigas tu progreso zona por zona sin montar un sistema de organización complicado.",
+      },
+      {
+        question: "¿Cada cuánto conviene repasar la casa?",
+        answer:
+          "Con una rutina corta diaria (10-15 minutos), una pasada semanal por las zonas comunes y una revisión mensual de armarios y despensa es suficiente para que no se vuelva a acumular.",
+      },
+      {
+        question: "¿Puedo descargar esta lista en PDF para imprimir?",
+        answer:
+          "Sí. Abre la lista de cualquier zona y pulsa «Descargar PDF»: se genera desde el diálogo de impresión del navegador un PDF limpio con casillas, listo para imprimir y marcar a mano, y con tu progreso actual ya marcado.",
+      },
+    ],
+  },
 } as const;
 
 export type ChecklistSeoLocale = keyof typeof checklistSeoContent;

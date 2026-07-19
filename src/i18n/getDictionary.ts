@@ -1,9 +1,10 @@
 import type { Locale } from "./config";
 import en from "./en.json";
+import es from "./es.json";
 import ja from "./ja.json";
 import zh from "./zh.json";
 
-const dictionaries: Record<Locale, unknown> = { en, zh, ja };
+const dictionaries: Record<Locale, unknown> = { en, zh, ja, es };
 
 export type Dictionary = typeof en;
 

@@ -3,9 +3,45 @@ import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 
 /**
+ * Shared paths (English slugs) that also have real Spanish copy.
+ *
+ * The Spanish rollout is keyword-led rather than a full translation of the
+ * English site, so most English-slug guides have no `es` version. Only the
+ * paths listed here — plus `/declutter-checklist/*` area pages, which are
+ * driven by translated data — may advertise an `es` hreflang.
+ */
+const ES_READY_SHARED_PATHS = new Set(["", "/declutter-checklist"]);
+
+/**
+ * Spanish-only pages built around Spanish keywords. They exist at `/es/...`
+ * and nowhere else, so they self-canonicalize with no hreflang siblings.
+ */
+export const ES_ONLY_PATHS = [
+  "/rutina-de-limpieza-del-hogar",
+  "/como-ordenar-armarios",
+  "/como-ordenar-la-cocina",
+  "/como-ordenar-la-habitacion",
+] as const;
+
+const esOnlyPathSet: ReadonlySet<string> = new Set(ES_ONLY_PATHS);
+
+export function isEsOnlyPath(path: string) {
+  return esOnlyPathSet.has(path);
+}
+
+function localesForPath(path: string): readonly Locale[] {
+  if (isEsOnlyPath(path)) return ["es"];
+
+  const esReady =
+    ES_READY_SHARED_PATHS.has(path) || path.startsWith("/declutter-checklist/");
+
+  return esReady ? locales : locales.filter((locale) => locale !== "es");
+}
+
+/**
  * Build canonical + hreflang alternates for a localized page.
  * - canonical: `/{locale}{path}`
- * - languages: each locale + `x-default` pointing to defaultLocale
+ * - languages: each locale that actually has this page, + `x-default`
  *
  * `path` should start with `/` and NOT include the locale prefix
  * (e.g. "/declutter-checklist", or "" for the locale root).
@@ -15,10 +51,16 @@ export function buildLanguageAlternates(
   path: string = "",
 ): NonNullable<Metadata["alternates"]> {
   const normalizedPath = path === "/" ? "" : path;
+  const available = localesForPath(normalizedPath);
+
   const languages: Record<string, string> = Object.fromEntries(
-    locales.map((alt) => [alt, `/${alt}${normalizedPath}`]),
+    available.map((alt) => [alt, `/${alt}${normalizedPath}`]),
   );
-  languages["x-default"] = `/${defaultLocale}${normalizedPath}`;
+
+  const xDefault = available.includes(defaultLocale)
+    ? defaultLocale
+    : available[0];
+  languages["x-default"] = `/${xDefault}${normalizedPath}`;
 
   return {
     canonical: `/${locale}${normalizedPath}`,

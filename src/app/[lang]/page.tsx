@@ -33,6 +33,255 @@ const LandingPage = async ({ params }: Props) => {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
 
+  if (locale === "es") {
+    return (
+      <main className="overflow-x-hidden bg-[#f7f3ec] pt-16 text-[#1f2a21]">
+        <section className="mx-auto flex max-w-7xl flex-col gap-12 px-8 py-20 md:flex-row md:items-center">
+          <div className="md:w-1/2">
+            <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8c5a2b]">
+              Orden y limpieza en casa
+            </p>
+            <h1 className="mt-4 text-5xl font-bold leading-tight tracking-[-0.05em] text-[#173223] md:text-6xl">
+              Ordenar la casa por pasos,
+              <br />
+              no por fuerza de voluntad
+            </h1>
+            <p className="mt-6 max-w-2xl text-lg leading-8 text-[#46534b]">
+              Aquí no hay un método milagroso. Hay{" "}
+              <span className="font-semibold text-[#173223]">
+                rutinas de limpieza
+              </span>{" "}
+              que caben en un día normal, guías para{" "}
+              <span className="font-semibold text-[#173223]">
+                ordenar armarios
+              </span>
+              ,{" "}
+              <span className="font-semibold text-[#173223]">la cocina</span> y{" "}
+              <span className="font-semibold text-[#173223]">la habitación</span>
+              , y una lista gratuita que puedes marcar cada día o descargar en
+              PDF para imprimir.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3 text-sm font-semibold">
+              <Link
+                href={`/${locale}/declutter-checklist`}
+                className="rounded-full bg-[#173223] px-6 py-3 text-white"
+              >
+                Ver la lista de orden y limpieza
+              </Link>
+              <Link
+                href={`/${locale}/rutina-de-limpieza-del-hogar`}
+                className="rounded-full border border-[#173223] px-6 py-3 text-[#173223]"
+              >
+                Crear mi rutina de limpieza
+              </Link>
+            </div>
+          </div>
+          <div className="md:w-1/2 relative">
+            <div className="absolute -inset-4 rounded-full bg-[#d9b88f]/20 blur-3xl" />
+            <Image
+              width={600}
+              height={500}
+              alt="Salón ordenado y luminoso"
+              className="relative h-[500px] w-full rounded-[1.5rem] object-cover"
+              src="/hero.webp"
+              priority
+            />
+          </div>
+        </section>
+
+        <section className="bg-white py-16">
+          <div className="mx-auto max-w-7xl px-8">
+            <div className="mb-10">
+              <h2 className="text-4xl font-bold tracking-[-0.05em] text-[#173223]">
+                Por dónde empezar según lo que te esté pasando
+              </h2>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                [
+                  "La casa se desordena en dos días",
+                  "No te falta limpiar más, te falta repartirlo. Una rutina diaria de 15 minutos más una pasada semanal por zonas.",
+                ],
+                [
+                  "El armario está lleno y no tienes qué ponerte",
+                  "El problema casi nunca es el espacio: es la cantidad de ropa compitiendo por el mismo sitio. Primero se saca, después se organiza.",
+                ],
+                [
+                  "La cocina acumula de todo",
+                  "Caducados, duplicados y aparatos parados. Se ordena cajón a cajón, no comprando organizadores.",
+                ],
+                [
+                  "La habitación es la última que ordenas",
+                  "Se ordena por superficies y en sesiones cortas: suelo, cama, mesilla. Y se mantiene con cinco minutos cada noche.",
+                ],
+              ].map(([title, body]) => (
+                <div
+                  key={title}
+                  className="rounded-[1.75rem] bg-[#f7f3ec] p-6 shadow-sm ring-1 ring-black/5"
+                >
+                  <h3 className="text-xl font-bold tracking-[-0.04em] text-[#173223]">
+                    {title}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-[#546259] md:text-base">
+                    {body}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="mx-auto max-w-7xl px-8">
+            <div className="mb-10">
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#8c5a2b]">
+                Guías por zonas
+              </p>
+              <h2 className="mt-3 text-4xl font-bold tracking-[-0.05em] text-[#173223]">
+                Ordenar la casa entera cansa; ordenar una zona se termina
+              </h2>
+              <p className="mt-4 max-w-3xl text-base leading-8 text-[#546259]">
+                Cada guía va al grano: qué sacar primero, en qué orden hacerlo,
+                los errores que hacen perder la tarde y cómo conseguir que la
+                zona se mantenga sin volver a empezar en dos semanas.
+              </p>
+            </div>
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[
+                [
+                  "Rutina de limpieza del hogar",
+                  "Plan diario, semanal y mensual que cabe en una semana real, con PDF para imprimir.",
+                  "/rutina-de-limpieza-del-hogar",
+                ],
+                [
+                  "Cómo ordenar armarios",
+                  "Los 7 pasos para vaciar, filtrar por categorías y decidir qué hacer con lo que dudas.",
+                  "/como-ordenar-armarios",
+                ],
+                [
+                  "Cómo ordenar la cocina",
+                  "Armarios, cajones y despensa: quitar duplicados, caducados y aparatos parados.",
+                  "/como-ordenar-la-cocina",
+                ],
+                [
+                  "Cómo ordenar la habitación",
+                  "Por superficies y en sesiones cortas, incluida la silla de la ropa.",
+                  "/como-ordenar-la-habitacion",
+                ],
+                [
+                  "Lista de orden y limpieza",
+                  "La lista completa por zonas: marca tu progreso o descárgala en PDF.",
+                  "/declutter-checklist",
+                ],
+                [
+                  "Lista del armario",
+                  "Punto por punto lo que conviene revisar dentro del armario.",
+                  "/declutter-checklist/closets",
+                ],
+              ].map(([label, desc, href]) => (
+                <Link
+                  key={href}
+                  href={`/${locale}${href}`}
+                  className="rounded-[1.75rem] bg-white p-6 shadow-sm ring-1 ring-black/5 transition-colors hover:bg-[#fbf8f2]"
+                >
+                  <h3 className="text-xl font-bold tracking-[-0.04em] text-[#173223]">
+                    {label}
+                  </h3>
+                  <p className="mt-3 text-sm leading-7 text-[#546259]">{desc}</p>
+                  <span className="mt-4 inline-block text-sm font-semibold text-[#8c5a2b]">
+                    Leer la guía →
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="bg-[#173223] py-16 text-white">
+          <div className="mx-auto grid max-w-7xl gap-8 px-8 lg:grid-cols-[1.05fr_0.95fr]">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-[0.24em] text-[#d8c19d]">
+                Cómo funciona
+              </p>
+              <h2 className="mt-3 text-4xl font-bold tracking-[-0.05em]">
+                Una lista que se marca, se guarda y se imprime
+              </h2>
+              <p className="mt-4 max-w-3xl text-base leading-8 text-white/80">
+                La lista está organizada por zonas y se reinicia cada día, pero
+                tu progreso se acumula. Puedes marcarla desde el móvil mientras
+                ordenas, o descargarla en PDF con casillas para marcarla a mano.
+              </p>
+            </div>
+            <div className="grid gap-4">
+              {[
+                [
+                  "Gratis y sin registro para empezar",
+                  "Puedes usar la lista completa sin crear ninguna cuenta.",
+                ],
+                [
+                  "PDF para imprimir",
+                  "Cada zona se descarga como lista con casillas, con lo que ya llevas hecho marcado.",
+                ],
+                [
+                  "Tu progreso, día a día",
+                  "Ves en qué zonas avanzas más y cuántos días seguidos llevas.",
+                ],
+              ].map(([title, body]) => (
+                <div
+                  key={title}
+                  className="rounded-[1.5rem] border border-white/15 bg-white/10 px-5 py-5"
+                >
+                  <h3 className="text-lg font-bold">{title}</h3>
+                  <p className="mt-2 text-sm leading-7 text-white/80">{body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16">
+          <div className="mx-auto max-w-5xl rounded-[2rem] bg-white px-8 py-12 shadow-sm ring-1 ring-black/5">
+            <h2 className="text-4xl font-bold tracking-[-0.05em] text-[#173223]">
+              Empieza por uno de estos dos sitios
+            </h2>
+            <div className="mt-8 grid gap-6 md:grid-cols-2">
+              <div className="rounded-[1.5rem] bg-[#f7f3ec] p-6">
+                <h3 className="text-2xl font-bold text-[#173223]">
+                  Lista de orden y limpieza
+                </h3>
+                <p className="mt-3 text-base leading-7 text-[#546259]">
+                  Si lo que quieres es ponerte hoy mismo: elige una zona, marca
+                  lo que vayas haciendo y descarga el PDF si prefieres el papel.
+                </p>
+                <Link
+                  href={`/${locale}/declutter-checklist`}
+                  className="mt-5 inline-block text-sm font-semibold text-[#8c5a2b]"
+                >
+                  Ir a la lista →
+                </Link>
+              </div>
+              <div className="rounded-[1.5rem] bg-[#f7f3ec] p-6">
+                <h3 className="text-2xl font-bold text-[#173223]">
+                  Rutina de limpieza del hogar
+                </h3>
+                <p className="mt-3 text-base leading-7 text-[#546259]">
+                  Si el problema es que todo se acumula para el mismo día: monta
+                  un plan diario, semanal y mensual que aguante una semana normal.
+                </p>
+                <Link
+                  href={`/${locale}/rutina-de-limpieza-del-hogar`}
+                  className="mt-5 inline-block text-sm font-semibold text-[#8c5a2b]"
+                >
+                  Crear la rutina →
+                </Link>
+              </div>
+            </div>
+          </div>
+        </section>
+      </main>
+    );
+  }
+
   if (locale === "ja") {
     return (
       <main className="overflow-x-hidden bg-[#f7f3ec] pt-16 text-[#1f2a21]">

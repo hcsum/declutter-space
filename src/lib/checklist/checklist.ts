@@ -1,6 +1,7 @@
 import data from "@/const/declutter-checklist.json";
 import zhData from "@/const/declutter-checklist.zh.json";
 import jaData from "@/const/declutter-checklist.ja.json";
+import esData from "@/const/declutter-checklist.es.json";
 import { defaultLocale, type Locale } from "@/i18n/config";
 
 export type DeclutterCategory = { category: string; items: string[] };
@@ -29,6 +30,7 @@ const localizedChecklists: Record<Locale, DeclutterCategory[]> = {
   en: checklist,
   ja: jaData as DeclutterCategory[],
   zh: zhData as DeclutterCategory[],
+  es: esData as DeclutterCategory[],
 };
 
 export const CUSTOM_ITEMS_STORAGE_KEY = "declutter-checklist-custom-items";
