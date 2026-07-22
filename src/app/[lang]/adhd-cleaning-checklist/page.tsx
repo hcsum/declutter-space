@@ -211,6 +211,8 @@ function getCopy(locale: string): Copy {
       relatedTitle: "関連記事",
       relatedIntro: "部屋別の詳しいガイドも合わせるならこちら:",
       relatedLinks: [
+        { href: "/katazukerarenai", label: "部屋が片付けられない人へ——原因と6ステップ" },
+        { href: "/danshari-yarikata", label: "断捨離のやり方——何から捨てるか" },
         { href: "/declutter-checklist", label: "片付けチェックリスト（進捗保存つき）" },
         { href: "/things-to-declutter", label: "家から手放せるもの60選" },
         { href: "/things-to-stop-buying", label: "散らからない家のために買うのをやめたい10の物" },

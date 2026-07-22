@@ -29,8 +29,25 @@ export function isEsOnlyPath(path: string) {
   return esOnlyPathSet.has(path);
 }
 
+/**
+ * Japanese-only pages built around Japanese keywords. Same rationale as the
+ * Spanish rollout: keyword-led native pages that exist at `/ja/...` and nowhere
+ * else, so they self-canonicalize with no hreflang siblings.
+ */
+export const JA_ONLY_PATHS = [
+  "/katazukerarenai",
+  "/danshari-yarikata",
+] as const;
+
+const jaOnlyPathSet: ReadonlySet<string> = new Set(JA_ONLY_PATHS);
+
+export function isJaOnlyPath(path: string) {
+  return jaOnlyPathSet.has(path);
+}
+
 function localesForPath(path: string): readonly Locale[] {
   if (isEsOnlyPath(path)) return ["es"];
+  if (isJaOnlyPath(path)) return ["ja"];
 
   const esReady =
     ES_READY_SHARED_PATHS.has(path) || path.startsWith("/declutter-checklist/");
