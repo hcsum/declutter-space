@@ -17,6 +17,8 @@ const allLocalePaths = ["", "/declutter-checklist", ...checklistAreaPaths];
  */
 const nonSpanishPaths = [
   "/decluttering-decision-guide",
+  "/should-i-buy-it",
+  "/cost-per-wear-calculator",
   "/things-to-declutter",
   "/things-to-stop-buying",
   "/how-to-declutter-sentimental-items",

@@ -129,6 +129,7 @@ function getCopy(locale: string): Copy {
       relatedTitle: "関連ガイド",
       relatedIntro: "すでに家にある物を片付けたいなら、こちらから部屋別に進められます。",
       relatedLinks: [
+        { href: "/should-i-buy-it", label: "これ、買うべき？ 購入判断スコア" },
         { href: "/things-to-declutter", label: "家の断捨離で手放せるもの60選" },
         { href: "/how-to-declutter-your-kitchen", label: "キッチンの断捨離方法" },
         { href: "/how-to-declutter-your-closet", label: "クローゼットの断捨離方法" },
@@ -232,6 +233,7 @@ function getCopy(locale: string): Copy {
       relatedTitle: "相关阅读",
       relatedIntro: "想看具体房间怎么整理，可以从这些指南开始：",
       relatedLinks: [
+        { href: "/should-i-buy-it", label: "该不该买？购买决策打分器" },
         { href: "/things-to-declutter", label: "60 件可以从家里清掉的东西" },
         { href: "/how-to-declutter-your-kitchen", label: "如何整理厨房" },
         { href: "/how-to-declutter-your-closet", label: "如何整理衣柜" },
@@ -334,6 +336,7 @@ function getCopy(locale: string): Copy {
     relatedTitle: "Related guides",
     relatedIntro: "Want to focus on what is already in the house? These guides take you room by room:",
     relatedLinks: [
+      { href: "/should-i-buy-it", label: "Should I buy it? Purchase decision scorer" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },
       { href: "/how-to-declutter-your-kitchen", label: "How to declutter your kitchen" },
       { href: "/how-to-declutter-your-closet", label: "How to declutter your closet" },

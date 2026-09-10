@@ -2,6 +2,9 @@
   "header": {
     "declutterChecklist": "Lista de orden y limpieza",
     "secondLook": "Guía de decisión",
+    "tools": "Herramientas",
+    "shouldIBuy": "¿Debería comprarlo?",
+    "costPerWear": "Coste por uso",
     "login": "Iniciar sesión",
     "openMenu": "Abrir menú",
     "toggleTheme": "Cambiar tema",

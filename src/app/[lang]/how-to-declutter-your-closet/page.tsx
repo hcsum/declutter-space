@@ -105,6 +105,7 @@ function getCopy(locale: string): GuideCopy {
       relatedTitle: "相关阅读",
       relatedIntro: "如果你接下来要处理的是不同层级的问题：",
       relatedLinks: [
+        { href: "/cost-per-wear-calculator", label: "Cost per wear 计算器" },
         { href: "/how-to-declutter-sentimental-items", label: "如何整理情感物品" },
         { href: "/things-to-stop-buying", label: "10 件该停止买的东西" },
         { href: "/decluttering-decision-guide", label: "犹豫物品决策指南" },
@@ -180,6 +181,7 @@ function getCopy(locale: string): GuideCopy {
       relatedTitle: "関連ガイド",
       relatedIntro: "部屋の外まで整えたいなら：",
       relatedLinks: [
+        { href: "/cost-per-wear-calculator", label: "コストパーウェア計算機" },
         { href: "/how-to-declutter-sentimental-items", label: "思い出の品を片付ける方法" },
         { href: "/things-to-stop-buying", label: "clutter-free な家のために買うのをやめたい 10 のもの" },
         { href: "/things-to-declutter", label: "家から手放せる 60 のもの" },
@@ -254,6 +256,7 @@ function getCopy(locale: string): GuideCopy {
     relatedTitle: "Related guides",
     relatedIntro: "Pair this room reset with broader habit changes:",
     relatedLinks: [
+      { href: "/cost-per-wear-calculator", label: "Cost per wear calculator" },
       { href: "/how-to-declutter-sentimental-items", label: "How to declutter sentimental items" },
       { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
       { href: "/things-to-declutter", label: "60 things to declutter from your home" },

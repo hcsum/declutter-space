@@ -540,6 +540,50 @@ const LandingPage = async ({ params }: Props) => {
                 </Link>
               </div>
             </div>
+            {/* Should I Buy It */}
+            <div className="bg-surface dark:bg-gray-700 rounded-2xl p-8 shadow-soft-depth border border-outline-variant dark:border-gray-600 flex flex-col items-start gap-6 group hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 bg-primary-container/30 dark:bg-primary/20 rounded-2xl flex items-center justify-center text-primary dark:text-orange-400">
+                <span className="material-symbols-outlined text-4xl">
+                  balance
+                </span>
+              </div>
+              <div>
+                <h3 className="text-headline-md mb-2 text-on-surface dark:text-white">
+                  {dict.home.featureShouldIBuyTitle}
+                </h3>
+                <p className="text-on-surface-variant dark:text-gray-400 text-body-md mb-6">
+                  {dict.home.featureShouldIBuyDesc}
+                </p>
+                <Link
+                  href={`/${locale}/should-i-buy-it`}
+                  className="px-8 py-3 bg-primary text-on-primary rounded-full text-label-sm uppercase tracking-widest transition-all duration-300 hover:px-10"
+                >
+                  {dict.home.featureShouldIBuyCta}
+                </Link>
+              </div>
+            </div>
+            {/* Cost Per Wear */}
+            <div className="bg-surface dark:bg-gray-700 rounded-2xl p-8 shadow-soft-depth border border-outline-variant dark:border-gray-600 flex flex-col items-start gap-6 group hover:border-secondary/30 transition-all duration-300">
+              <div className="w-16 h-16 bg-secondary-container/30 dark:bg-secondary/20 rounded-2xl flex items-center justify-center text-secondary dark:text-blue-400">
+                <span className="material-symbols-outlined text-4xl">
+                  calculate
+                </span>
+              </div>
+              <div>
+                <h3 className="text-headline-md mb-2 text-on-surface dark:text-white">
+                  {dict.home.featureCostPerWearTitle}
+                </h3>
+                <p className="text-on-surface-variant dark:text-gray-400 text-body-md mb-6">
+                  {dict.home.featureCostPerWearDesc}
+                </p>
+                <Link
+                  href={`/${locale}/cost-per-wear-calculator`}
+                  className="px-8 py-3 bg-secondary/5 border border-secondary text-secondary dark:text-blue-400 dark:border-blue-400 rounded-full text-label-sm uppercase tracking-widest transition-all duration-300 hover:px-10"
+                >
+                  {dict.home.featureCostPerWearCta}
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>

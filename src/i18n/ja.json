@@ -2,6 +2,9 @@
   "header": {
     "declutterChecklist": "片付けチェックリスト",
     "secondLook": "捨てる判断ガイド",
+    "tools": "ツール",
+    "shouldIBuy": "買うべき？",
+    "costPerWear": "1回あたりコスト",
     "login": "ログイン",
     "openMenu": "メニューを開く",
     "toggleTheme": "テーマを切り替える",

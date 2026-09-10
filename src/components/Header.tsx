@@ -13,6 +13,7 @@ import {
   Bars3Icon,
   XMarkIcon,
   LanguageIcon,
+  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useLoginDialog } from "./LoginDialogProvider";
@@ -68,6 +69,9 @@ const Header: React.FC = () => {
     pathname === `/${locale}/`;
   const isChecklist = pathname.includes("/declutter-checklist");
   const isSecondLook = pathname.includes("/decluttering-decision-guide");
+  const isShouldIBuy = pathname.includes("/should-i-buy-it");
+  const isCostPerWear = pathname.includes("/cost-per-wear-calculator");
+  const isTools = isShouldIBuy || isCostPerWear;
 
   const homeLabel =
     locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
@@ -96,7 +100,7 @@ const Header: React.FC = () => {
             <span className="truncate">Declutter Your Home</span>
           </p>
         </Link>
-        <nav className="hidden md:flex items-center gap-8 font-body-md text-sm tracking-wide">
+        <nav className="hidden md:flex items-center gap-5 lg:gap-8 font-body-md text-sm tracking-wide">
           <Link
             href={localePath("/")}
             className={
@@ -127,6 +131,46 @@ const Header: React.FC = () => {
           >
             {t("header.secondLook")}
           </Link>
+          <div className="relative group">
+            <button
+              type="button"
+              className={`flex items-center gap-1 ${
+                isTools
+                  ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                  : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+              }`}
+              aria-haspopup="true"
+            >
+              {t("header.tools")}
+              <ChevronDownIcon className="h-4 w-4" />
+            </button>
+            <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all z-50">
+              <div className="min-w-[220px] rounded-lg border border-stone-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700">
+                <Link
+                  href={localePath("/should-i-buy-it")}
+                  className={`block px-4 py-2.5 text-sm hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors ${
+                    isShouldIBuy
+                      ? "text-orange-700 dark:text-orange-400 font-semibold"
+                      : "text-stone-600 dark:text-stone-300"
+                  }`}
+                  aria-current={isShouldIBuy ? "page" : undefined}
+                >
+                  {t("header.shouldIBuy")}
+                </Link>
+                <Link
+                  href={localePath("/cost-per-wear-calculator")}
+                  className={`block px-4 py-2.5 text-sm hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors ${
+                    isCostPerWear
+                      ? "text-orange-700 dark:text-orange-400 font-semibold"
+                      : "text-stone-600 dark:text-stone-300"
+                  }`}
+                  aria-current={isCostPerWear ? "page" : undefined}
+                >
+                  {t("header.costPerWear")}
+                </Link>
+              </div>
+            </div>
+          </div>
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
           <button
@@ -248,6 +292,28 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("header.secondLook")}
+              </Link>
+              <Link
+                href={localePath("/should-i-buy-it")}
+                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                  isShouldIBuy
+                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t("header.shouldIBuy")}
+              </Link>
+              <Link
+                href={localePath("/cost-per-wear-calculator")}
+                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                  isCostPerWear
+                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t("header.costPerWear")}
               </Link>
             </nav>
 
