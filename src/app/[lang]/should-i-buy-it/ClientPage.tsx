@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 import type { BuyCopy, ChoiceOption } from "./copy";
 
 const STORAGE_KEY = "should-i-buy-it-state";
@@ -77,6 +78,8 @@ export default function ClientPage({
 }) {
   const [state, setState] = useState<State>(EMPTY_STATE);
   const [hydrated, setHydrated] = useState(false);
+  const hasUserInteractedRef = useRef(false);
+  const lastTrackedResultRef = useRef("");
 
   useEffect(() => {
     try {
@@ -107,6 +110,7 @@ export default function ClientPage({
   );
 
   function set<K extends keyof State>(key: K, value: State[K]) {
+    hasUserInteractedRef.current = true;
     setState((previous) => ({ ...previous, [key]: value }));
   }
 
@@ -128,7 +132,8 @@ export default function ClientPage({
     nominalWage && realWage && realWage < nominalWage
       ? Math.round(((nominalWage - realWage) / nominalWage) * 100)
       : null;
-  const lifeHours = realWage && realWage > 0 && price > 0 ? price / realWage : null;
+  const lifeHours =
+    realWage && realWage > 0 && price > 0 ? price / realWage : null;
 
   const rows = useMemo(() => {
     const collected: { label: string; points: number; max: number }[] = [];
@@ -161,7 +166,15 @@ export default function ClientPage({
     }
 
     return collected;
-  }, [copy, costPerUse, lifeHours, state.duplicate, state.money, state.storage, state.waited]);
+  }, [
+    copy,
+    costPerUse,
+    lifeHours,
+    state.duplicate,
+    state.money,
+    state.storage,
+    state.waited,
+  ]);
 
   const earned = rows.reduce((sum, row) => sum + row.points, 0);
   const available = rows.reduce((sum, row) => sum + row.max, 0);
@@ -181,6 +194,63 @@ export default function ClientPage({
         : score >= 35
           ? "text-[#9a5a2b]"
           : "text-[#ba1a1a]";
+
+  useEffect(() => {
+    if (!hydrated || !hasUserInteractedRef.current || !hasBasics) return;
+
+    const answers = [
+      state.duplicate,
+      state.money,
+      state.waited,
+      state.storage,
+    ].filter(Boolean).length;
+    const scoreBand =
+      score >= 75
+        ? "high"
+        : score >= 55
+          ? "medium"
+          : score >= 35
+            ? "low"
+            : "very_low";
+    const fingerprint = [
+      price,
+      uses,
+      score,
+      answers,
+      realWage,
+      debtCapped,
+    ].join("|");
+    const timeout = window.setTimeout(() => {
+      if (lastTrackedResultRef.current === fingerprint) return;
+      lastTrackedResultRef.current = fingerprint;
+      trackEvent("should_i_buy_it_scored", {
+        score_band: scoreBand,
+        answered_questions: answers,
+        has_real_wage: realWage !== null,
+        debt_capped: debtCapped,
+      });
+    }, 800);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    debtCapped,
+    hasBasics,
+    hydrated,
+    price,
+    realWage,
+    score,
+    state.duplicate,
+    state.money,
+    state.storage,
+    state.waited,
+    uses,
+  ]);
+
+  function resetCalculator() {
+    trackEvent("should_i_buy_it_reset");
+    lastTrackedResultRef.current = "";
+    setState(EMPTY_STATE);
+  }
 
   return (
     <div className="mx-auto flex max-w-5xl flex-col gap-5">
@@ -381,7 +451,10 @@ export default function ClientPage({
                       type="button"
                       aria-pressed={selected}
                       onClick={() =>
-                        set(key, selected ? "" : (option.value as State[typeof key]))
+                        set(
+                          key,
+                          selected ? "" : (option.value as State[typeof key]),
+                        )
                       }
                       className={`rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
                         selected
@@ -419,7 +492,9 @@ export default function ClientPage({
         ) : (
           <>
             <div className="mt-5 flex flex-wrap items-end gap-x-6 gap-y-2">
-              <p className={`text-6xl font-bold tracking-[-0.05em] ${scoreColor} dark:text-white`}>
+              <p
+                className={`text-6xl font-bold tracking-[-0.05em] ${scoreColor} dark:text-white`}
+              >
                 {score}
               </p>
               <p className="pb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[#8b5c47]">
@@ -502,12 +577,14 @@ export default function ClientPage({
         <div className="mt-8 flex flex-wrap items-center gap-4">
           <button
             type="button"
-            onClick={() => setState(EMPTY_STATE)}
+            onClick={resetCalculator}
             className="rounded-full border border-[#d4c4bb] px-5 py-2.5 text-sm font-semibold text-[#7b5137] transition-colors hover:bg-white dark:border-gray-600 dark:text-orange-300"
           >
             {copy.resetLabel}
           </button>
-          <p className="text-sm text-[#7b8a81] dark:text-gray-400">{copy.savedNote}</p>
+          <p className="text-sm text-[#7b8a81] dark:text-gray-400">
+            {copy.savedNote}
+          </p>
         </div>
       </section>
     </div>

@@ -96,14 +96,15 @@ export default function AreaChecklistSection({
     return {
       ...category,
       defaultItems: category.defaultItems.filter(
-        (item) => !(removedItemsByCategory[category.key] ?? []).includes(item.id),
+        (item) =>
+          !(removedItemsByCategory[category.key] ?? []).includes(item.id),
       ),
     };
   }, [category, removedItemsByCategory]);
 
   const customItems = useMemo(
     () =>
-      visibleCategory ? customItemsByCategory[visibleCategory.key] ?? [] : [],
+      visibleCategory ? (customItemsByCategory[visibleCategory.key] ?? []) : [],
     [customItemsByCategory, visibleCategory],
   );
   const allItems = useMemo(
@@ -112,9 +113,20 @@ export default function AreaChecklistSection({
     [customItems, visibleCategory],
   );
   const sortedItems = useMemo(
-    () => [...allItems].sort((left, right) => left.text.localeCompare(right.text)),
+    () =>
+      [...allItems].sort((left, right) => left.text.localeCompare(right.text)),
     [allItems],
   );
+  const pdfPages = useMemo(() => {
+    const itemsPerPage = 18;
+    const pages = [];
+
+    for (let index = 0; index < sortedItems.length; index += itemsPerPage) {
+      pages.push(sortedItems.slice(index, index + itemsPerPage));
+    }
+
+    return pages;
+  }, [sortedItems]);
   const todayHistorySet = useMemo(
     () => new Set(historyByDate[todayKey] ?? []),
     [historyByDate, todayKey],
@@ -277,36 +289,30 @@ export default function AreaChecklistSection({
         import("html2canvas"),
         import("jspdf"),
       ]);
-      const canvas = await html2canvas(pdfContentRef.current, {
-        backgroundColor: "#f9faf2",
-        scale: Math.min(2, window.devicePixelRatio || 1.5),
-        useCORS: true,
-      });
-      const imageData = canvas.toDataURL("image/png");
+      await document.fonts?.ready;
+
+      const pages = Array.from(
+        pdfContentRef.current.querySelectorAll<HTMLElement>("[data-pdf-page]"),
+      );
+      if (pages.length === 0) return;
+
       const pdf = new jsPDF({
         orientation: "portrait",
         unit: "mm",
         format: "a4",
       });
-      const pageWidth = 210;
-      const pageHeight = 297;
-      const imageHeight = (canvas.height * pageWidth) / canvas.width;
 
-      let renderedHeight = 0;
-      pdf.addImage(imageData, "PNG", 0, 0, pageWidth, imageHeight);
-      renderedHeight += pageHeight;
-
-      while (renderedHeight < imageHeight) {
-        pdf.addPage();
-        pdf.addImage(
-          imageData,
-          "PNG",
-          0,
-          -renderedHeight,
-          pageWidth,
-          imageHeight,
-        );
-        renderedHeight += pageHeight;
+      for (const [index, page] of pages.entries()) {
+        const canvas = await html2canvas(page, {
+          backgroundColor: "#f9faf2",
+          scale: Math.min(2, window.devicePixelRatio || 1.5),
+          useCORS: true,
+          width: 794,
+          height: 1123,
+          windowWidth: 794,
+        });
+        if (index > 0) pdf.addPage();
+        pdf.addImage(canvas.toDataURL("image/png"), "PNG", 0, 0, 210, 297);
       }
 
       pdf.save(`${areaSlug}-declutter-checklist.pdf`);
@@ -374,14 +380,14 @@ export default function AreaChecklistSection({
               return (
                 <div
                   key={item.id}
-                  className="flex items-start gap-3 rounded-2xl bg-white/80 px-4 py-3"
+                  className="flex items-center gap-3 rounded-2xl bg-white/80 px-4 py-3"
                 >
-                  <label className="flex min-w-0 flex-1 cursor-pointer items-start gap-3">
+                  <label className="flex min-w-0 flex-1 cursor-pointer items-center gap-3">
                     <input
                       type="checkbox"
                       checked={isChecked}
                       onChange={() => toggleItem(item.id)}
-                      className="mt-0.5 h-5 w-5 shrink-0 rounded-md border-none bg-white text-[#2b694d] focus:ring-[#2b694d]/20"
+                      className="h-5 w-5 shrink-0 rounded-md border-none bg-white text-[#2b694d] focus:ring-[#2b694d]/20"
                     />
                     <span
                       className={[
@@ -431,73 +437,62 @@ export default function AreaChecklistSection({
       </div>
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed left-[-9999px] top-0 w-[794px] overflow-hidden"
+        className="pointer-events-none absolute left-[-9999px] top-0 w-[794px]"
       >
-        <div
-          ref={pdfContentRef}
-          className="bg-[#f9faf2] px-12 py-10 font-sans text-[#1a1c18]"
-        >
-          <div className="rounded-[28px] bg-white p-9 shadow-sm ring-1 ring-[#dfe4d7]">
-            <div className="flex items-start justify-between gap-8 border-b border-[#dfe4d7] pb-7">
-              <div className="min-w-0">
-                <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#59615d]">
-                  {t("checklist.downloadPdf")}
-                </p>
-                <h1 className="mt-3 text-[34px] font-black leading-tight text-[#002d1c]">
-                  {heading}
-                </h1>
-                <p className="mt-3 text-[15px] leading-7 text-[#414844]">
-                  {description}
-                </p>
-              </div>
-              <div className="shrink-0 rounded-2xl bg-[#edefe7] px-5 py-4 text-center text-[#2b694d]">
-                <div className="text-[28px] font-black leading-none">
-                  {completedCount}/{allItems.length}
-                </div>
-                <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em]">
-                  {t("checklist.items")}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-7 grid grid-cols-2 gap-3">
-              {sortedItems.map((item) => {
-                const entryKey = buildEntryKey(visibleCategory.key, item.id);
-                const isChecked = todayHistorySet.has(entryKey);
-
-                return (
-                  <div
-                    key={item.id}
-                    className="flex min-h-14 items-start gap-3 rounded-2xl bg-[#f3f4ec] px-4 py-3"
-                  >
-                    <div
-                      className={[
-                        "mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-md border-2 text-[12px] font-black",
-                        isChecked
-                          ? "border-[#2b694d] bg-[#2b694d] text-white"
-                          : "border-[#93a096] bg-white text-white",
-                      ].join(" ")}
-                    >
-                      {isChecked ? "x" : ""}
+        <div ref={pdfContentRef} className="font-sans text-[#1a1c18]">
+          {pdfPages.map((pageItems, pageIndex) => (
+            <div
+              key={pageIndex}
+              data-pdf-page
+              className="h-[1123px] w-[794px] overflow-hidden bg-[#f9faf2] p-8"
+            >
+              <div className="flex h-full flex-col rounded-[28px] bg-white p-7 ring-1 ring-[#dfe4d7]">
+                <div className="flex shrink-0 items-start justify-between gap-7 border-b border-[#dfe4d7] pb-5">
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#59615d]">
+                      {t("checklist.downloadPdf")}
+                    </p>
+                    <h1 className="mt-2 text-[31px] font-black leading-tight text-[#002d1c]">
+                      {heading}
+                    </h1>
+                    <p className="mt-2 text-[14px] leading-[22px] text-[#414844]">
+                      {description}
+                    </p>
+                  </div>
+                  <div className="shrink-0 rounded-2xl bg-[#edefe7] px-5 py-4 text-center text-[#2b694d]">
+                    <div className="text-[28px] font-black leading-none">
+                      0/{allItems.length}
                     </div>
-                    <div
-                      className={[
-                        "text-[13px] font-semibold leading-5 text-[#28302c]",
-                        isChecked ? "opacity-60 line-through" : "",
-                      ].join(" ")}
-                    >
-                      {item.text}
+                    <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em]">
+                      {t("checklist.items")}
                     </div>
                   </div>
-                );
-              })}
-            </div>
+                </div>
 
-            <div className="mt-8 flex items-center justify-between border-t border-[#dfe4d7] pt-5 text-[11px] font-bold uppercase tracking-[0.18em] text-[#6d766f]">
-              <span>{visibleCategory.category}</span>
-              <span>{t("checklist.printFooterNote")}</span>
+                <div className="mt-5 grid flex-1 auto-rows-fr grid-cols-2 gap-2.5">
+                  {pageItems.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex min-h-0 items-center gap-3 rounded-2xl bg-[#f3f4ec] px-4 py-2.5"
+                    >
+                      <div className="h-5 w-5 shrink-0 rounded-md border-2 border-[#93a096] bg-white" />
+                      <div className="min-w-0 text-[13px] font-semibold leading-[18px] text-[#28302c]">
+                        {item.text}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="mt-5 flex shrink-0 items-center justify-between border-t border-[#dfe4d7] pt-4 text-[10px] font-bold uppercase tracking-[0.16em] text-[#6d766f]">
+                  <span>{visibleCategory.category}</span>
+                  <span>
+                    {pageIndex + 1}/{pdfPages.length}
+                  </span>
+                  <span>{t("checklist.printFooterNote")}</span>
+                </div>
+              </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

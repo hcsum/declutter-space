@@ -4,7 +4,7 @@
   },
   "header": {
     "declutterChecklist": "Declutter Checklist",
-    "secondLook": "Decision Guide",
+    "secondLook": "Should I Let It Go?",
     "tools": "Tools",
     "shouldIBuy": "Should I Buy It?",
     "costPerWear": "Cost Per Wear",
@@ -97,7 +97,7 @@
     "featureChecklistTitle": "Declutter Checklist",
     "featureChecklistDesc": "A daily checklist organized by room. Check off tasks, track your progress, and build decluttering habits that stick — one small win at a time.",
     "featureChecklistCta": "Start your checklist",
-    "featureSecondLookTitle": "Decluttering Decision Guide",
+    "featureSecondLookTitle": "Should I Let It Go?",
     "featureSecondLookDesc": "Not sure whether to keep something? Use this decluttering decision guide to review unsure items, set a deadline, and decide with more clarity.",
     "featureSecondLookCta": "Open the guide",
     "featureShouldIBuyTitle": "Should I Buy It? Scorer",

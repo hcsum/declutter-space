@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { trackEvent } from "@/lib/analytics";
 import type { CpwCopy, GradeKey } from "./copy";
 
 const STORAGE_KEY = "cost-per-wear-calculator-state";
@@ -39,7 +40,16 @@ const EMPTY_FORM: Form = {
 };
 
 /** Everyday pieces get hundreds of chances to earn their price; occasion pieces get a handful. */
-const THRESHOLDS: Record<Mode, { excellent: number; good: number; fair: number; poor: number; target: number }> = {
+const THRESHOLDS: Record<
+  Mode,
+  {
+    excellent: number;
+    good: number;
+    fair: number;
+    poor: number;
+    target: number;
+  }
+> = {
   everyday: { excellent: 1, good: 5, fair: 10, poor: 25, target: 5 },
   occasion: { excellent: 10, good: 25, fair: 50, poor: 100, target: 25 },
 };
@@ -68,7 +78,8 @@ function gradeFor(costPer: number, mode: Mode): GradeKey {
 
 const cardClass =
   "rounded-[1.75rem] border border-[#e6ddd8] bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 md:p-8";
-const labelClass = "block text-sm font-semibold text-[#1f2d24] dark:text-gray-100";
+const labelClass =
+  "block text-sm font-semibold text-[#1f2d24] dark:text-gray-100";
 const helpClass = "mt-1 text-sm leading-6 text-[#7b8a81] dark:text-gray-400";
 const inputClass =
   "mt-2 w-full rounded-xl border border-[#d6c2bb] bg-[#fbf9f8] px-4 py-3 text-base text-[#1f2d24] outline-none transition-colors focus:border-[#82533f] focus:ring-1 focus:ring-[#82533f] dark:border-gray-600 dark:bg-gray-900 dark:text-gray-100";
@@ -91,6 +102,8 @@ export default function ClientPage({
   const [form, setForm] = useState<Form>(EMPTY_FORM);
   const [saved, setSaved] = useState<SavedRow[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const hasUserInteractedRef = useRef(false);
+  const lastTrackedResultRef = useRef("");
 
   useEffect(() => {
     try {
@@ -125,6 +138,7 @@ export default function ClientPage({
   );
 
   function set<K extends keyof Form>(key: K, value: Form[K]) {
+    hasUserInteractedRef.current = true;
     setForm((previous) => ({ ...previous, [key]: value }));
   }
 
@@ -139,8 +153,48 @@ export default function ClientPage({
   const countForTarget = Math.ceil(total / target);
   const presets = form.unit === "days" ? copy.presetsDays : copy.presetsWears;
 
+  useEffect(() => {
+    if (
+      !hydrated ||
+      !hasUserInteractedRef.current ||
+      costPer === null ||
+      grade === null
+    ) {
+      return;
+    }
+
+    const fingerprint = [form.mode, form.unit, total, count, grade].join("|");
+    const timeout = window.setTimeout(() => {
+      if (lastTrackedResultRef.current === fingerprint) return;
+      lastTrackedResultRef.current = fingerprint;
+      trackEvent("cost_per_wear_calculated", {
+        mode: form.mode,
+        unit: form.unit,
+        grade,
+        has_additional_costs: num(form.alterations) + num(form.care) > 0,
+      });
+    }, 800);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    count,
+    costPer,
+    form.alterations,
+    form.care,
+    form.mode,
+    form.unit,
+    grade,
+    hydrated,
+    total,
+  ]);
+
   function saveRow() {
     if (costPer === null || grade === null) return;
+    trackEvent("cost_per_wear_saved", {
+      mode: form.mode,
+      unit: form.unit,
+      grade,
+    });
     setSaved((previous) => [
       {
         id: `${Date.now()}`,
@@ -153,6 +207,12 @@ export default function ClientPage({
       },
       ...previous,
     ]);
+  }
+
+  function resetCalculator() {
+    trackEvent("cost_per_wear_reset");
+    lastTrackedResultRef.current = "";
+    setForm(EMPTY_FORM);
   }
 
   return (
@@ -247,7 +307,9 @@ export default function ClientPage({
             </button>
           </div>
           <p className={helpClass}>
-            {form.mode === "everyday" ? copy.modeHelpEveryday : copy.modeHelpOccasion}
+            {form.mode === "everyday"
+              ? copy.modeHelpEveryday
+              : copy.modeHelpOccasion}
           </p>
         </fieldset>
 
@@ -357,10 +419,16 @@ export default function ClientPage({
                 </p>
                 <p className="mt-1 text-sm leading-6 text-[#52645a] dark:text-gray-400">
                   {costPer <= target
-                    ? copy.targetReached.replace("{target}", numberFormat.format(target))
+                    ? copy.targetReached.replace(
+                        "{target}",
+                        numberFormat.format(target),
+                      )
                     : copy.targetNote
                         .replace("{target}", numberFormat.format(target))
-                        .replace("{count}", numberFormat.format(countForTarget))}
+                        .replace(
+                          "{count}",
+                          numberFormat.format(countForTarget),
+                        )}
                 </p>
               </div>
             </div>
@@ -378,7 +446,10 @@ export default function ClientPage({
                 </p>
                 <p className="mt-1 text-base leading-7 text-[#52645a] dark:text-gray-300">
                   {count < 30
-                    ? copy.thirtyShortfall.replace("{count}", numberFormat.format(count))
+                    ? copy.thirtyShortfall.replace(
+                        "{count}",
+                        numberFormat.format(count),
+                      )
                     : copy.thirtyClear}
                 </p>
               </div>
@@ -399,12 +470,14 @@ export default function ClientPage({
         <div className="mt-8 flex flex-wrap items-center gap-4">
           <button
             type="button"
-            onClick={() => setForm(EMPTY_FORM)}
+            onClick={resetCalculator}
             className="rounded-full border border-[#d4c4bb] px-5 py-2.5 text-sm font-semibold text-[#7b5137] transition-colors hover:bg-white dark:border-gray-600 dark:text-orange-300"
           >
             {copy.resetLabel}
           </button>
-          <p className="text-sm text-[#7b8a81] dark:text-gray-400">{copy.savedNote}</p>
+          <p className="text-sm text-[#7b8a81] dark:text-gray-400">
+            {copy.savedNote}
+          </p>
         </div>
       </section>
 
@@ -448,8 +521,12 @@ export default function ClientPage({
                     className="border-b border-[#f0eae6] text-[#1f2d24] dark:border-gray-700 dark:text-gray-200"
                   >
                     <td className="py-3 pr-3 font-semibold">{row.item}</td>
-                    <td className="py-3 pr-3">{numberFormat.format(row.total)}</td>
-                    <td className="py-3 pr-3">{numberFormat.format(row.count)}</td>
+                    <td className="py-3 pr-3">
+                      {numberFormat.format(row.total)}
+                    </td>
+                    <td className="py-3 pr-3">
+                      {numberFormat.format(row.count)}
+                    </td>
                     <td className="py-3 pr-3 font-bold">
                       {numberFormat.format(row.costPer)}
                     </td>

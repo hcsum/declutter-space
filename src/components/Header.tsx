@@ -13,7 +13,6 @@ import {
   Bars3Icon,
   XMarkIcon,
   LanguageIcon,
-  ChevronDownIcon,
 } from "@heroicons/react/24/outline";
 import { UserCircleIcon } from "@heroicons/react/24/solid";
 import { useLoginDialog } from "./LoginDialogProvider";
@@ -63,18 +62,11 @@ const Header: React.FC = () => {
     };
   }, []);
 
-  const isHome =
-    pathname === "/" ||
-    pathname === `/${locale}` ||
-    pathname === `/${locale}/`;
   const isChecklist = pathname.includes("/declutter-checklist");
   const isSecondLook = pathname.includes("/decluttering-decision-guide");
   const isShouldIBuy = pathname.includes("/should-i-buy-it");
   const isCostPerWear = pathname.includes("/cost-per-wear-calculator");
-  const isTools = isShouldIBuy || isCostPerWear;
 
-  const homeLabel =
-    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
   const languageLabel =
     locale === "ja"
       ? "言語"
@@ -96,21 +88,13 @@ const Header: React.FC = () => {
       <div className="flex items-center justify-between px-4 py-3 md:px-8">
         <Link href={localePath("/")} className="min-w-0">
           <p className="flex items-center gap-2 font-display text-lg font-bold tracking-tighter text-orange-800 dark:text-orange-400 md:text-2xl">
-            <span className="material-symbols-outlined text-xl md:text-2xl">home</span>
+            <span className="material-symbols-outlined text-xl md:text-2xl">
+              home
+            </span>
             <span className="truncate">Declutter Your Home</span>
           </p>
         </Link>
-        <nav className="hidden md:flex items-center gap-5 lg:gap-8 font-body-md text-sm tracking-wide">
-          <Link
-            href={localePath("/")}
-            className={
-              isHome
-                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
-                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
-            }
-          >
-            {homeLabel}
-          </Link>
+        <nav className="hidden items-center gap-8 font-body-md text-sm tracking-wide lg:flex">
           <Link
             href={localePath("/declutter-checklist")}
             className={
@@ -122,6 +106,26 @@ const Header: React.FC = () => {
             {t("header.declutterChecklist")}
           </Link>
           <Link
+            href={localePath("/should-i-buy-it")}
+            className={
+              isShouldIBuy
+                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+            }
+          >
+            {t("header.shouldIBuy")}
+          </Link>
+          <Link
+            href={localePath("/cost-per-wear-calculator")}
+            className={
+              isCostPerWear
+                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+            }
+          >
+            {t("header.costPerWear")}
+          </Link>
+          <Link
             href={localePath("/decluttering-decision-guide")}
             className={
               isSecondLook
@@ -131,46 +135,6 @@ const Header: React.FC = () => {
           >
             {t("header.secondLook")}
           </Link>
-          <div className="relative group">
-            <button
-              type="button"
-              className={`flex items-center gap-1 ${
-                isTools
-                  ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
-                  : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
-              }`}
-              aria-haspopup="true"
-            >
-              {t("header.tools")}
-              <ChevronDownIcon className="h-4 w-4" />
-            </button>
-            <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible focus-within:opacity-100 focus-within:visible transition-all z-50">
-              <div className="min-w-[220px] rounded-lg border border-stone-200 bg-white shadow-lg dark:border-gray-600 dark:bg-gray-700">
-                <Link
-                  href={localePath("/should-i-buy-it")}
-                  className={`block px-4 py-2.5 text-sm hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors ${
-                    isShouldIBuy
-                      ? "text-orange-700 dark:text-orange-400 font-semibold"
-                      : "text-stone-600 dark:text-stone-300"
-                  }`}
-                  aria-current={isShouldIBuy ? "page" : undefined}
-                >
-                  {t("header.shouldIBuy")}
-                </Link>
-                <Link
-                  href={localePath("/cost-per-wear-calculator")}
-                  className={`block px-4 py-2.5 text-sm hover:bg-stone-100 dark:hover:bg-gray-600 transition-colors ${
-                    isCostPerWear
-                      ? "text-orange-700 dark:text-orange-400 font-semibold"
-                      : "text-stone-600 dark:text-stone-300"
-                  }`}
-                  aria-current={isCostPerWear ? "page" : undefined}
-                >
-                  {t("header.costPerWear")}
-                </Link>
-              </div>
-            </div>
-          </div>
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
           <button
@@ -184,7 +148,7 @@ const Header: React.FC = () => {
               <MoonIcon className="h-5 w-5 text-stone-600 dark:text-stone-300" />
             )}
           </button>
-          <div className="relative hidden md:block group">
+          <div className="relative hidden lg:block group">
             <button
               className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-gray-700 transition-colors"
               aria-label="Language"
@@ -209,7 +173,7 @@ const Header: React.FC = () => {
             </div>
           </div>
           {loggedIn && (
-            <div ref={profileRef} className="relative hidden md:block">
+            <div ref={profileRef} className="relative hidden lg:block">
               <button
                 onClick={() => setIsProfileOpen((v) => !v)}
                 className="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-gray-700 transition-colors"
@@ -236,14 +200,14 @@ const Header: React.FC = () => {
           {!loggedIn && (
             <button
               onClick={() => setLoginOpen(true)}
-              className="hidden md:inline-flex px-6 py-2 bg-stone-100 dark:bg-gray-700 text-stone-800 dark:text-stone-200 font-body-md text-sm rounded-lg hover:bg-stone-200 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out active:scale-95"
+              className="hidden px-6 py-2 bg-stone-100 dark:bg-gray-700 text-stone-800 dark:text-stone-200 font-body-md text-sm rounded-lg hover:bg-stone-200 dark:hover:bg-gray-600 transition-all duration-300 ease-in-out active:scale-95 lg:inline-flex"
               aria-label={t("header.login")}
             >
               {t("header.login")}
             </button>
           )}
           <button
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 hover:bg-stone-200 dark:bg-gray-800/80 dark:hover:bg-gray-700 transition-colors md:hidden"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white/80 hover:bg-stone-200 dark:bg-gray-800/80 dark:hover:bg-gray-700 transition-colors lg:hidden"
             aria-label={t("header.openMenu")}
             aria-expanded={isMobileMenuOpen}
             onClick={() => setIsMobileMenuOpen((v) => !v)}
@@ -257,20 +221,9 @@ const Header: React.FC = () => {
         </div>
       </div>
       {isMobileMenuOpen && (
-        <div className="md:hidden absolute inset-x-0 top-full z-40 border-b border-stone-200 bg-stone-50/95 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/95">
+        <div className="absolute inset-x-0 top-full z-40 border-b border-stone-200 bg-stone-50/95 backdrop-blur-md dark:border-gray-700 dark:bg-gray-900/95 lg:hidden">
           <div className="m-4 rounded-[1.75rem] border border-stone-200/80 bg-white/95 p-4 shadow-lg shadow-stone-900/5 dark:border-gray-700 dark:bg-gray-800/95">
             <nav className="space-y-2">
-              <Link
-                href={localePath("/")}
-                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isHome
-                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
-                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {homeLabel}
-              </Link>
               <Link
                 href={localePath("/declutter-checklist")}
                 className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
@@ -281,17 +234,6 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("header.declutterChecklist")}
-              </Link>
-              <Link
-             href={localePath("/decluttering-decision-guide")}
-                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isSecondLook
-                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
-                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t("header.secondLook")}
               </Link>
               <Link
                 href={localePath("/should-i-buy-it")}
@@ -314,6 +256,17 @@ const Header: React.FC = () => {
                 onClick={() => setIsMobileMenuOpen(false)}
               >
                 {t("header.costPerWear")}
+              </Link>
+              <Link
+                href={localePath("/decluttering-decision-guide")}
+                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                  isSecondLook
+                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                }`}
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {t("header.secondLook")}
               </Link>
             </nav>
 
