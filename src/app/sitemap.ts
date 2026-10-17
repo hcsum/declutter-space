@@ -2,7 +2,24 @@ import type { MetadataRoute } from "next";
 import { locales, defaultLocale, type Locale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
-import { ES_ONLY_PATHS } from "@/lib/seo";
+import { ES_ONLY_PATHS, JA_ONLY_PATHS } from "@/lib/seo";
+
+// Only declare dates for substantive edits whose date is known. An omitted
+// lastmod is more accurate than changing every URL on each deployment.
+const contentUpdated: Record<string, string> = {
+  "/en/how-to-declutter-sentimental-items": "2026-10-16",
+  "/zh/how-to-declutter-sentimental-items": "2026-10-16",
+  "/ja/how-to-declutter-sentimental-items": "2026-10-16",
+  "/en/how-to-declutter-old-cards-and-letters": "2026-10-16",
+  "/es/rutina-de-limpieza-del-hogar": "2026-10-16",
+  "/es/plan-de-limpieza-semanal": "2026-10-16",
+  "/en/how-to-declutter-your-kitchen": "2026-10-17",
+  "/en/how-to-declutter-your-bathroom": "2026-10-17",
+  "/zh/how-to-declutter-your-kitchen": "2026-10-17",
+  "/ja/how-to-declutter-your-kitchen": "2026-10-17",
+  "/zh/how-to-declutter-your-bathroom": "2026-10-17",
+  "/ja/how-to-declutter-your-bathroom": "2026-10-17",
+};
 
 const checklistAreaPaths = getChecklistCategorySlugs().map(
   (slug) => `/declutter-checklist/${slug}`,
@@ -50,7 +67,6 @@ function priorityFor(path: string) {
 function entriesFor(
   path: string,
   pathLocales: readonly Locale[],
-  lastModified: Date,
 ): MetadataRoute.Sitemap {
   const languages: Record<string, string> = Object.fromEntries(
     pathLocales.map((alt) => [alt, localizedUrl(alt, path)]),
@@ -62,7 +78,9 @@ function entriesFor(
 
   return pathLocales.map((locale) => ({
     url: localizedUrl(locale, path),
-    lastModified,
+    ...(contentUpdated[`/${locale}${path}`]
+      ? { lastModified: contentUpdated[`/${locale}${path}`] }
+      : {}),
     changeFrequency: "weekly" as const,
     priority: priorityFor(path),
     alternates: { languages },
@@ -70,15 +88,18 @@ function entriesFor(
 }
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const lastModified = new Date();
-
   return [
-    ...allLocalePaths.flatMap((path) => entriesFor(path, locales, lastModified)),
-    ...nonSpanishPaths.flatMap((path) =>
-      entriesFor(path, nonSpanishLocales, lastModified),
+    ...allLocalePaths.flatMap((path) =>
+      entriesFor(path, locales),
     ),
-    ...ES_ONLY_PATHS.flatMap((path) =>
-      entriesFor(path, ["es"], lastModified),
+    ...nonSpanishPaths.flatMap((path) =>
+      entriesFor(path, nonSpanishLocales),
+    ),
+    ...ES_ONLY_PATHS.flatMap((path) => entriesFor(path, ["es"])),
+    ...JA_ONLY_PATHS.flatMap((path) => entriesFor(path, ["ja"])),
+    ...entriesFor(
+      "/how-to-declutter-old-cards-and-letters",
+      ["en"],
     ),
   ];
 }

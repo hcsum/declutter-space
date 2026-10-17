@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import RoomDecisionGuide from "@/components/RoomDecisionGuide";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
 import { buildLanguageAlternates } from "@/lib/seo";
 
@@ -74,7 +76,7 @@ function getCopy(locale: string): GuideCopy {
         "厨房整理的目标不是做成样板厨房，而是让你在真正饿、忙、赶时间的时候，也能更容易拿到需要的东西。很多厨房压力，并不是来自做饭本身，而是来自找不到、放不下、台面总被占住。把这些摩擦减掉，厨房自然会更轻松。",
       toolTitle: "现在就开始厨房清单",
       toolDesc:
-        "下面这份互动清单和厨房清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
+        "打开厨房互动清单后，你可以勾选任务、添加项目并保存进度。先完成一个抽屉或一层柜格，再决定是否继续。",
       toolPage: "打开厨房清单功能页",
       mistakesTitle: "厨房整理里最常见的错误",
       mistakes: [
@@ -172,7 +174,7 @@ function getCopy(locale: string): GuideCopy {
       ],
       toolTitle: "キッチンチェックリストから始める",
       toolDesc:
-        "このインタラクティブなチェックリストは、専用のキッチンチェックリストページと同じライブデータを使っています。どちらのページからでも項目のチェック、追加、進捗の保存ができます。",
+        "キッチンチェックリストのページで、項目のチェック、追加、進捗の保存ができます。まず引き出し一つ、または棚一段から始めましょう。",
       toolPage: "キッチンチェックリストのページを開く",
       blockersTitle: "キッチンの散らかりの奥にある感情的なつまずき",
       blockersBody:
@@ -191,7 +193,7 @@ function getCopy(locale: string): GuideCopy {
   return {
     title: "How to Declutter Your Kitchen | Step-by-Step Kitchen Guide | DeclutterYourHome",
     description:
-      "Learn how to declutter your kitchen step by step by clearing expired food, duplicate tools, cluttered counters, and low-value appliances so cooking gets easier.",
+      "Declutter your kitchen one zone at a time. Decide what to keep, donate, or discard with checks for food containers, mugs, pantry food, utensils, and appliances.",
     eyebrow: "Kitchen Guide",
     heroTitle: "How to Declutter Your Kitchen Without Making Cooking Harder",
     heroSubtitle:
@@ -201,21 +203,21 @@ function getCopy(locale: string): GuideCopy {
       "Kitchen clutter is rarely random. It usually builds around decision delays: spices you might use someday, duplicate gadgets, mugs you did not choose, lids without containers, containers without lids, and appliances that once felt helpful but now sit in the way. The strongest kitchen reset starts by protecting the real workflow of cooking, cleaning, and putting groceries away.",
     stepsTitle: "How to declutter your kitchen in 7 steps",
     steps: [
-      ["1. Throw away what is clearly expired, broken, or unusable", "Start with expired food, stale spices, moldy ingredients, damaged storage containers, and chipped tableware. Kitchens usually contain an easy first wave of obvious noes."],
+      ["1. Remove spoiled food and unusable items", "Start with obvious rubbish, spoiled ingredients, damaged containers, and chipped tableware. Follow food storage and safety instructions; a best-before quality date is not the same as a safety-related use-by date."],
       ["2. Reset the pantry, fridge, and seasoning zones", "Group similar items together so duplicates, near-expired food, and wishful purchases become visible fast."],
       ["3. Remove duplicate gadgets and freebie tableware", "Extra measuring cups, spatulas, can openers, promo mugs, and disposable utensils quietly fill drawers and cabinets without adding much value."],
-      ["4. Reassess small appliances honestly", "Rice cookers, air fryers, blenders, and juicers should earn their space through regular use. If they do not, they are storage-heavy clutter."],
+      ["4. Reassess small appliances against real needs", "Consider frequency of use, seasonal cooking, accessibility, and other household users. Keep an occasional-use appliance if it still serves a useful purpose; offer unwanted working ones with their parts."],
       ["5. Fix the two chaos magnets: containers and cookware", "Mismatched food containers, missing lids, warped plastic, rusty pans, and tools that are annoying to clean all make the kitchen harder to use."],
       ["6. Keep the counters for true daily essentials", "Counters are work surfaces, not overflow storage. Leave out only what supports regular cooking or daily routines."],
       ["7. Put things back by cooking workflow", "Utensils, spices, prep tools, and dishes should live close to where you actually use them. A kitchen that matches your movement is easier to maintain."],
     ],
     removeTitle: "What to declutter from your kitchen first",
     removeItems: [
-      "Expired or never-to-be-used food",
+      "Spoiled food and food you will not use, following label guidance",
       "Spices and condiments with no flavor left",
       "Mismatched storage containers and lids",
       "Duplicate gadgets and freebie mugs",
-      "Small appliances that sit idle for months",
+      "Unwanted small appliances, after checking with other users",
       "Chipped, warped, rusty, or annoying cookware",
     ],
     emotionTitle: "A better kitchen reduces friction, not personality",
@@ -233,24 +235,26 @@ function getCopy(locale: string): GuideCopy {
       "Keep the things you use in a normal week closest to where they are needed: your everyday dishes near the dishwasher or drying area, prep tools near the main work surface, and your most-used oils, spices, and utensils near the stove. Prime access should go to real habits, not idealized routines.",
     quickResetTitle: "How to declutter your kitchen in 15 minutes",
     quickResetSteps: [
-      "Throw away expired food and clear obvious trash from counters",
+      "Remove spoiled food according to label guidance and clear obvious trash",
       "Gather duplicate mugs, utensils, and containers into one place",
       "Choose one problem zone to finish: fridge, pantry shelf, or utensil drawer",
-      "Put back only what supports daily cooking this week",
+      "Put everyday items within reach and give occasional-use keepers a separate home",
     ],
     faqTitle: "Kitchen decluttering FAQ",
     faqs: [
       ["How often should you declutter a kitchen?", "A light reset every week and a deeper declutter every few months usually works better than waiting for one huge overhaul."],
       ["What is the fastest place to start in a messy kitchen?", "Start with expired food, duplicate containers, and crowded counters. Those three areas usually create the fastest visible change."],
       ["How many small appliances should stay on the counter?", "Only the ones you use often enough that putting them away would slow down a real routine. Everything else should earn cabinet space or leave."],
+      ["How do you declutter food storage containers?", "Match lids to bases after checking the dishwasher and other cupboards. Keep intact sets in useful sizes, offer unwanted usable sets, and check local disposal rules for damaged or unmatched pieces."],
+      ["How many mugs and dishes should you keep?", "Use household size, washing frequency, and actual guests as your starting point. There is no universal number. Keep accessible or adapted items and ask before removing shared belongings."],
     ],
     toolTitle: "Start with the kitchen checklist",
     toolDesc:
-      "This interactive checklist shares the same live data as the dedicated kitchen checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
+      "Open the dedicated kitchen checklist to check off tasks, add your own items, and save progress. Start with the drawer or shelf you just reviewed rather than trying to finish the whole room at once.",
     toolPage: "Open the Kitchen Checklist page",
     blockersTitle: "The emotional blockers behind kitchen clutter",
     blockersBody:
-      "The kitchen looks like the most functional room in the house, but the emotional residue is real: gift cookware kept out of guilt (\"my mother-in-law gave us that\"), spices saved \"just in case\" they come back into rotation, single-use appliances bought during a cooking-trend phase, and the merged kitchen gear of a past relationship. None of it is staying because you need it — it is staying because deciding takes decision fatigue. Name the blocker first. Then apply use it or lose it: if the past 12 months did not bring it out, the next 12 probably will not either.",
+      "Gift cookware, expensive gadgets, and shared possessions can make decisions harder. Identify whether the item meets a current need, has personal meaning, or belongs to someone else. Low use alone does not make it worthless: seasonal cooking and accessibility needs matter too. Review your own unwanted items first, ask before changing shared sets, and leave difficult decisions for a smaller follow-up session.",
     relatedTitle: "Related guides",
     relatedIntro: "Pair this room reset with broader habit changes:",
     relatedLinks: [
@@ -264,6 +268,7 @@ function getCopy(locale: string): GuideCopy {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
+  if (!isValidLocale(lang) || lang === "es") return {};
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getCopy(locale);
 
@@ -276,6 +281,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function KitchenPage({ params }: Props) {
   const { lang } = await params;
+  if (!isValidLocale(lang) || lang === "es") notFound();
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getCopy(locale);
 
@@ -299,6 +305,11 @@ export default async function KitchenPage({ params }: Props) {
             >
               {copy.toolPage}
             </Link>
+            {locale === "en" && (
+              <Link href="#item-decisions" className="rounded-full bg-[#dcebdd] px-5 py-3 text-[#002d1c]">
+                What to keep, donate, or discard
+              </Link>
+            )}
           </div>
         </section>
 
@@ -325,6 +336,8 @@ export default async function KitchenPage({ params }: Props) {
             </ul>
           </aside>
         </section>
+
+        {locale === "en" && <RoomDecisionGuide room="kitchen" />}
 
         <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
           <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">

@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import SpanishGuide, { type SpanishGuideCopy } from "@/components/SpanishGuide";
 import { JsonLd } from "@/components/json-ld";
+import CleaningRoutineOverview from "@/components/CleaningRoutineOverview";
 import {
   buildBreadcrumbSchema,
   buildFaqPageSchema,
@@ -16,12 +17,12 @@ const copy: SpanishGuideCopy = {
   eyebrow: "Rutina de limpieza del hogar",
   heroTitle: "Rutina de limpieza del hogar: diaria, semanal y mensual",
   heroSubtitle:
-    "La casa no se desordena porque limpies poco, sino porque todo se acumula para el mismo día. Una rutina de limpieza del hogar reparte el trabajo en tareas cortas: 10-15 minutos al día, una pasada semanal por zonas y una revisión mensual. Puedes descargar la lista en PDF y marcarla a mano.",
-  ctaLabel: "Abrir la lista y descargar el PDF",
-  ctaHref: "/es/declutter-checklist",
-  introTitle: "Por qué el plan de limpieza semanal falla casi siempre",
+    "Si las tareas se acumulan para el mismo día, puede costar encontrar tiempo para empezar. Una rutina de limpieza del hogar permite repartirlas: un repaso diario, tareas semanales por zonas y una revisión mensual. Prueba con 10-15 minutos al día y ajusta el plan a tu casa. Puedes personalizar la plantilla e imprimirla o guardarla como PDF desde el navegador.",
+  ctaLabel: "Personalizar el plan e imprimir / guardar PDF",
+  ctaHref: "/es/plan-de-limpieza-semanal#plantilla",
+  introTitle: "Cómo hacer un plan que encaje en tu semana",
   introBody:
-    "La mayoría de los planes de limpieza fallan por lo mismo: son demasiado ambiciosos para un día normal. Se planifica un sábado entero de limpieza a fondo, llega el sábado, no hay ganas, y la casa acumula otra semana. Una rutina que funciona se diseña al revés: primero decides cuánto tiempo tienes de verdad entre semana (normalmente 10 o 15 minutos), y solo después decides qué cabe dentro. Lo que no cabe pasa a la pasada semanal o a la revisión mensual, no al día siguiente.",
+    "Un plan puede resultar difícil de seguir si exige más tiempo o energía de los que tienes. Antes de reservar un sábado entero, piensa qué ratos tienes disponibles entre semana y el fin de semana. Después decide qué tareas caben en cada rato. Si algo queda pendiente, busca otro momento concreto en vez de añadirlo sin más al día siguiente.",
   removeTitle: "Las tareas diarias que sostienen la casa",
   removeItems: [
     "Hacer la cama al levantarte",
@@ -44,7 +45,7 @@ const copy: SpanishGuideCopy = {
     ],
     [
       "3. Reparte la casa por zonas, un día cada una",
-      "Lunes baño, martes cocina, miércoles dormitorios, jueves salón, viernes suelos. Cada zona toca una vez por semana y ninguna sesión pasa de 20-30 minutos.",
+      "Por ejemplo: lunes baño, martes cocina, miércoles dormitorios, jueves salón y viernes suelos. Reserva un rato para cada zona y reduce el alcance si no te da tiempo. Puedes empezar con bloques de 20-30 minutos y ajustarlos según lo que necesites.",
     ],
     [
       "4. Ancla cada tarea a algo que ya haces",
@@ -52,16 +53,16 @@ const copy: SpanishGuideCopy = {
     ],
     [
       "5. Saca lo que sobra antes de organizar",
-      "Limpiar una casa con demasiadas cosas cuesta el doble: cada superficie hay que despejarla antes de pasar el paño. Una ronda de orden previa recorta el tiempo de limpieza de forma permanente.",
+      "Si las superficies están llenas, primero hay que mover objetos para poder pasar el paño. Dedica unos minutos a despejarlas y devuelve cada cosa a su sitio. Si hay objetos que ya no necesitas, decide su destino por separado.",
     ],
     [
       "6. Deja lo mensual por escrito y olvídate",
-      "Cambiar sábanas, limpiar el frigorífico, ventanas, filtros de la campana, revisar caducados. Son tareas que nadie recuerda por intuición: van en la lista mensual, no en tu cabeza.",
+      "Limpiar una zona del frigorífico, ventanas, zócalos o revisar filtros según las instrucciones del fabricante. Reparte esas tareas entre las semanas del mes. Las sábanas y toallas van en la revisión semanal, ajustando la frecuencia a tus necesidades.",
     ],
   ],
-  highlightTitle: "10 minutos al día ganan a tres horas el sábado",
+  highlightTitle: "Reparte las tareas según tu tiempo y energía",
   highlightBody:
-    "Setenta minutos repartidos en la semana rinden mucho más que tres horas de golpe, porque la casa nunca llega a un estado en el que ordenar dé pereza. El sábado intensivo, además, solo funciona si el sábado sale bien; la rutina corta sobrevive a las semanas malas, que son la mayoría.",
+    "Los repasos cortos pueden ayudarte a mantener despejadas las zonas de uso diario. Si prefieres concentrar la limpieza, reserva uno o dos bloques el fin de semana y deja solo lo básico para los demás días. Prueba el reparto y cambia lo que no encaje: ninguna de las dos opciones funciona igual para todo el mundo.",
   mistakesTitle: "Errores habituales al crear una rutina de limpieza",
   mistakes: [
     "Planificar una rutina para tu mejor semana, no para una semana normal",
@@ -72,8 +73,9 @@ const copy: SpanishGuideCopy = {
   ],
   keepTitle: "Qué va en la pasada semanal",
   keepBody:
-    "La sesión semanal es para lo que se nota pero no es urgente: polvo en superficies, aspirar y fregar suelos, baño a fondo (inodoro, ducha, espejos), cambiar toallas, limpiar el microondas y la vitrocerámica, y una pasada por la nevera para tirar lo que ha caducado. Con 20-30 minutos por zona es suficiente si lo diario se está cumpliendo.",
-  quickResetTitle: "Reinicio rápido de 15 minutos cuando se te ha ido de las manos",
+    "Puedes reservar para la semana el polvo de las superficies, los suelos, el inodoro, la ducha, los espejos, las sábanas y las toallas. Añade el microondas, la placa de cocina y una revisión de los alimentos según haga falta. El tiempo necesario cambia con el tamaño de la casa y su uso; si una zona no cabe en el rato disponible, divídela en tareas más pequeñas.",
+  quickResetTitle:
+    "Reinicio rápido de 15 minutos cuando se te ha ido de las manos",
   quickResetSteps: [
     "Pon un temporizador de 15 minutos: al sonar, paras aunque no hayas terminado",
     "Primera ronda solo con una bolsa: basura y cosas para tirar",
@@ -85,7 +87,7 @@ const copy: SpanishGuideCopy = {
   faqs: [
     [
       "¿Cuánto tiempo hay que dedicar cada día a limpiar la casa?",
-      "Entre 10 y 15 minutos diarios bastan para mantener una casa normal, siempre que haya una pasada semanal por zonas de 20-30 minutos. El objetivo del rato diario no es limpiar a fondo, es evitar que se acumule.",
+      "Puedes probar con 10-15 minutos para un repaso básico y ajustar después. El tiempo depende del tamaño de la casa, de cuántas personas viven en ella y de sus necesidades. Reserva aparte las tareas semanales y mensuales; el repaso diario no tiene que incluir toda la limpieza.",
     ],
     [
       "¿En qué orden se debe limpiar una casa?",
@@ -93,7 +95,7 @@ const copy: SpanishGuideCopy = {
     ],
     [
       "¿Es mejor limpiar un poco cada día o todo un día a la semana?",
-      "Un poco cada día se sostiene mejor. La sesión larga semanal depende de tener ese día libre y con energía; la rutina corta sobrevive a las semanas complicadas, y la casa nunca llega al punto en el que ponerse cuesta mucho.",
+      "Depende de tus horarios y preferencias. Puedes repartir las zonas entre varios días o concentrarlas en uno o dos bloques el fin de semana. En ambos casos, deja un mantenimiento básico para los días de uso: platos, encimera y recogida de objetos. La plantilla ofrece las dos versiones para que elijas y las adaptes.",
     ],
     [
       "¿Cómo mantengo la casa limpia y ordenada con niños?",
@@ -101,18 +103,25 @@ const copy: SpanishGuideCopy = {
     ],
     [
       "¿Puedo descargar la rutina de limpieza en PDF?",
-      "Sí. Abre la lista de cualquier zona y pulsa «Descargar PDF»: obtienes una lista con casillas lista para imprimir y marcar a mano, con tu progreso actual ya marcado.",
+      "Sí. Abre la plantilla de limpieza semanal, elige la versión repartida o de fin de semana y adapta las tareas. Pulsa «Imprimir / Guardar como PDF» y elige «Guardar como PDF» en tu navegador. Incluye el mantenimiento diario, el plan de lunes a domingo y las tareas mensuales.",
     ],
   ],
-  toolTitle: "Empieza hoy con la lista marcada",
+  toolTitle: "Personaliza tu plan de limpieza semanal",
   toolDesc:
-    "La lista de orden y limpieza está organizada por zonas: recibidor, cocina, dormitorio, salón, baño, armarios y despacho. Marca lo que hagas hoy, guarda el progreso y descarga el PDF cuando quieras trabajar en papel.",
+    "La plantilla incluye tareas de limpieza diarias, una semana editable y una revisión mensual. Puedes cambiar tareas y responsables, marcar lo que has hecho e imprimir el resultado sin crear una cuenta.",
   relatedTitle: "Sigue por aquí",
-  relatedIntro: "Si el problema no es la limpieza sino la cantidad de cosas:",
+  relatedIntro: "Personaliza tu semana o consulta estas guías para despejar las zonas antes de limpiar:",
   relatedLinks: [
+    {
+      href: "/es/plan-de-limpieza-semanal",
+      label: "Plan de limpieza semanal editable para imprimir",
+    },
     { href: "/es/como-ordenar-armarios", label: "Cómo ordenar armarios" },
     { href: "/es/como-ordenar-la-cocina", label: "Cómo ordenar la cocina" },
-    { href: "/es/como-ordenar-la-habitacion", label: "Cómo ordenar la habitación" },
+    {
+      href: "/es/como-ordenar-la-habitacion",
+      label: "Cómo ordenar la habitación",
+    },
     { href: "/es/declutter-checklist", label: "Lista de orden y limpieza" },
   ],
 };
@@ -155,7 +164,9 @@ export default async function Page({ params }: Props) {
           { name: "Rutina de limpieza del hogar", path: PATH },
         ])}
       />
-      <SpanishGuide copy={copy} />
+      <SpanishGuide copy={copy}>
+        <CleaningRoutineOverview />
+      </SpanishGuide>
     </>
   );
 }

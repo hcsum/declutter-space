@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { ReactNode } from "react";
 
 /**
  * Shared renderer for the Spanish-only keyword pages under `/es`.
@@ -35,7 +36,13 @@ export type SpanishGuideCopy = {
   relatedLinks: Array<{ href: string; label: string }>;
 };
 
-export default function SpanishGuide({ copy }: { copy: SpanishGuideCopy }) {
+export default function SpanishGuide({
+  copy,
+  children,
+}: {
+  copy: SpanishGuideCopy;
+  children?: ReactNode;
+}) {
   return (
     <main className="min-h-screen bg-[#f3f4ec] px-5 pb-20 pt-24 text-[#1a1c18] md:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-8">
@@ -58,6 +65,8 @@ export default function SpanishGuide({ copy }: { copy: SpanishGuideCopy }) {
             </Link>
           </div>
         </section>
+
+        {children}
 
         <section className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
           <article className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
@@ -89,7 +98,10 @@ export default function SpanishGuide({ copy }: { copy: SpanishGuideCopy }) {
           </h2>
           <div className="mt-6 space-y-5">
             {copy.steps.map(([title, body]) => (
-              <div key={title} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+              <div
+                key={title}
+                className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5"
+              >
                 <h3 className="text-lg font-bold text-[#002d1c]">{title}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
                   {body}
@@ -138,7 +150,10 @@ export default function SpanishGuide({ copy }: { copy: SpanishGuideCopy }) {
           </h2>
           <ol className="mt-6 space-y-3 text-sm leading-6 text-[#414844] md:text-base">
             {copy.quickResetSteps.map((step) => (
-              <li key={step} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4">
+              <li
+                key={step}
+                className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-4"
+              >
                 {step}
               </li>
             ))}
@@ -151,7 +166,10 @@ export default function SpanishGuide({ copy }: { copy: SpanishGuideCopy }) {
           </h2>
           <div className="mt-6 space-y-4">
             {copy.faqs.map(([question, answer]) => (
-              <div key={question} className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5">
+              <div
+                key={question}
+                className="rounded-[1.5rem] bg-[#f9faf2] px-5 py-5"
+              >
                 <h3 className="text-lg font-bold text-[#002d1c]">{question}</h3>
                 <p className="mt-2 text-sm leading-6 text-[#414844] md:text-base md:leading-7">
                   {answer}

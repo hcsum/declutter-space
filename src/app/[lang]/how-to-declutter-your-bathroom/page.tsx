@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { notFound } from "next/navigation";
+import RoomDecisionGuide from "@/components/RoomDecisionGuide";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
 import { buildLanguageAlternates } from "@/lib/seo";
 
@@ -74,7 +76,7 @@ function getCopy(locale: string): GuideCopy {
         "浴室不只是功能区，它也是你早晚最频繁接触的空间之一。台面拥挤、抽屉混乱、每次都要翻找，会在很小的时间片里不断制造摩擦。把这些小摩擦减掉，日常节奏会顺很多。",
       toolTitle: "现在就开始浴室清单",
       toolDesc:
-        "下面这份互动清单和浴室清单功能页共用同一套数据。你可以直接在这里勾选、添加项目、保存进度。",
+        "打开浴室与洗衣区互动清单后，你可以勾选任务、添加项目并保存进度。先完成一个抽屉或一层柜格即可。",
       toolPage: "打开浴室清单功能页",
       mistakesTitle: "浴室整理里最常见的错误",
       mistakes: [
@@ -101,7 +103,7 @@ function getCopy(locale: string): GuideCopy {
       ],
       blockersTitle: "浴室杂物的情绪卡点",
       blockersBody:
-        "浴室的杂物常常以小但多的形式积累——\"还能挤一下\" 的洗发水、\"哪天用得上\" 的旅行装、收过来从没用的样品、贵但其实不适合自己肤质的护肤品。这些东西不是因为还有用而留着，而是因为扔它们带着 \"浪费\" 和 \"以防万一\" 的小负罪感。\"用，或者放手\" 在浴室特别适用：开封后超过一年的护肤品基本已经氧化失效，留着只是占地方。",
+        "没用完的洗发水、旅行装和昂贵但不适合自己的护肤品，可能让人因为怕浪费而迟迟不决定。先检查是否适合继续使用，再决定去留；不必为了用完而勉强使用刺激皮肤的产品。有效期、开封后使用期限和储存要求应以产品标示及厂商说明为准，不能统一按开封一年判断。处理别人的用品前先征求意见。",
       relatedTitle: "相关阅读",
       relatedIntro: "想拓展到房间外的话题：",
       relatedLinks: [
@@ -172,11 +174,11 @@ function getCopy(locale: string): GuideCopy {
       ],
       toolTitle: "浴室チェックリストから始める",
       toolDesc:
-        "このインタラクティブなチェックリストは、専用の浴室チェックリストページと同じライブデータを使っています。どちらのページからでも項目のチェック、追加、進捗の保存ができます。",
+        "浴室・洗濯スペースのチェックリストページで、項目のチェック、追加、進捗の保存ができます。まず引き出し一つ、または棚一段から始めましょう。",
       toolPage: "浴室チェックリストのページを開く",
       blockersTitle: "浴室の散らかりの奥にある感情的なつまずき",
       blockersBody:
-        "浴室の物は『小さいけれど数が多い』形でたまりがちです。まだ少し残っているシャンプー、いつか旅行で使うかもしれないトラベルサイズ、試さないまま届いたサンプル、高かったのに合わなかった美容液。残っている理由は『役に立つから』ではなく、『捨てるのはもったいない』『念のため』という小さな感情です。ここでは『使うか、手放すか』が特によく効きます。開封から 1 年以上たったスキンケア用品の多くは、もう本来の価値を失っています。",
+        "使いかけのシャンプー、旅行用の小瓶、高かったのに肌に合わなかった美容液は、もったいなさから残しやすい物です。まず今も使えるかを確認し、合わない製品を無理に使い切る必要はありません。使用期限、開封後の使用期間、保管方法は製品表示とメーカーの案内を確認してください。開封から一律に一年とは判断できません。他の人の持ち物は本人に確認してから整理しましょう。",
       relatedTitle: "関連ガイド",
       relatedIntro: "部屋の外まで整えたいなら：",
       relatedLinks: [
@@ -191,7 +193,7 @@ function getCopy(locale: string): GuideCopy {
   return {
     title: "How to Declutter Your Bathroom | Step-by-Step Bathroom Reset | DeclutterYourHome",
     description:
-      "Learn how to declutter your bathroom step by step by clearing expired products, sample overflow, crowded counters, and backup stock you do not need.",
+      "Declutter your bathroom one shelf at a time. Sort toiletries, makeup, medicines, towels, and backups with practical keep-or-release checks and a room checklist.",
     eyebrow: "Bathroom Guide",
     heroTitle: "How to Declutter Your Bathroom Without Running Out of Essentials",
     heroSubtitle:
@@ -201,11 +203,11 @@ function getCopy(locale: string): GuideCopy {
       "Bathrooms fill up with things that look harmless on their own: samples, duplicate toiletries, nearly expired products, old towels, empty bottles, and too much backup stock. Because the room is small, these categories pile up fast. The best bathroom reset comes from reducing volume first, not from buying more organizers for products you already do not need.",
     stepsTitle: "How to declutter your bathroom in 7 steps",
     steps: [
-      ["1. Throw away expired, spoiled, or clearly unused products", "Start with expired medication, sunscreen, skincare, makeup, samples, and anything that has changed texture, smell, or color."],
+      ["1. Separate expired, deteriorated, and unwanted products", "Check expiry dates, opening-period symbols, and storage instructions. Set medicines aside for an appropriate disposal route, such as a local take-back scheme. Follow local guidance for other products and packaging."],
       ["2. Group like items together", "Put haircare, skincare, oral care, cleaning products, and first-aid items together so duplicates and overstock become obvious."],
       ["3. Keep only current-use items in the easiest spots", "Counters and shower shelves should hold what you are actively using now. Backups can stay, but they should not compete with daily-use products."],
       ["4. Cut back on samples and travel-size products", "Tiny items feel harmless, but they often become long-term clutter. Keep what you will actually use soon or take on a trip and clear the rest."],
-      ["5. Replace worn towels, curtains, and bath mats", "These items have a big impact on how clean the room feels. If they are yellowed, musty, frayed, or unpleasant to use, they are likely past their useful life."],
+      ["5. Review towels, curtains, and bath mats", "Launder and reassess textiles before replacing them for appearance alone. Keep usable items for household needs and check local textile-donation or disposal rules for what you no longer want."],
       ["6. Reset drawers and cabinets full of random small items", "Hair ties, cotton swabs, razors, spare batteries, manuals, and freebie extras become frustrating fast when they are mixed together."],
       ["7. Put a firm limit on backup stock", "Extra toothpaste, toilet paper, shampoo, and cleaning supplies are fine, but they need a visible boundary so storage does not quietly expand forever."],
     ],
@@ -233,7 +235,7 @@ function getCopy(locale: string): GuideCopy {
       "Keep only the products you are actively using in your morning and evening routine within easy reach. Backups, guest items, and less-frequent products should stay separate so the room reflects today’s routine instead of your entire inventory.",
     quickResetTitle: "How to declutter your bathroom in 15 minutes",
     quickResetSteps: [
-      "Throw away expired products, empty bottles, and obvious trash",
+      "Separate expired products for appropriate disposal and remove empty packaging",
       "Pull all daily-use items together and move everything else off the counter",
       "Choose one drawer or shelf and remove duplicates and samples",
       "Put backups in one clearly limited zone instead of spreading them across the room",
@@ -243,14 +245,16 @@ function getCopy(locale: string): GuideCopy {
       ["How many backup toiletries should you keep?", "Keep only what fits in one defined backup area. Once extras spill beyond that limit, they become clutter instead of convenience."],
       ["Should bathroom counters be completely empty?", "No. They should hold the products you actually use every day. The goal is functional clarity, not a hotel-style photo set."],
       ["What should you declutter first in a bathroom?", "Start with expired products, unused samples, and duplicate items. They are the fastest way to create space without affecting your routine."],
+      ["How do you decide which skincare and makeup to discard?", "Check expiry dates, any period-after-opening symbol, storage instructions, and the manufacturer’s advice. Do not apply a universal twelve-month rule or keep using a product that irritates you just to finish it."],
+      ["Can you donate unused toiletries?", "Some services accept suitable unopened, in-date products, but their rules vary. Confirm acceptance first; do not assume opened cosmetics, medicines, or every travel sample can be donated."],
     ],
     toolTitle: "Start with the bathroom checklist",
     toolDesc:
-      "This interactive checklist shares the same live data as the dedicated bathroom checklist page, so you can check off tasks, add items, and keep progress saved from either page.",
+      "Open the bathroom and laundry checklist to check off tasks, add your own items, and save progress. Use it for the shelf you just sorted, then return when you are ready for another small area.",
     toolPage: "Open the Bathroom Checklist page",
     blockersTitle: "The emotional blockers behind bathroom clutter",
     blockersBody:
-      "Bathroom clutter accumulates as \"small but many\": the half-finished shampoo \"there's still some left,\" the travel-size bottles \"might use them on a trip someday,\" the free samples that arrived with no review, the expensive serum that did not work but feels wasteful to toss. None of it is staying because it is useful. It is staying because tossing it carries a small charge of \"waste\" or \"just in case.\" Use it or lose it applies here especially hard: most opened skincare oxidizes within twelve months, so the bottle you have been saving is already past its actual usefulness.",
+      "Half-finished bottles, travel samples, and an expensive serum that did not suit you can bring up feelings of waste. Check whether each product is still suitable and whether you actually want to use it. Follow its expiry, opening-period, and storage instructions rather than a universal twelve-month rule. You do not have to use up an irritating product to justify the purchase, and you should ask before removing another person’s toiletries.",
     relatedTitle: "Related guides",
     relatedIntro: "Pair this room reset with broader habit changes:",
     relatedLinks: [
@@ -264,6 +268,7 @@ function getCopy(locale: string): GuideCopy {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { lang } = await params;
+  if (!isValidLocale(lang) || lang === "es") return {};
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getCopy(locale);
 
@@ -276,6 +281,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BathroomPage({ params }: Props) {
   const { lang } = await params;
+  if (!isValidLocale(lang) || lang === "es") notFound();
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getCopy(locale);
 
@@ -299,6 +305,11 @@ export default async function BathroomPage({ params }: Props) {
             >
               {copy.toolPage}
             </Link>
+            {locale === "en" && (
+              <Link href="#item-decisions" className="rounded-full bg-[#dcebdd] px-5 py-3 text-[#002d1c]">
+                Sort toiletries, makeup, and backups
+              </Link>
+            )}
           </div>
         </section>
 
@@ -325,6 +336,8 @@ export default async function BathroomPage({ params }: Props) {
             </ul>
           </aside>
         </section>
+
+        {locale === "en" && <RoomDecisionGuide room="bathroom" />}
 
         <section className="rounded-[2rem] bg-white px-6 py-8 shadow-sm ring-1 ring-black/5 md:px-8">
           <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-3xl">

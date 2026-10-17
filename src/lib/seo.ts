@@ -18,6 +18,7 @@ const ES_READY_SHARED_PATHS = new Set(["", "/declutter-checklist"]);
  */
 export const ES_ONLY_PATHS = [
   "/rutina-de-limpieza-del-hogar",
+  "/plan-de-limpieza-semanal",
   "/como-ordenar-armarios",
   "/como-ordenar-la-cocina",
   "/como-ordenar-la-habitacion",
@@ -46,6 +47,7 @@ export function isJaOnlyPath(path: string) {
 }
 
 function localesForPath(path: string): readonly Locale[] {
+  if (path === "/how-to-declutter-old-cards-and-letters") return ["en"];
   if (isEsOnlyPath(path)) return ["es"];
   if (isJaOnlyPath(path)) return ["ja"];
 
