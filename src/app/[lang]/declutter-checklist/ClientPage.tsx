@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useMemo, useState } from "react";
+import { FormEvent, useMemo, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { Bars3Icon, XMarkIcon } from "@heroicons/react/24/outline";
 import { useDialogState } from "@/components/DialogProvider";
@@ -17,12 +17,11 @@ import {
   RemovedItemsByCategory,
   buildEntryKey,
   formatDateKey,
-  getChecklistDateFormatters,
   getLocalizedChecklistCategories,
-  parseDateKey,
 } from "@/lib/checklist/checklist";
 import { useChecklistPersistence } from "@/lib/checklist/useChecklistPersistence";
 import { checklistSeoContent } from "@/lib/checklist/seo-content";
+import { resourceNavigationCopy } from "@/lib/checklist/resource-navigation";
 
 type DraftsByCategory = Record<string, string>;
 
@@ -35,32 +34,23 @@ const categoryAccents = [
   "bg-[#e4f0ec] text-[#2a6c59]",
 ];
 
-function getFlowDates() {
-  const today = new Date();
-  return Array.from({ length: 31 }, (_, index) => {
-    const date = new Date(today);
-    date.setDate(today.getDate() + index - 10);
-    return date;
-  });
-}
-
 function getCategoryAccent(index: number) {
   return categoryAccents[index % categoryAccents.length];
 }
 
-export default function ClientPage() {
+export default function ClientPage({
+  featuredResources,
+}: {
+  featuredResources: ReactNode;
+}) {
   const { setDialogContent } = useDialogState();
   const { t, locale, localePath } = useI18n();
+  const resourceCopy = resourceNavigationCopy[locale];
   const seoContent =
     checklistSeoContent[locale as keyof typeof checklistSeoContent] ??
     checklistSeoContent.en;
   const today = new Date();
   const todayKey = formatDateKey(today);
-  const flowDates = useMemo(() => getFlowDates(), []);
-  const { monthDayFormatter, longDateFormatter } = useMemo(
-    () => getChecklistDateFormatters(locale),
-    [locale],
-  );
 
   const [customItemsByCategory, setCustomItemsByCategory] =
     useState<CustomItemsByCategory>({});
@@ -72,9 +62,6 @@ export default function ClientPage() {
   const [importedLists, setImportedLists] = useState<ImportedList[]>([]);
   const [draftsByCategory, setDraftsByCategory] = useState<DraftsByCategory>(
     {},
-  );
-  const [selectedHistoryDate, setSelectedHistoryDate] = useState<string | null>(
-    null,
   );
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isEditMode, setIsEditMode] = useState(false);
@@ -98,11 +85,6 @@ export default function ClientPage() {
         }),
       ),
     [importedLists, locale, removedItemsByCategory],
-  );
-
-  const historyCategories = useMemo(
-    () => getLocalizedChecklistCategories(locale, importedLists),
-    [importedLists, locale],
   );
 
   const checklistState = useMemo(
@@ -138,56 +120,19 @@ export default function ClientPage() {
     },
   });
 
-  const allItemsByEntryKey = useMemo(() => {
-    const entries = new Map<string, { category: string; text: string }>();
-    historyCategories.forEach((category) => {
-      category.defaultItems.forEach((item) => {
-        entries.set(buildEntryKey(category.key, item.id), {
-          category: category.category,
-          text: item.text,
-        });
-      });
-      (customItemsByCategory[category.key] ?? []).forEach((item) => {
-        entries.set(buildEntryKey(category.key, item.id), {
-          category: category.category,
-          text: item.text,
-        });
-      });
-    });
-    return entries;
-  }, [customItemsByCategory, historyCategories]);
-
   const todayHistorySet = useMemo(
     () => new Set(historyByDate[todayKey] ?? []),
     [historyByDate, todayKey],
   );
 
-  const selectedHistoryEntries = selectedHistoryDate
-    ? (historyByDate[selectedHistoryDate] ?? [])
-    : [];
-
-  const selectedHistoryGroups = selectedHistoryEntries.reduce<
-    Array<{ category: string; items: string[] }>
-  >((groups, entryKey) => {
-    const details =
-      allItemsByEntryKey.get(entryKey) ?? archivedItemsByEntryKey[entryKey];
-    if (!details) return groups;
-    const existing = groups.find(
-      (group) => group.category === details.category,
-    );
-    if (existing) {
-      existing.items.push(details.text);
-      return groups;
-    }
-    groups.push({ category: details.category, items: [details.text] });
-    return groups;
-  }, []);
-
   function toggleItem(categoryKey: string, itemId: string) {
     const entryKey = buildEntryKey(categoryKey, itemId);
     // Only the check direction is a signal of use; unchecking is a correction.
     if (!todayHistorySet.has(entryKey)) {
-      trackEvent("check_item", { source: "checklist_hub", category: categoryKey });
+      trackEvent("check_item", {
+        source: "checklist_hub",
+        category: categoryKey,
+      });
     }
     if (hasLoadedStorage && !hasSeenMomentumDialog) {
       setHasSeenMomentumDialog(true);
@@ -433,9 +378,9 @@ export default function ClientPage() {
       <div className="flex min-w-0 flex-1 flex-col md:ml-64 print:ml-0">
         <header className="sticky top-0 z-20 flex items-center justify-between bg-[#f9faf2] px-5 py-4 md:px-8">
           <div>
-            <h1 className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
+            <p className="text-sm font-semibold uppercase tracking-[0.22em] text-[#59615d]">
               {t("checklist.headerLabel")}
-            </h1>
+            </p>
             <p className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
               {t("checklist.headerTitle")}
             </p>
@@ -449,152 +394,33 @@ export default function ClientPage() {
         </header>
 
         <section className="flex-1 space-y-8 px-5 pb-10 pt-4 md:px-8">
-          <div className="print-hidden">
-            <ChecklistCloudBanner
-              isLoggedIn={isLoggedIn}
-              cloudStatus={cloudStatus}
-            />
-          </div>
-
-          <section className="print-hidden rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
-            <div className="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-              <div>
-                <h2 className="text-3xl font-black tracking-[-0.05em] text-[#002d1c]">
-                  {t("checklist.ongoingTitle")}
-                </h2>
-                <p className="mt-1 text-sm font-medium text-[#5e6662]">
-                  {t("checklist.ongoingDesc")}
-                </p>
-              </div>
-              <div className="text-sm font-bold text-[#2b694d]">
-                {t("checklist.tryTasks")}
-              </div>
-            </div>
-
-            <div className="overflow-x-auto pb-2">
-              <div className="min-w-[960px]">
-                <div className="flex h-52 items-end gap-1.5 md:gap-3">
-                  {flowDates.map((date) => {
-                    const dateKey = formatDateKey(date);
-                    const completedCount = (historyByDate[dateKey] ?? [])
-                      .length;
-                    const isSelected = selectedHistoryDate === dateKey;
-                    const isToday = dateKey === todayKey;
-                    const isFuture = date > today;
-                    const hasActivity = completedCount > 0;
-                    const minBarHeight = 20;
-                    const maxBarHeight = 100;
-                    const perItemStep = 10;
-                    const barHeight = hasActivity
-                      ? Math.min(
-                          maxBarHeight,
-                          minBarHeight + completedCount * perItemStep,
-                        )
-                      : minBarHeight;
-
-                    return (
-                      <button
-                        key={dateKey}
-                        type="button"
-                        onClick={() =>
-                          setSelectedHistoryDate(
-                            completedCount > 0 ? dateKey : null,
-                          )
-                        }
-                        className="group flex h-full min-w-0 flex-1 flex-col items-center justify-end"
-                        aria-pressed={isSelected}
-                        aria-label={`${monthDayFormatter.format(date)}: ${t("checklist.itemsCompleted").replace("{count}", String(completedCount))}`}
-                      >
-                        <span
-                          className={[
-                            "mb-2 text-[10px] font-black uppercase tracking-[0.22em] text-[#f0bd8b] transition-opacity",
-                            isToday ? "opacity-100" : "opacity-0",
-                          ].join(" ")}
-                        >
-                          {t("checklist.today")}
-                        </span>
-                        <span
-                          className={[
-                            "block w-full rounded-t-lg transition-all",
-                            isSelected
-                              ? "bg-[#002d1c]"
-                              : isToday
-                                ? "bg-[#f0bd8b]"
-                                : hasActivity
-                                  ? "bg-[#2b694d]/75 hover:bg-[#2b694d]"
-                                  : isFuture
-                                    ? "bg-[#e8e9e1] opacity-60"
-                                    : "bg-[#002d1c]/10 hover:bg-[#002d1c]/15",
-                          ].join(" ")}
-                          style={{ height: `${barHeight}%` }}
-                        />
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="mt-3 flex justify-between text-[11px] font-semibold uppercase tracking-[0.22em] text-[#717973]">
-                  <span>{monthDayFormatter.format(flowDates[0])}</span>
-                  <span>{t("checklist.tapBar")}</span>
-                  <span>
-                    {monthDayFormatter.format(flowDates[flowDates.length - 1])}
-                  </span>
-                </div>
-              </div>
+          <section className="max-w-4xl py-4">
+            <h1 className="text-3xl font-bold tracking-[-0.04em] text-[#002d1c] md:text-4xl">
+              {resourceCopy.title}
+            </h1>
+            <p className="mt-4 text-base leading-7 text-[#414844]">
+              {resourceCopy.intro}
+            </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <a
+                href="#interactive-checklist"
+                className="inline-flex min-h-11 items-center rounded-full bg-[#002d1c] px-5 py-3 text-sm font-semibold text-white hover:bg-[#00432a]"
+              >
+                {resourceCopy.online} ↓
+              </a>
+              <a
+                href="#printable-checklists"
+                className="inline-flex min-h-11 items-center rounded-full border border-[#b7d1c4] px-5 py-3 text-sm font-semibold text-[#2b694d] hover:bg-[#e7eadf]"
+              >
+                {resourceCopy.downloads} ↓
+              </a>
             </div>
           </section>
-
-          {selectedHistoryDate && (
-            <section className="print-hidden rounded-[2rem] bg-[#edefe7] p-6 md:p-8">
-              <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                <div>
-                  <p className="text-xs font-black uppercase tracking-[0.24em] text-[#5d6661]">
-                    {t("checklist.dailyProgress")}
-                  </p>
-                  <h3 className="mt-2 text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
-                    {longDateFormatter.format(
-                      parseDateKey(selectedHistoryDate),
-                    )}
-                  </h3>
-                  <p className="mt-2 text-sm text-[#56615c]">
-                    {t("checklist.dailyProgressDesc")}
-                  </p>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedHistoryDate(null)}
-                  className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#2b694d]"
-                >
-                  {t("checklist.close")}
-                </button>
-              </div>
-
-              <div className="mt-6 grid gap-4 lg:grid-cols-2">
-                {selectedHistoryGroups.map((group) => (
-                  <article
-                    key={group.category}
-                    className="rounded-[1.5rem] bg-white p-5"
-                  >
-                    <h4 className="text-lg font-bold tracking-[-0.03em] text-[#002d1c]">
-                      {group.category}
-                    </h4>
-                    <ul className="mt-4 space-y-3 text-sm text-[#414844]">
-                      {group.items.map((item) => (
-                        <li key={item} className="flex items-start gap-3">
-                          <span className="mt-0.5 inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md bg-[#2b694d] text-[11px] font-bold text-white">
-                            x
-                          </span>
-                          <span>{item}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </article>
-                ))}
-              </div>
-            </section>
-          )}
-
-          <div className="flex items-center justify-between">
+          {featuredResources}
+          <div
+            id="interactive-checklist"
+            className="flex scroll-mt-28 items-center justify-between gap-3"
+          >
             <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
               {t("checklist.dailyTasksTitle")}
             </h2>
@@ -647,7 +473,9 @@ export default function ClientPage() {
                       <h3 className="text-lg font-bold tracking-[-0.03em] text-[#002d1c]">
                         {category.source === "built-in" ? (
                           <Link
-                            href={localePath(`/declutter-checklist/${category.slug}`)}
+                            href={localePath(
+                              `/declutter-checklist/${category.slug}`,
+                            )}
                             className="hover:underline"
                           >
                             {category.category}
@@ -735,6 +563,32 @@ export default function ClientPage() {
                 </article>
               );
             })}
+          </section>
+
+          <section className="print-hidden space-y-6 rounded-[2rem] bg-white p-6 shadow-sm md:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h2 className="text-2xl font-bold tracking-[-0.04em] text-[#002d1c]">
+                  {t("checklist.dailyProgress")}
+                </h2>
+                <p className="mt-2 text-sm text-[#414844]">
+                  {t("checklist.tasksToday").replace(
+                    "{count}",
+                    String(todayHistorySet.size),
+                  )}
+                </p>
+              </div>
+              <Link
+                href={localePath("/declutter-checklist/progress")}
+                className="inline-flex min-h-11 items-center rounded-full bg-[#edefe7] px-5 py-3 text-sm font-bold text-[#2b694d] hover:bg-[#e0e4d9]"
+              >
+                {t("checklist.navProgress")} →
+              </Link>
+            </div>
+            <ChecklistCloudBanner
+              isLoggedIn={isLoggedIn}
+              cloudStatus={cloudStatus}
+            />
           </section>
 
           <section className="print-hidden rounded-[2rem] bg-[#002d1c] p-8 text-white">

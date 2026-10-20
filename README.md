@@ -35,7 +35,34 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
 
-## keywords
+## Printable checklist assets
+
+Kitchen, bedroom and closet PDFs and first-page WebP previews are committed in
+`public/checklists/{locale}/`. They use the same translated item data as the
+interactive lists. To regenerate after changing that data:
+
+```bash
+npm run assets:checklists
+```
+
+The generator needs a local Chrome installation (macOS/Linux), or `CHROME_PATH`
+pointing to its executable. Install CJK fonts when generating on Linux, and verify
+Chinese/Japanese text in both the PDF and preview. It checks translation item
+counts and layout overflow before exporting. PDF text remains selectable.
+
+Edit `src/lib/checklist/printables.json` for featured rooms, localized resource
+copy and items per PDF page. Commit regenerated assets with the source changes;
+normal deployments serve these static files without running Chrome.
+
+Supported content languages are defined in `src/i18n/page-locales.ts`, shared by
+metadata (which rejects untranslated pages), language navigation and sitemap.
+When adding a translation, update this registry along with the actual page copy.
+
+To check a running production preview's status codes, metadata, internal links,
+sitemap and downloadable assets, run `npm run check:seo`. It defaults to
+`http://localhost:3107`; set `SEO_BASE_URL` to check another preview.
+
+## Target keywords
 
 1. how to declutter your home
 2. 30 day declutter challenge

@@ -1,61 +1,15 @@
 import type { Metadata } from "next";
-import { locales, defaultLocale, type Locale } from "@/i18n/config";
+import { notFound } from "next/navigation";
+import { type Locale } from "@/i18n/config";
+import { defaultLocaleForPath, localesForPath } from "@/i18n/page-locales";
 import { siteUrl } from "@/lib/site";
 
-/**
- * Shared paths (English slugs) that also have real Spanish copy.
- *
- * The Spanish rollout is keyword-led rather than a full translation of the
- * English site, so most English-slug guides have no `es` version. Only the
- * paths listed here — plus `/declutter-checklist/*` area pages, which are
- * driven by translated data — may advertise an `es` hreflang.
- */
-const ES_READY_SHARED_PATHS = new Set(["", "/declutter-checklist"]);
-
-/**
- * Spanish-only pages built around Spanish keywords. They exist at `/es/...`
- * and nowhere else, so they self-canonicalize with no hreflang siblings.
- */
-export const ES_ONLY_PATHS = [
-  "/rutina-de-limpieza-del-hogar",
-  "/plan-de-limpieza-semanal",
-  "/como-ordenar-armarios",
-  "/como-ordenar-la-cocina",
-  "/como-ordenar-la-habitacion",
-] as const;
-
-const esOnlyPathSet: ReadonlySet<string> = new Set(ES_ONLY_PATHS);
-
-export function isEsOnlyPath(path: string) {
-  return esOnlyPathSet.has(path);
-}
-
-/**
- * Japanese-only pages built around Japanese keywords. Same rationale as the
- * Spanish rollout: keyword-led native pages that exist at `/ja/...` and nowhere
- * else, so they self-canonicalize with no hreflang siblings.
- */
-export const JA_ONLY_PATHS = [
-  "/katazukerarenai",
-  "/danshari-yarikata",
-] as const;
-
-const jaOnlyPathSet: ReadonlySet<string> = new Set(JA_ONLY_PATHS);
-
-export function isJaOnlyPath(path: string) {
-  return jaOnlyPathSet.has(path);
-}
-
-function localesForPath(path: string): readonly Locale[] {
-  if (path === "/how-to-declutter-old-cards-and-letters") return ["en"];
-  if (isEsOnlyPath(path)) return ["es"];
-  if (isJaOnlyPath(path)) return ["ja"];
-
-  const esReady =
-    ES_READY_SHARED_PATHS.has(path) || path.startsWith("/declutter-checklist/");
-
-  return esReady ? locales : locales.filter((locale) => locale !== "es");
-}
+export {
+  ES_ONLY_PATHS,
+  JA_ONLY_PATHS,
+  isEsOnlyPath,
+  isJaOnlyPath,
+} from "@/i18n/page-locales";
 
 /**
  * Build canonical + hreflang alternates for a localized page.
@@ -71,14 +25,15 @@ export function buildLanguageAlternates(
 ): NonNullable<Metadata["alternates"]> {
   const normalizedPath = path === "/" ? "" : path;
   const available = localesForPath(normalizedPath);
+  // Reject untranslated routes as well as omitting them from hreflang/sitemap.
+  // This runs during metadata generation, before a static page is published.
+  if (!available.includes(locale)) notFound();
 
   const languages: Record<string, string> = Object.fromEntries(
     available.map((alt) => [alt, `/${alt}${normalizedPath}`]),
   );
 
-  const xDefault = available.includes(defaultLocale)
-    ? defaultLocale
-    : available[0];
+  const xDefault = defaultLocaleForPath(normalizedPath);
   languages["x-default"] = `/${xDefault}${normalizedPath}`;
 
   return {

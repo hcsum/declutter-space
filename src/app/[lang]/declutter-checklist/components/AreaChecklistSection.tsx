@@ -24,6 +24,7 @@ type AreaChecklistSectionProps = {
   heading: string;
   description: string;
   nextPath: string;
+  exportLabel?: string;
 };
 
 export default function AreaChecklistSection({
@@ -31,6 +32,7 @@ export default function AreaChecklistSection({
   heading,
   description,
   nextPath,
+  exportLabel,
 }: AreaChecklistSectionProps) {
   const { setDialogContent } = useDialogState();
   const { t, locale } = useI18n();
@@ -114,8 +116,10 @@ export default function AreaChecklistSection({
   );
   const sortedItems = useMemo(
     () =>
-      [...allItems].sort((left, right) => left.text.localeCompare(right.text)),
-    [allItems],
+      [...allItems].sort((left, right) =>
+        left.text.localeCompare(right.text, locale),
+      ),
+    [allItems, locale],
   );
   const pdfPages = useMemo(() => {
     const itemsPerPage = 18;
@@ -348,7 +352,7 @@ export default function AreaChecklistSection({
               disabled={isGeneratingPdf}
               className="print-hidden rounded-full bg-[#002d1c] px-4 py-2 text-sm font-bold text-white transition-colors hover:bg-[#00432a] disabled:cursor-wait disabled:opacity-60"
             >
-              {t("checklist.downloadPdf")}
+              {exportLabel ?? t("checklist.downloadPdf")}
             </button>
           </div>
         </div>
@@ -452,9 +456,9 @@ export default function AreaChecklistSection({
                     <p className="text-[11px] font-black uppercase tracking-[0.24em] text-[#59615d]">
                       {t("checklist.downloadPdf")}
                     </p>
-                    <h1 className="mt-2 text-[31px] font-black leading-tight text-[#002d1c]">
+                    <div className="mt-2 text-[31px] font-black leading-tight text-[#002d1c]">
                       {heading}
-                    </h1>
+                    </div>
                     <p className="mt-2 text-[14px] leading-[22px] text-[#414844]">
                       {description}
                     </p>

@@ -1,6 +1,7 @@
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { ReactNode } from "react";
-import { defaultLocale, isValidLocale, locales } from "@/i18n/config";
+import { notFound } from "next/navigation";
+import { isValidLocale, locales } from "@/i18n/config";
 import {
   materialSymbolsStylesheet,
   siteBodyClassName,
@@ -22,7 +23,8 @@ export default async function LocaleLayout({
   params: Promise<{ lang: string }>;
 }) {
   const { lang } = await params;
-  const locale = isValidLocale(lang) ? lang : defaultLocale;
+  if (!isValidLocale(lang)) notFound();
+  const locale = lang;
 
   return (
     <html lang={locale}>

@@ -5,8 +5,9 @@ import React, { useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import { useLightDarkMode } from "./LightDarkModeContext";
 import { useI18n } from "@/i18n/i18n-provider";
-import { Locale, locales } from "@/i18n/config";
+import { Locale } from "@/i18n/config";
 import { getLocalizedPathname } from "@/i18n/getLocalizedPathname";
+import { isPageAvailable, localesForPath } from "@/i18n/page-locales";
 import {
   MoonIcon,
   SunIcon,
@@ -66,6 +67,8 @@ const Header: React.FC = () => {
   const isSecondLook = pathname.includes("/decluttering-decision-guide");
   const isShouldIBuy = pathname.includes("/should-i-buy-it");
   const isCostPerWear = pathname.includes("/cost-per-wear-calculator");
+  const pagePath = `/${pathname.split("/").slice(2).join("/")}`;
+  const availableLocales = localesForPath(pagePath);
 
   const languageLabel =
     locale === "ja"
@@ -105,36 +108,42 @@ const Header: React.FC = () => {
           >
             {t("header.declutterChecklist")}
           </Link>
-          <Link
-            href={localePath("/should-i-buy-it")}
-            className={
-              isShouldIBuy
-                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
-                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
-            }
-          >
-            {t("header.shouldIBuy")}
-          </Link>
-          <Link
-            href={localePath("/cost-per-wear-calculator")}
-            className={
-              isCostPerWear
-                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
-                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
-            }
-          >
-            {t("header.costPerWear")}
-          </Link>
-          <Link
-            href={localePath("/decluttering-decision-guide")}
-            className={
-              isSecondLook
-                ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
-                : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
-            }
-          >
-            {t("header.secondLook")}
-          </Link>
+          {isPageAvailable(locale, "/should-i-buy-it") && (
+            <Link
+              href={localePath("/should-i-buy-it")}
+              className={
+                isShouldIBuy
+                  ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                  : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+              }
+            >
+              {t("header.shouldIBuy")}
+            </Link>
+          )}
+          {isPageAvailable(locale, "/cost-per-wear-calculator") && (
+            <Link
+              href={localePath("/cost-per-wear-calculator")}
+              className={
+                isCostPerWear
+                  ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                  : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+              }
+            >
+              {t("header.costPerWear")}
+            </Link>
+          )}
+          {isPageAvailable(locale, "/decluttering-decision-guide") && (
+            <Link
+              href={localePath("/decluttering-decision-guide")}
+              className={
+                isSecondLook
+                  ? "text-orange-700 dark:text-orange-400 border-b-2 border-orange-700 dark:border-orange-400 pb-1"
+                  : "text-stone-600 dark:text-stone-400 hover:text-orange-700 dark:hover:text-orange-400 transition-colors"
+              }
+            >
+              {t("header.secondLook")}
+            </Link>
+          )}
         </nav>
         <div className="flex items-center gap-2 md:gap-3">
           <button
@@ -156,7 +165,7 @@ const Header: React.FC = () => {
               <LanguageIcon className="h-5 w-5 text-stone-600 dark:text-stone-300" />
             </button>
             <div className="absolute right-0 top-full mt-1 bg-white dark:bg-gray-700 border border-stone-200 dark:border-gray-600 rounded-lg shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50 min-w-[80px]">
-              {locales.map((loc) => (
+              {availableLocales.map((loc) => (
                 <Link
                   key={loc}
                   href={getLocalizedPathname(pathname, loc)}
@@ -235,39 +244,45 @@ const Header: React.FC = () => {
               >
                 {t("header.declutterChecklist")}
               </Link>
-              <Link
-                href={localePath("/should-i-buy-it")}
-                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isShouldIBuy
-                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
-                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t("header.shouldIBuy")}
-              </Link>
-              <Link
-                href={localePath("/cost-per-wear-calculator")}
-                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isCostPerWear
-                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
-                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t("header.costPerWear")}
-              </Link>
-              <Link
-                href={localePath("/decluttering-decision-guide")}
-                className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
-                  isSecondLook
-                    ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
-                    : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {t("header.secondLook")}
-              </Link>
+              {isPageAvailable(locale, "/should-i-buy-it") && (
+                <Link
+                  href={localePath("/should-i-buy-it")}
+                  className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                    isShouldIBuy
+                      ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                      : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t("header.shouldIBuy")}
+                </Link>
+              )}
+              {isPageAvailable(locale, "/cost-per-wear-calculator") && (
+                <Link
+                  href={localePath("/cost-per-wear-calculator")}
+                  className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                    isCostPerWear
+                      ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                      : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t("header.costPerWear")}
+                </Link>
+              )}
+              {isPageAvailable(locale, "/decluttering-decision-guide") && (
+                <Link
+                  href={localePath("/decluttering-decision-guide")}
+                  className={`block rounded-2xl px-4 py-3 text-sm font-semibold transition-colors ${
+                    isSecondLook
+                      ? "bg-orange-50 text-orange-700 dark:bg-orange-400/10 dark:text-orange-300"
+                      : "text-stone-800 hover:bg-stone-100 dark:text-stone-100 dark:hover:bg-gray-700"
+                  }`}
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
+                  {t("header.secondLook")}
+                </Link>
+              )}
             </nav>
 
             <div className="mt-4 rounded-2xl bg-stone-100/80 p-3 dark:bg-gray-700/70">
@@ -276,7 +291,7 @@ const Header: React.FC = () => {
                 {languageLabel}
               </div>
               <div className="grid grid-cols-2 gap-2">
-                {locales.map((loc) => (
+                {availableLocales.map((loc) => (
                   <Link
                     key={loc}
                     href={getLocalizedPathname(pathname, loc)}

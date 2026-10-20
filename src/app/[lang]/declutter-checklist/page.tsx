@@ -3,9 +3,14 @@ import { Suspense } from "react";
 import type { Metadata } from "next";
 import getDictionary from "@/i18n/getDictionary";
 import { defaultLocale, isValidLocale } from "@/i18n/config";
-import { buildBreadcrumbSchema, buildFaqPageSchema, buildLanguageAlternates } from "@/lib/seo";
+import {
+  buildBreadcrumbSchema,
+  buildFaqPageSchema,
+  buildLanguageAlternates,
+} from "@/lib/seo";
 import { checklistSeoContent } from "@/lib/checklist/seo-content";
 import { JsonLd } from "@/components/json-ld";
+import ChecklistResources from "@/components/ChecklistResources";
 
 type Props = { params: Promise<{ lang: string }> };
 
@@ -61,7 +66,9 @@ export default async function Page({ params }: Props) {
         ])}
       />
       <Suspense fallback={null}>
-        <ClientPage />
+        <ClientPage
+          featuredResources={<ChecklistResources locale={locale} />}
+        />
       </Suspense>
     </>
   );

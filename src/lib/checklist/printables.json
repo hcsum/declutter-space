@@ -1,0 +1,85 @@
+{
+  "itemsPerPage": 12,
+  "titleOverrides": {
+    "en": { "closets": "Closet Decluttering Checklist" }
+  },
+  "areas": [
+    { "slug": "kitchen", "sourceCategory": "Kitchen" },
+    { "slug": "bedroom", "sourceCategory": "Bedroom" },
+    { "slug": "closets", "sourceCategory": "Closets" }
+  ],
+  "copy": {
+    "en": {
+      "language": "English",
+      "title": "{area} Declutter Checklist",
+      "intro": "Start with one drawer or shelf. Review each item, keep what serves you, and let the rest go at your own pace.",
+      "collectionTitle": "Free printable room checklists",
+      "collectionIntro": "Choose one space. Preview the checklist, download a free A4 PDF, or check off tasks online. No account needed to start.",
+      "relatedTitle": "Choose your next space",
+      "download": "Download free PDF",
+      "online": "Use online checklist",
+      "customExport": "Export my edited list",
+      "previewAlt": "First-page preview of the {area} declutter checklist",
+      "previewCaption": "First page shown · Full checklist in the PDF",
+      "specs": "{items} items · {pages} {pageUnit} · A4 · {language}",
+      "pageUnit": ["page", "pages"],
+      "format": "Free PDF · No sign-up",
+      "page": "Page {current} / {total}",
+      "notes": "Notes / next small step"
+    },
+    "zh": {
+      "language": "中文",
+      "title": "{area}断舍离清单",
+      "intro": "从一个抽屉或一层架子开始。逐项看看，留下真正有用的东西，按自己的节奏处理不再需要的物品。",
+      "collectionTitle": "免费分区断舍离打印清单",
+      "collectionIntro": "选一个区域，先看清单预览，免费下载 A4 PDF，或在线勾选任务。无需注册即可开始。",
+      "relatedTitle": "下一个整理区域",
+      "download": "免费下载 PDF",
+      "online": "在线使用清单",
+      "customExport": "导出我编辑后的清单",
+      "previewAlt": "{area}断舍离清单第一页预览",
+      "previewCaption": "展示第一页 · PDF 包含完整清单",
+      "specs": "{items} 项 · {pages} {pageUnit} · A4 · {language}",
+      "pageUnit": ["页", "页"],
+      "format": "免费 PDF · 无需注册",
+      "page": "第 {current} 页，共 {total} 页",
+      "notes": "备注 / 下一小步"
+    },
+    "ja": {
+      "language": "日本語",
+      "title": "{area}片付けチェックリスト",
+      "intro": "引き出し一つ、棚一段から始めましょう。一つずつ見直し、役に立つ物を残して、自分のペースで手放していきます。",
+      "collectionTitle": "無料で印刷できる部屋別チェックリスト",
+      "collectionIntro": "場所を一つ選び、プレビューを確認して無料の A4 PDF をダウンロード。オンラインでもチェックできます。登録不要で始められます。",
+      "relatedTitle": "次に片付ける場所を選ぶ",
+      "download": "無料 PDF をダウンロード",
+      "online": "オンラインで使う",
+      "customExport": "編集したリストを書き出す",
+      "previewAlt": "{area}片付けチェックリストの1ページ目のプレビュー",
+      "previewCaption": "1ページ目の見本 · PDF に全項目を収録",
+      "specs": "{items} 項目 · {pages} {pageUnit} · A4 · {language}",
+      "pageUnit": ["ページ", "ページ"],
+      "format": "無料 PDF · 登録不要",
+      "page": "{current} / {total} ページ",
+      "notes": "メモ / 次の小さな一歩"
+    },
+    "es": {
+      "language": "Español",
+      "title": "Lista para ordenar: {area}",
+      "intro": "Empieza por un cajón o una balda. Revisa cada cosa, conserva lo que te sirve y deja ir el resto a tu ritmo.",
+      "collectionTitle": "Listas gratuitas por zonas para imprimir",
+      "collectionIntro": "Elige una zona, mira la vista previa y descarga el PDF A4 gratis, o marca las tareas online. Puedes empezar sin registrarte.",
+      "relatedTitle": "Elige tu próxima zona",
+      "download": "Descargar PDF gratis",
+      "online": "Usar la lista online",
+      "customExport": "Exportar mi lista editada",
+      "previewAlt": "Vista previa de la primera página de la lista para ordenar: {area}",
+      "previewCaption": "Primera página · La lista completa está en el PDF",
+      "specs": "{items} tareas · {pages} {pageUnit} · A4 · {language}",
+      "pageUnit": ["página", "páginas"],
+      "format": "PDF gratis · Sin registro",
+      "page": "Página {current} / {total}",
+      "notes": "Notas / próximo paso pequeño"
+    }
+  }
+}
