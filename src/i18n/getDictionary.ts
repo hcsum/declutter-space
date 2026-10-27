@@ -1,10 +1,11 @@
 import type { Locale } from "./config";
 import en from "./en.json";
+import de from "./de.json";
 import es from "./es.json";
 import ja from "./ja.json";
 import zh from "./zh.json";
 
-const dictionaries: Record<Locale, unknown> = { en, zh, ja, es };
+const dictionaries: Record<Locale, unknown> = { en, zh, ja, es, de };
 
 export type Dictionary = typeof en;
 
@@ -21,7 +22,9 @@ function mergeDictionary(base: unknown, override: unknown): unknown {
       ...(base as Record<string, unknown>),
     };
 
-    for (const [key, value] of Object.entries(override as Record<string, unknown>)) {
+    for (const [key, value] of Object.entries(
+      override as Record<string, unknown>,
+    )) {
       result[key] = mergeDictionary(result[key], value);
     }
 

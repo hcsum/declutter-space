@@ -1,6 +1,7 @@
 import data from "@/const/declutter-checklist.json";
 import zhData from "@/const/declutter-checklist.zh.json";
 import jaData from "@/const/declutter-checklist.ja.json";
+import deData from "@/const/declutter-checklist.de.json";
 import esData from "@/const/declutter-checklist.es.json";
 import { defaultLocale, type Locale } from "@/i18n/config";
 
@@ -28,6 +29,7 @@ export type ChecklistCategory = DeclutterCategory & {
 const checklist = data as DeclutterCategory[];
 const localizedChecklists: Record<Locale, DeclutterCategory[]> = {
   en: checklist,
+  de: deData as DeclutterCategory[],
   ja: jaData as DeclutterCategory[],
   zh: zhData as DeclutterCategory[],
   es: esData as DeclutterCategory[],
@@ -176,7 +178,9 @@ export function getChecklistCategoryBySlug(
   slug: string,
   locale: Locale = defaultLocale,
 ) {
-  return getChecklistCategories(locale).find((category) => category.slug === slug);
+  return getChecklistCategories(locale).find(
+    (category) => category.slug === slug,
+  );
 }
 
 export function getChecklistCategorySlugs() {

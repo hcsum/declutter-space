@@ -26,6 +26,7 @@ export default function ChecklistLocaleSwitcher() {
   }, []);
 
   function getLocaleLabel(targetLocale: (typeof locales)[number]) {
+    if (targetLocale === "de") return "DE";
     if (targetLocale === "en") return "EN";
     if (targetLocale === "zh") return "中文";
     if (targetLocale === "es") return "ES";

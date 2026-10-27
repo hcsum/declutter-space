@@ -34,8 +34,16 @@ for (const locale of Object.keys(config.copy)) {
   );
   const footer = hub.match(/<footer[\s\S]*?<\/footer>/)?.[0];
   assert.ok(footer, `${locale}: resource footer rendered in HTML`);
-  assert.ok(footer.includes(`href="/${locale}/privacy-policy"`));
-  assert.ok(footer.includes(`href="/${locale}/customer-service-policy"`));
+  assert.ok(
+    footer.includes(
+      `href="/${locale === "de" ? "en" : locale}/privacy-policy"`,
+    ),
+  );
+  assert.ok(
+    footer.includes(
+      `href="/${locale === "de" ? "en" : locale}/customer-service-policy"`,
+    ),
+  );
   if (locale === "es") {
     assert.ok(!footer.includes("/how-to-declutter-"));
     assert.ok(footer.includes("/es/como-ordenar-la-cocina"));
@@ -89,6 +97,10 @@ for (const locale of Object.keys(config.copy)) {
 }
 
 for (const path of [
+  "/de/adhd-cleaning-checklist",
+  "/de/how-to-declutter-your-closet",
+  "/en/kleiderschrank-ausmisten",
+  "/de/50-dinge-ausmisten",
   "/es/adhd-cleaning-checklist",
   "/es/cost-per-wear-calculator",
   "/es/how-to-declutter-your-bedroom",
@@ -101,8 +113,32 @@ for (const path of [
   assert.match(html, /name="robots" content="noindex/);
 }
 
+for (const path of ["/de", "/de/kleiderschrank-ausmisten"]) {
+  const html = await (await get(path)).text();
+  assert.equal((html.match(/<h1[ >]/g) || []).length, 1, `${path}: one H1`);
+  assert.ok(
+    html.includes(`rel="canonical" href="${site}${path}"`),
+    `${path}: canonical`,
+  );
+  assert.ok(
+    html.includes('href="/de/declutter-checklist"'),
+    `${path}: checklist link`,
+  );
+  assert.ok(html.includes("FAQPage"), `${path}: FAQ schema`);
+  if (path.endsWith("kleiderschrank-ausmisten")) {
+    assert.ok(html.includes('hrefLang="de"'), `${path}: German alternate`);
+    assert.ok(
+      !html.includes('hrefLang="en"'),
+      `${path}: no untranslated alternate`,
+    );
+  }
+}
+
 const sitemap = await (await get("/sitemap.xml")).text();
 assert.ok(!sitemap.includes("/es/adhd-cleaning-checklist"));
+assert.ok(sitemap.includes(`${site}/de/kleiderschrank-ausmisten`));
+assert.ok(!sitemap.includes(`${site}/de/how-to-declutter-your-closet`));
+assert.ok(!sitemap.includes(`${site}/de/adhd-cleaning-checklist`));
 assert.ok(!sitemap.includes("/declutter-checklist/progress"));
 assert.ok(!sitemap.includes("/declutter-checklist/upload"));
 for (const locale of Object.keys(config.copy)) {
@@ -115,5 +151,5 @@ for (const locale of Object.keys(config.copy)) {
   }
 }
 console.log(
-  `SEO smoke check passed: ${checked} responses, including all 12 PDFs and previews.`,
+  `SEO smoke check passed: ${checked} responses, including all ${Object.keys(config.copy).length * config.areas.length} PDFs and previews.`,
 );

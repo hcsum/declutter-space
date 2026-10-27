@@ -1,12 +1,23 @@
 {
   "itemsPerPage": 12,
   "titleOverrides": {
-    "en": { "closets": "Closet Decluttering Checklist" }
+    "en": {
+      "closets": "Closet Decluttering Checklist"
+    }
   },
   "areas": [
-    { "slug": "kitchen", "sourceCategory": "Kitchen" },
-    { "slug": "bedroom", "sourceCategory": "Bedroom" },
-    { "slug": "closets", "sourceCategory": "Closets" }
+    {
+      "slug": "kitchen",
+      "sourceCategory": "Kitchen"
+    },
+    {
+      "slug": "bedroom",
+      "sourceCategory": "Bedroom"
+    },
+    {
+      "slug": "closets",
+      "sourceCategory": "Closets"
+    }
   ],
   "copy": {
     "en": {
@@ -80,6 +91,24 @@
       "format": "PDF gratis · Sin registro",
       "page": "Página {current} / {total}",
       "notes": "Notas / próximo paso pequeño"
+    },
+    "de": {
+      "language": "Deutsch",
+      "title": "{area}: Ausmisten-Checkliste",
+      "intro": "Beginne mit einer Schublade oder einem Fach. Prüfe jeden Gegenstand, behalte, was du nutzt, und gib den Rest in deinem Tempo weiter.",
+      "collectionTitle": "Ausmisten-Checkliste PDF kostenlos herunterladen",
+      "collectionIntro": "Wähle Küche, Schlafzimmer oder Kleiderschrank. Lade das deutsche A4-PDF direkt ohne Anmeldung herunter oder bearbeite die Checkliste online.",
+      "relatedTitle": "Dein nächster Bereich",
+      "download": "Kostenloses PDF herunterladen",
+      "online": "Checkliste online nutzen",
+      "customExport": "Meine bearbeitete Liste exportieren",
+      "previewAlt": "Vorschau der ersten Seite: {area} Ausmisten-Checkliste",
+      "previewCaption": "Vorschau der ersten Seite · Vollständige Liste im PDF",
+      "specs": "{items} Einträge · {pages} {pageUnit} · A4 · {language}",
+      "pageUnit": ["Seite", "Seiten"],
+      "format": "Kostenloses PDF · Ohne Anmeldung",
+      "page": "Seite {current} / {total}",
+      "notes": "Notizen / dein nächster kleiner Schritt"
     }
   }
 }

@@ -71,15 +71,18 @@ const Header: React.FC = () => {
   const availableLocales = localesForPath(pagePath);
 
   const languageLabel =
-    locale === "ja"
-      ? "言語"
-      : locale === "zh"
-        ? "语言"
-        : locale === "es"
-          ? "Idioma"
-          : "Language";
+    locale === "de"
+      ? "Sprache"
+      : locale === "ja"
+        ? "言語"
+        : locale === "zh"
+          ? "语言"
+          : locale === "es"
+            ? "Idioma"
+            : "Language";
 
   function getLocaleLabel(targetLocale: Locale, compact = false) {
+    if (targetLocale === "de") return compact ? "DE" : "Deutsch";
     if (targetLocale === "en") return compact ? "EN" : "English";
     if (targetLocale === "zh") return compact ? "中文" : "中文";
     if (targetLocale === "es") return compact ? "ES" : "Español";

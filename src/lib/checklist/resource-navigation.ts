@@ -3,6 +3,15 @@ import { isPageAvailable } from "@/i18n/page-locales";
 import { checklistSeoContent } from "./seo-content";
 
 export const resourceNavigationCopy = {
+  de: {
+    title: "Kostenlose Ausmisten-Checkliste für deine Wohnung",
+    intro:
+      "Lade ein deutsches PDF direkt herunter oder bearbeite die Liste online. Ohne Anmeldung bleiben Änderungen und Fortschritt in diesem Browser gespeichert. Melde dich nur an, wenn du die Cloud-Sicherung nutzen möchtest.",
+    online: "Online-Checkliste starten",
+    downloads: "Kostenlose PDF-Checklisten ansehen",
+    resources: "Checklisten zum Ausdrucken",
+    guides: "Anleitungen zum Ausmisten",
+  },
   en: {
     title: "Free room-by-room declutter checklists",
     intro:

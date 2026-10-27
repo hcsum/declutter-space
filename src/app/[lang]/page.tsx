@@ -1,4 +1,5 @@
 import React from "react";
+import GermanGuide from "@/components/GermanGuide";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -32,6 +33,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 const LandingPage = async ({ params }: Props) => {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
+
+  if (locale === "de") return <GermanGuide />;
 
   if (locale === "es") {
     return (

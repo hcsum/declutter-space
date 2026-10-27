@@ -5,11 +5,12 @@ import type { Locale } from "./config";
 import { defaultLocale } from "./config";
 import type { Dictionary } from "./getDictionary";
 import en from "./en.json";
+import de from "./de.json";
 import es from "./es.json";
 import ja from "./ja.json";
 import zh from "./zh.json";
 
-const dicts: Record<Locale, unknown> = { en, zh, ja, es };
+const dicts: Record<Locale, unknown> = { en, zh, ja, es, de };
 
 interface I18nContextValue {
   locale: Locale;
@@ -55,7 +56,9 @@ function mergeDictionary(base: unknown, override: unknown): unknown {
       ...(base as Record<string, unknown>),
     };
 
-    for (const [key, value] of Object.entries(override as Record<string, unknown>)) {
+    for (const [key, value] of Object.entries(
+      override as Record<string, unknown>,
+    )) {
       result[key] = mergeDictionary(result[key], value);
     }
 

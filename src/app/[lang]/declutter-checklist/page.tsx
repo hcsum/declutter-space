@@ -23,25 +23,31 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: dict.checklist.metaTitle,
     description: dict.checklist.metaDescription,
     keywords:
-      locale === "es"
+      locale === "de"
         ? [
-            "lista de orden y limpieza",
-            "checklist de limpieza",
-            "lista de limpieza para imprimir",
-            "plan de limpieza semanal",
-            "rutina de limpieza del hogar",
-            "lista de limpieza pdf",
-            "cómo ordenar la casa",
+            "ausmisten checkliste pdf",
+            "wohnung ausmisten checkliste",
+            "ausmisten checkliste pdf kostenlos",
           ]
-        : [
-            "declutter checklist",
-            "decluttering checklist",
-            "room by room declutter checklist",
-            "home declutter checklist",
-            "free declutter checklist",
-            "declutter checklist pdf",
-            "printable declutter checklist",
-          ],
+        : locale === "es"
+          ? [
+              "lista de orden y limpieza",
+              "checklist de limpieza",
+              "lista de limpieza para imprimir",
+              "plan de limpieza semanal",
+              "rutina de limpieza del hogar",
+              "lista de limpieza pdf",
+              "cómo ordenar la casa",
+            ]
+          : [
+              "declutter checklist",
+              "decluttering checklist",
+              "room by room declutter checklist",
+              "home declutter checklist",
+              "free declutter checklist",
+              "declutter checklist pdf",
+              "printable declutter checklist",
+            ],
     alternates: buildLanguageAlternates(locale, "/declutter-checklist"),
   };
 }
@@ -54,7 +60,13 @@ export default async function Page({ params }: Props) {
     checklistSeoContent[locale as keyof typeof checklistSeoContent] ??
     checklistSeoContent.en;
   const homeLabel =
-    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
+    locale === "de"
+      ? "Startseite"
+      : locale === "ja"
+        ? "ホーム"
+        : locale === "es"
+          ? "Inicio"
+          : "Home";
 
   return (
     <>

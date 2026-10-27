@@ -33,6 +33,8 @@ export const NON_SPANISH_PATHS = [
   "/how-to-declutter-your-closet",
 ] as const;
 
+export const DE_ONLY_PATHS = ["/kleiderschrank-ausmisten"] as const;
+
 export function isEsOnlyPath(path: string) {
   return (ES_ONLY_PATHS as readonly string[]).includes(path);
 }
@@ -43,13 +45,27 @@ export function isJaOnlyPath(path: string) {
 
 /** Shared by route metadata, language navigation and sitemap generation. */
 export function localesForPath(path: string): readonly Locale[] {
+  path = path === "/" ? "" : path;
+  if ((DE_ONLY_PATHS as readonly string[]).includes(path)) return ["de"];
+  const germanAvailable =
+    path === "" ||
+    path === "/declutter-checklist" ||
+    /^\/declutter-checklist\/(?:entrance-hall|bedroom|kitchen|living-room|balcony|smartphone|life-philosophy|bathroom-laundry|home-office|closets|kids-items|progress|upload)$/.test(
+      path,
+    );
+  if (!germanAvailable) return localesForNonGermanPath(path);
+  return locales;
+}
+
+function localesForNonGermanPath(path: string): readonly Locale[] {
+  const existingLocales = locales.filter((locale) => locale !== "de");
   if (path === "/how-to-declutter-old-cards-and-letters") return ["en"];
   if (isEsOnlyPath(path)) return ["es"];
   if (isJaOnlyPath(path)) return ["ja"];
   if ((NON_SPANISH_PATHS as readonly string[]).includes(path)) {
-    return locales.filter((locale) => locale !== "es");
+    return existingLocales.filter((locale) => locale !== "es");
   }
-  return locales;
+  return existingLocales;
 }
 
 export function isPageAvailable(locale: Locale, path: string) {

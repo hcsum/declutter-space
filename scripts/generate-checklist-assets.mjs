@@ -39,6 +39,12 @@ for (const candidate of candidates) {
 if (!executablePath)
   throw new Error("Install Chrome or set CHROME_PATH to its executable.");
 
+const requestedLocale = process.argv
+  .find((arg) => arg.startsWith("--locale="))
+  ?.split("=")[1];
+if (requestedLocale && !config.copy[requestedLocale])
+  throw new Error(`Unknown locale: ${requestedLocale}`);
+
 const browser = await chromium.launch({ executablePath, headless: true });
 try {
   const page = await browser.newPage({
@@ -46,6 +52,7 @@ try {
     deviceScaleFactor: 1.5,
   });
   for (const [locale, copy] of Object.entries(config.copy)) {
+    if (requestedLocale && requestedLocale !== locale) continue;
     const localized =
       locale === "en"
         ? english

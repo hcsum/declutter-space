@@ -17,7 +17,7 @@ export default function AppFooter() {
   const pathname = usePathname();
   const { t, locale, localePath } = useI18n();
   const path = pathname
-    .replace(/^\/(?:en|zh|ja|es)(?=\/|$)/, "")
+    .replace(/^\/(?:en|zh|ja|es|de)(?=\/|$)/, "")
     .replace(/\/$/, "");
   const isChecklist = /^\/declutter-checklist(?:\/|$)/.test(path);
   if (/^\/declutter-checklist\/(?:progress|upload)(?:\/|$)/.test(path)) {
@@ -86,13 +86,21 @@ export default function AppFooter() {
             <p>{copyright}</p>
             <Link
               className="hover:underline"
-              href={localePath("/customer-service-policy")}
+              href={
+                locale === "de"
+                  ? "/en/customer-service-policy"
+                  : localePath("/customer-service-policy")
+              }
             >
               {t("footer.customerServicePolicy")}
             </Link>
             <Link
               className="hover:underline"
-              href={localePath("/privacy-policy")}
+              href={
+                locale === "de"
+                  ? "/en/privacy-policy"
+                  : localePath("/privacy-policy")
+              }
             >
               {t("footer.privacyPolicy")}
             </Link>
@@ -109,13 +117,21 @@ export default function AppFooter() {
         <p className="text-sm mt-2">{t("footer.builtWithLove")}</p>
         <div className="mt-4 flex flex-col sm:flex-row justify-center sm:space-x-4">
           <Link
-            href={localePath("/customer-service-policy")}
+            href={
+              locale === "de"
+                ? "/en/customer-service-policy"
+                : localePath("/customer-service-policy")
+            }
             className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
           >
             {t("footer.customerServicePolicy")}
           </Link>
           <Link
-            href={localePath("/privacy-policy")}
+            href={
+              locale === "de"
+                ? "/en/privacy-policy"
+                : localePath("/privacy-policy")
+            }
             className="text-gray-400 hover:text-blue-300 text-sm mx-2 sm:mx-0"
           >
             {t("footer.privacyPolicy")}

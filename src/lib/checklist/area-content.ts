@@ -16,6 +16,14 @@ type AreaContentBySlug = Record<string, Record<Locale, AreaCopy>>;
  */
 export const areaContent: AreaContentBySlug = {
   "entrance-hall": {
+    de: {
+      metaDescription:
+        "Flur ausmisten: kostenlose Checkliste für Schuhe, Schirme, Schlüssel und Dinge, die auf eine Rückgabe warten. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Flur. Gehe Schuhe, Schirme, Schlüssel und Dinge, die auf eine Rückgabe warten in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Mache zuerst den Weg zur Tür frei und prüfe dann nur ein Fach im Schuhschrank.",
+    },
     en: {
       metaDescription:
         "Free entrance hall declutter checklist covering worn-out shoes, expired shoe polish, stray keys, and catch-all baskets that quietly pile up by the door.",
@@ -50,6 +58,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   bedroom: {
+    de: {
+      metaDescription:
+        "Schlafzimmer ausmisten: kostenlose Checkliste für Nachttisch, Bettwäsche, Kissen und ungenutzte Dinge unter dem Bett. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Schlafzimmer. Gehe Nachttisch, Bettwäsche, Kissen und ungenutzte Dinge unter dem Bett in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Beginne auf dem Nachttisch. Lass das Bett frei, damit du abends keine neue Baustelle vorfindest.",
+    },
     en: {
       metaDescription:
         "Free bedroom declutter checklist for pillows, nightstand clutter, ill-fitting clothes, and sentimental pieces you keep out of guilt.",
@@ -84,6 +100,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   kitchen: {
+    de: {
+      metaDescription:
+        "Küche ausmisten: kostenlose Checkliste für Vorräte, doppelte Küchenhelfer, unpassende Dosen und selten genutzte Geräte. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Küche. Gehe Vorräte, doppelte Küchenhelfer, unpassende Dosen und selten genutzte Geräte in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Nimm dir eine Schublade vor. Prüfe Lebensmittel auf ihren Zustand; ein überschrittenes Mindesthaltbarkeitsdatum bedeutet nicht automatisch, dass sie ungenießbar sind.",
+    },
     en: {
       metaDescription:
         "Free kitchen declutter checklist for chipped tableware, expired seasonings, broken appliances, and duplicate gadgets crowding your drawers.",
@@ -118,6 +142,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   "living-room": {
+    de: {
+      metaDescription:
+        "Wohnzimmer ausmisten: kostenlose Checkliste für Bücher, Spiele, Dekoration und Kleinkram auf den Ablagen. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Wohnzimmer. Gehe Bücher, Spiele, Dekoration und Kleinkram auf den Ablagen in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Räume eine Ablage frei. Gib Batterien und Elektrogeräte bei geeigneten Rücknahmestellen ab; prüfe bei Medikamenten die örtlichen Entsorgungshinweise.",
+    },
     en: {
       metaDescription:
         "Free living room declutter checklist for broken decor, media clutter, expired medicine, and the surfaces that collect everything else.",
@@ -152,6 +184,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   balcony: {
+    de: {
+      metaDescription:
+        "Balkon ausmisten: kostenlose Checkliste für Pflanztöpfe, alte Kartons und ungenutzte Werkzeuge. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Balkon. Gehe Pflanztöpfe, alte Kartons und ungenutzte Werkzeuge in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Beginne mit leeren Kartons. Kläre für Farben und andere problematische Reste die passende örtliche Entsorgung.",
+    },
     en: {
       metaDescription:
         "Free balcony declutter checklist for withered plants, expired fertilizer, cracked plastic bins, and gear that never made it back inside.",
@@ -186,6 +226,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   smartphone: {
+    de: {
+      metaDescription:
+        "Smartphone ausmisten: kostenlose Checkliste für Fotos, Downloads, Apps, Chats und Benachrichtigungen. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Smartphone. Gehe Fotos, Downloads, Apps, Chats und Benachrichtigungen in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Sichere wichtige Daten zuerst. Bearbeite dann nur eine Kategorie, zum Beispiel doppelte Screenshots.",
+    },
     en: {
       metaDescription:
         "Free digital declutter checklist for your phone: dead chat threads, promotional emails, unused app notifications, and contacts you never talk to.",
@@ -220,6 +268,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   "life-philosophy": {
+    de: {
+      metaDescription:
+        "Alltag & Gewohnheiten ausmisten: kostenlose Checkliste für Verpflichtungen, Kaufimpulse und Gewohnheiten, die Platz und Energie kosten. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Alltag & Gewohnheiten. Gehe Verpflichtungen, Kaufimpulse und Gewohnheiten, die Platz und Energie kosten in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Wähle eine kleine Gewohnheit, die du ändern möchtest. Du musst heute keine großen Lebensentscheidungen treffen.",
+    },
     en: {
       metaDescription:
         "A gentle checklist for letting go of what no longer serves you, one-sided relationships, guilt-driven habits, and a hoarding mindset, not just physical items.",
@@ -254,6 +310,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   "bathroom-laundry": {
+    de: {
+      metaDescription:
+        "Bad & Wäsche ausmisten: kostenlose Checkliste für Pflegeprodukte, Make-up, Wäsche und überzählige Bettwäsche. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Bad & Wäsche. Gehe Pflegeprodukte, Make-up, Wäsche und überzählige Bettwäsche in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Prüfe zuerst eine kleine Produktgruppe auf Zustand und Verwendbarkeit. Räume nur zurück, was du tatsächlich nutzt.",
+    },
     en: {
       metaDescription:
         "Free bathroom and laundry declutter checklist for old sunscreen, dried-up makeup, skincare samples, and worn-out hair accessories.",
@@ -288,6 +352,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   "home-office": {
+    de: {
+      metaDescription:
+        "Arbeitszimmer ausmisten: kostenlose Checkliste für Schreibwaren, Kabel und Papierstapel. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Arbeitszimmer. Gehe Schreibwaren, Kabel und Papierstapel in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Beginne mit leeren Stiften. Prüfe Aufbewahrungspflichten und sichere wichtige Unterlagen, bevor du Papier vernichtest.",
+    },
     en: {
       metaDescription:
         "Free home office declutter checklist for dried-out pens, outdated planners, excess stationery, and paper you're keeping just in case.",
@@ -322,6 +394,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   closets: {
+    de: {
+      metaDescription:
+        "Kleiderschrank ausmisten: kostenlose Checkliste für unpassende Kleidung, ungetragene Basics, Schuhe und Accessoires. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Kleiderschrank. Gehe unpassende Kleidung, ungetragene Basics, Schuhe und Accessoires in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Bearbeite zuerst nur eine Kategorie, etwa T-Shirts. Probiere unsichere Stücke an, statt sofort den ganzen Schrank zu leeren.",
+    },
     en: {
       metaDescription:
         "Free closet declutter checklist for clothes that no longer fit, unworn shoes, tagged items you never wore, and pieces kept out of guilt.",
@@ -356,6 +436,14 @@ export const areaContent: AreaContentBySlug = {
     },
   },
   "kids-items": {
+    de: {
+      metaDescription:
+        "Kindersachen ausmisten: kostenlose Checkliste für Bastelmaterial, Kinderkunst, Kuscheltiere und ausgewachsene Ausrüstung. Online bearbeiten, abhaken und Fortschritt speichern.",
+      intro:
+        "Diese Checkliste hilft dir beim Ausmisten im Bereich Kindersachen. Gehe Bastelmaterial, Kinderkunst, Kuscheltiere und ausgewachsene Ausrüstung in kleinen Schritten durch. Entscheide bewusst, was bleibt und was du weitergeben kannst.",
+      resetDescription:
+        "Beziehe dein Kind altersgerecht ein. Fotografiert gemeinsam ausgewählte Werke und entscheidet zusammen über persönliche Lieblingsstücke.",
+    },
     en: {
       metaDescription:
         "Free kids' items declutter checklist for dried-out art supplies, un-photographed artwork, worn-out costumes, and forgotten party favors.",
@@ -391,6 +479,9 @@ export const areaContent: AreaContentBySlug = {
   },
 };
 
-export function getAreaContent(slug: string, locale: Locale): AreaCopy | undefined {
+export function getAreaContent(
+  slug: string,
+  locale: Locale,
+): AreaCopy | undefined {
   return areaContent[slug]?.[locale];
 }

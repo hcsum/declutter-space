@@ -37,13 +37,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = resource
     ? `${resource.title} | DeclutterYourHome`
-    : locale === "zh"
-      ? `${category.category}断舍离清单 | DeclutterYourHome`
-      : locale === "ja"
-        ? `${category.category}片付けチェックリスト | DeclutterYourHome`
-        : locale === "es"
-          ? `Lista para ordenar: ${category.category} | DeclutterYourHome`
-          : `${category.category} Declutter Checklist | DeclutterYourHome`;
+    : locale === "de"
+      ? `${category.category}: Ausmisten-Checkliste | DeclutterYourHome`
+      : locale === "zh"
+        ? `${category.category}断舍离清单 | DeclutterYourHome`
+        : locale === "ja"
+          ? `${category.category}片付けチェックリスト | DeclutterYourHome`
+          : locale === "es"
+            ? `Lista para ordenar: ${category.category} | DeclutterYourHome`
+            : `${category.category} Declutter Checklist | DeclutterYourHome`;
   const description =
     areaCopy?.metaDescription ??
     (locale === "zh"
@@ -92,6 +94,13 @@ const guideLinksByLocale: Record<
   string,
   Record<string, { href: string; label: string; suffix: string }>
 > = {
+  de: {
+    closets: {
+      href: "/kleiderschrank-ausmisten",
+      label: "Anleitung zum Kleiderschrank-Ausmisten lesen",
+      suffix: " – mit Entscheidungsfragen für jedes Kleidungsstück.",
+    },
+  },
   en: {
     bedroom: {
       href: "/how-to-declutter-your-bedroom",
@@ -220,15 +229,23 @@ export default async function ChecklistAreaPage({ params }: Props) {
 
   const areaCopy = getAreaContent(slug, locale);
   const homeLabel =
-    locale === "ja" ? "ホーム" : locale === "es" ? "Inicio" : "Home";
-  const checklistLabel =
-    locale === "zh"
-      ? "断舍离清单"
+    locale === "de"
+      ? "Startseite"
       : locale === "ja"
-        ? "断捨離チェックリスト"
+        ? "ホーム"
         : locale === "es"
-          ? "Lista de orden y limpieza"
-          : "Declutter Checklist";
+          ? "Inicio"
+          : "Home";
+  const checklistLabel =
+    locale === "de"
+      ? "Ausmisten-Checkliste"
+      : locale === "zh"
+        ? "断舍离清单"
+        : locale === "ja"
+          ? "断捨離チェックリスト"
+          : locale === "es"
+            ? "Lista de orden y limpieza"
+            : "Declutter Checklist";
 
   const guideLink = getGuideLink(slug, locale);
 
@@ -249,13 +266,15 @@ export default async function ChecklistAreaPage({ params }: Props) {
               className="inline-flex items-center rounded-full bg-[#f3f4ec] px-3 py-2 text-sm font-semibold text-[#2b694d] transition-colors hover:bg-[#e7eadf]"
             >
               <span>
-                {locale === "zh"
-                  ? "总清单"
-                  : locale === "ja"
-                    ? "全チェックリスト"
-                    : locale === "es"
-                      ? "Lista completa"
-                      : "Full checklist"}
+                {locale === "de"
+                  ? "Gesamte Checkliste"
+                  : locale === "zh"
+                    ? "总清单"
+                    : locale === "ja"
+                      ? "全チェックリスト"
+                      : locale === "es"
+                        ? "Lista completa"
+                        : "Full checklist"}
               </span>
             </Link>
           </div>
@@ -264,13 +283,15 @@ export default async function ChecklistAreaPage({ params }: Props) {
           </p>
           <h1 className="mt-3 text-4xl font-bold tracking-[-0.05em] text-[#002d1c] md:text-5xl">
             {getChecklistPrintable(slug, locale)?.title ??
-              (locale === "zh"
-                ? `${category.category}断舍离清单`
-                : locale === "ja"
-                  ? `${category.category}片付けチェックリスト`
-                  : locale === "es"
-                    ? `Lista para ordenar: ${category.category}`
-                    : `${category.category} Declutter Checklist`)}
+              (locale === "de"
+                ? `${category.category}: Ausmisten-Checkliste`
+                : locale === "zh"
+                  ? `${category.category}断舍离清单`
+                  : locale === "ja"
+                    ? `${category.category}片付けチェックリスト`
+                    : locale === "es"
+                      ? `Lista para ordenar: ${category.category}`
+                      : `${category.category} Declutter Checklist`)}
           </h1>
           <p className="mt-4 max-w-3xl text-base leading-7 text-[#414844] md:text-lg">
             {areaCopy?.intro ??
@@ -301,13 +322,15 @@ export default async function ChecklistAreaPage({ params }: Props) {
           <AreaChecklistSection
             areaSlug={slug}
             heading={
-              locale === "zh"
-                ? `开始整理${category.category}`
-                : locale === "ja"
-                  ? `${category.category}のリセットを始める`
-                  : locale === "es"
-                    ? `Empieza a ordenar: ${category.category}`
-                    : `Start Your ${category.category} Reset`
+              locale === "de"
+                ? `${category.category}: Jetzt anfangen`
+                : locale === "zh"
+                  ? `开始整理${category.category}`
+                  : locale === "ja"
+                    ? `${category.category}のリセットを始める`
+                    : locale === "es"
+                      ? `Empieza a ordenar: ${category.category}`
+                      : `Start Your ${category.category} Reset`
             }
             description={
               areaCopy?.resetDescription ??

@@ -1,4 +1,68 @@
 export const checklistSeoContent = {
+  de: {
+    guideLabel: "So nutzt du die Checkliste",
+    guideTitle:
+      "Wohnung ausmisten: Checkliste für kleine, abgeschlossene Schritte",
+    guideIntro:
+      "Wähle einen Bereich, bearbeite die Einträge und hake ab, was du heute erledigt hast. Änderungen und Fortschritt bleiben in diesem Browser gespeichert. Die täglichen Häkchen werden zurückgesetzt; der Verlauf bleibt erhalten. Für Cloud-Sicherung kannst du dich anmelden.",
+    guidePoints: [
+      {
+        title: "Nur eine Schublade anfangen",
+        body: "Stelle einen Timer auf 10 bis 15 Minuten. Nimm nur so viel heraus, wie du in dieser Zeit wieder unterbringen kannst.",
+      },
+      {
+        title: "Für jeden Gegenstand ein Ziel festlegen",
+        body: "Behalten, verschenken, spenden, verkaufen oder sachgerecht entsorgen: Lege jede Sache direkt in den passenden Bereich. Bei fremden Dingen entscheidet die Person, der sie gehören.",
+      },
+      {
+        title: "Mit dem Wegbringen abschließen",
+        body: "Plane für Spenden und Verkäufe einen konkreten Termin. Räume die behaltenen Dinge zurück und mache den Boden frei, bevor du aufhörst.",
+      },
+    ],
+    roomTitle: "Ausmisten nach Bereichen",
+    roomIntro:
+      "Hier findest du praktische Schritte für die Wohnung und eine eigene Anleitung für deinen Kleiderschrank.",
+    roomLinks: [
+      {
+        href: "/",
+        label: "Ausmisten: Tipps für die Wohnung",
+        desc: "Klein anfangen, Entscheidungen treffen und die aussortierten Dinge wirklich wegbringen.",
+      },
+      {
+        href: "/kleiderschrank-ausmisten",
+        label: "Kleiderschrank ausmisten",
+        desc: "Entscheidungsfragen für Kleidung, Umgang mit Zweifeln und eine kostenlose PDF-Checkliste.",
+      },
+    ],
+    faqTitle: "Häufige Fragen zur Ausmisten-Checkliste",
+    faqs: [
+      {
+        question: "Ist die Ausmisten-Checkliste als PDF kostenlos?",
+        answer:
+          "Ja. Die deutschen PDFs für Küche, Schlafzimmer und Kleiderschrank sind kostenlos und ohne Anmeldung direkt herunterladbar. Sie sind im A4-Format mit Kästchen zum Abhaken gestaltet.",
+      },
+      {
+        question: "Kann ich die Checkliste online bearbeiten und abhaken?",
+        answer:
+          "Ja. Du kannst Einträge ergänzen, entfernen und abhaken. Deine Änderungen und dein Fortschritt werden in diesem Browser gespeichert. Für eine Sicherung im Konto kannst du dich anmelden.",
+      },
+      {
+        question: "Wo fange ich beim Ausmisten der Wohnung an?",
+        answer:
+          "Beginne mit einem kleinen, wenig emotionalen Bereich wie einer Küchenschublade. Plane 10 bis 15 Minuten ein und reserviere die letzten Minuten zum Zurückräumen und Wegbringen.",
+      },
+      {
+        question: "Bleiben meine Häkchen gespeichert?",
+        answer:
+          "Die Checkliste setzt die täglichen Häkchen jeden Tag zurück. Erledigte Einträge bleiben im Fortschrittsverlauf sichtbar. Ohne Anmeldung hängen die Daten von diesem Browser ab; beim Löschen der Browserdaten können sie verloren gehen.",
+      },
+      {
+        question: "Kann ich meine bearbeitete Liste als PDF exportieren?",
+        answer:
+          "Ja. Zusätzlich zu den fertigen PDFs kannst du deine bearbeitete Online-Liste exportieren. So kannst du eigene Einträge auch auf Papier verwenden.",
+      },
+    ],
+  },
   en: {
     guideLabel: "How to use this checklist",
     guideTitle: "A declutter checklist works best when you use it room by room",

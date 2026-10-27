@@ -3,6 +3,7 @@ import { type Locale } from "@/i18n/config";
 import { siteUrl } from "@/lib/site";
 import { getChecklistCategorySlugs } from "@/lib/checklist/checklist";
 import {
+  DE_ONLY_PATHS,
   ES_ONLY_PATHS,
   JA_ONLY_PATHS,
   NON_SPANISH_PATHS,
@@ -58,12 +59,16 @@ function entriesFor(path: string): MetadataRoute.Sitemap {
 
   return pathLocales.map((locale) => ({
     url: localizedUrl(locale, path),
-    ...(path === "/declutter-checklist" ||
-    printableAreas.some((area) => path === `/declutter-checklist/${area.slug}`)
-      ? { lastModified: "2026-10-20" }
-      : contentUpdated[`/${locale}${path}`]
-        ? { lastModified: contentUpdated[`/${locale}${path}`] }
-        : {}),
+    ...(locale === "de"
+      ? { lastModified: "2026-10-27" }
+      : path === "/declutter-checklist" ||
+          printableAreas.some(
+            (area) => path === `/declutter-checklist/${area.slug}`,
+          )
+        ? { lastModified: "2026-10-20" }
+        : contentUpdated[`/${locale}${path}`]
+          ? { lastModified: contentUpdated[`/${locale}${path}`] }
+          : {}),
     ...(path === "/declutter-checklist" || checklistAreaPaths.includes(path)
       ? { images: imagesForPath(path, locale) }
       : {}),
@@ -90,6 +95,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     ...allLocalePaths.flatMap(entriesFor),
     ...NON_SPANISH_PATHS.flatMap(entriesFor),
+    ...DE_ONLY_PATHS.flatMap(entriesFor),
     ...ES_ONLY_PATHS.flatMap(entriesFor),
     ...JA_ONLY_PATHS.flatMap(entriesFor),
     ...entriesFor("/how-to-declutter-old-cards-and-letters"),
