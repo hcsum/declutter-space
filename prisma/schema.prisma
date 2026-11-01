@@ -64,6 +64,18 @@ model Item {
   reminders  ItemReminder[]
   category   Category?      @relation(fields: [categoryId], references: [id])
   categoryId String?
+  share      ItemShare?
+}
+
+model ItemShare {
+  id        String   @id @default(uuid())
+  token     String   @unique @default(uuid())
+  itemId    String   @unique
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  story     String   @default("")
+  image     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 enum ItemReminderType {

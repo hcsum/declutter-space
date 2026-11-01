@@ -16,6 +16,9 @@ import SaveIcon from "@mui/icons-material/Save";
 import ItemSkeleton from "./ItemSkeleton";
 import LetGoDialog from "./LetGoDialog";
 import { useDialogState } from "./DialogProvider";
+import ItemShareDialog from "./item-share/ItemShareDialog";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import { useI18n } from "@/i18n/i18n-provider";
 
 // Use the concrete Prisma model type instead of `Prisma.ItemGetPayload<{}>`
 // to avoid the no-empty-object-type lint error and reflect the full row shape.
@@ -41,6 +44,8 @@ const ItemTable = ({
   search: string;
 }) => {
   const router = useRouter();
+  const { t } = useI18n();
+  const [sharingItem, setSharingItem] = useState<Item | null>(null);
   const [editingItem, setEditingItem] = useState<EditingItem | null>(null);
   const [validationErrors, setValidationErrors] = useState<{
     [field: string]: string[];
@@ -325,6 +330,14 @@ const ItemTable = ({
                   </div>
 
                   <div className="flex gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setSharingItem(item)}
+                      aria-label={t("itemShare.share")}
+                      className="rounded-lg p-2 text-primary hover:bg-surface"
+                    >
+                      <ShareOutlinedIcon />
+                    </button>
                     {editingItem?.id === item.id ? (
                       <>
                         <button
@@ -393,6 +406,14 @@ const ItemTable = ({
         onDelete={handleDelete}
         onNotYet={handleNotYet}
       />
+      {sharingItem && (
+        <ItemShareDialog
+          key={sharingItem.id}
+          item={sharingItem}
+          loggedIn
+          onClose={() => setSharingItem(null)}
+        />
+      )}
     </div>
   );
 };

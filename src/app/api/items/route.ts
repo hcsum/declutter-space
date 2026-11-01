@@ -7,6 +7,7 @@ export async function GET() {
     const serialized = items.map((item) => ({
       id: item.id,
       name: item.name,
+      pieces: item.pieces,
       deadline: item.deadline.toISOString(),
       startDate: item.startDate.toISOString(),
       image: item.image ?? null,

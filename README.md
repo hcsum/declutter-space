@@ -69,3 +69,60 @@ sitemap and downloadable assets, run `npm run check:seo`. It defaults to
 3. declutter checklist
 4. how to declutter digital files
 5. digital declutter checklist
+
+## Second Look sharing
+
+Second Look and the dashboard offer **Share item** for an individual belonging.
+The dialog supports a photo, an optional story (600 characters), a live card
+preview, an 1800-pixel-wide PNG download, and a public link. The new UI is
+translated into English, Chinese, Japanese, German, and Spanish.
+
+### Behavior and data
+
+- Publishing requires the item's owner to be logged in. Recipients can open
+  `/{locale}/share/{token}` and download the card without an account.
+- PNG export does not publish anything. Photo and story edits stay in the open
+  dialog until **Create share link** or **Update share link** is clicked.
+- The public card exposes the item's name, quantity, photo, and published story.
+  It does not expose the owner's account details or the private review deadline.
+- Updating a share keeps its URL. Turning sharing off deletes the `ItemShare`
+  record and immediately invalidates the URL. Publishing again creates a new
+  token; old links stay invalid. Deleting the item cascades to its share.
+- Links are not searchable listings: share pages are dynamic and marked
+  `noindex, nofollow`. Anyone who has a link can view and forward it.
+- Photos accept JPG, PNG, and WebP up to 15 MB. Browser-side processing converts
+  them to JPEG, at most 1800 pixels on the longest side, and compresses them below
+  1.8 million base64 characters to fit the existing 2 MB server-action limit.
+  The published photo is currently stored in PostgreSQL on `ItemShare.image`;
+  consider object storage if image volume grows substantially.
+- Preview and PNG use the same canvas renderer. Text wraps and card height grows
+  with the story. Existing remote item images need CORS permission; uploading a
+  replacement photo avoids this dependency.
+- This version shares one item per link. Collections, claiming/purchasing items,
+  PDF export, and dedicated print layouts are not implemented.
+
+### Deployment and verification
+
+Production deployment is triggered by pushing `main` to
+`hcsum/declutter-space`, which is connected to Vercel's `declutter-space` project.
+Apply the additive migration **before** releasing the new application code:
+
+```bash
+npx prisma migrate deploy
+npm run build
+```
+
+Migration: `prisma/migrations/20261101000000_add_item_shares/migration.sql`.
+It adds only `ItemShare`, its unique indexes, and a cascading foreign key to `Item`.
+Run migrations against the intended production connection; never point QA data
+or test-session tooling at production.
+
+Pre-release verification used an isolated local PostgreSQL database and Brave:
+publishing/updating Unicode stories, PNG signature/filename/1800px width,
+anonymous access, another user's rejected update, photo upload/compression,
+revocation, fresh tokens on re-publishing, and 390px mobile layouts all passed.
+The production build, TypeScript check, and targeted ESLint check also passed;
+the full build reports existing `next/image` recommendations on older pages.
+
+Key files: `src/actions/item-shares.ts`, `src/components/item-share/`, and
+`src/app/[lang]/share/[token]/page.tsx`.

@@ -7,10 +7,13 @@ import { createItem, deleteItem, archiveItem } from "@/actions/items";
 import { useI18n } from "@/i18n/i18n-provider";
 import { useLoginDialog } from "@/components/LoginDialogProvider";
 import { useDialogState } from "@/components/DialogProvider";
+import ItemShareDialog from "@/components/item-share/ItemShareDialog";
+import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
 
 type FetchedItem = {
   id: string;
   name: string;
+  pieces: number;
   deadline: string;
   startDate: string;
   image: string | null;
@@ -19,16 +22,18 @@ type FetchedItem = {
 type DisplayItem = {
   id: string;
   name: string;
+  pieces: number;
   deadline: Date;
   startDate: Date;
   progress: number;
-  image: string;
+  image: string | null;
 };
 
 const DEMO_ITEMS: DisplayItem[] = [
   {
     id: "demo-1",
     name: "Blue Velvet Blazer",
+    pieces: 1,
     deadline: new Date(Date.now() + 14 * 86400000),
     startDate: new Date(Date.now() - 33 * 86400000),
     progress: 70,
@@ -37,6 +42,7 @@ const DEMO_ITEMS: DisplayItem[] = [
   {
     id: "demo-2",
     name: "Vintage Camera",
+    pieces: 1,
     deadline: new Date(Date.now() + 32 * 86400000),
     startDate: new Date(Date.now() - 11 * 86400000),
     progress: 25,
@@ -45,6 +51,7 @@ const DEMO_ITEMS: DisplayItem[] = [
   {
     id: "demo-3",
     name: "Design Magazines",
+    pieces: 3,
     deadline: new Date(Date.now() + 2 * 86400000),
     startDate: new Date(Date.now() - 38 * 86400000),
     progress: 95,
@@ -78,10 +85,11 @@ function toDisplayItems(fetched: FetchedItem[]): DisplayItem[] {
     return {
       id: item.id,
       name: item.name,
+      pieces: item.pieces,
       deadline,
       startDate,
       progress: calcProgress(startDate, deadline),
-      image: item.image || `https://picsum.photos/seed/${item.id}/400/400`,
+      image: item.image,
     };
   });
 }
@@ -95,6 +103,7 @@ export default function ClientPage() {
   const [itemName, setItemName] = useState("");
   const [trialMonths, setTrialMonths] = useState("2");
   const [actingOn, setActingOn] = useState<string | null>(null);
+  const [sharingItem, setSharingItem] = useState<DisplayItem | null>(null);
 
   const fetchItems = useCallback(() => {
     fetch("/api/items", { cache: "no-store" })
@@ -344,11 +353,17 @@ export default function ClientPage() {
                   className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-[#eae8e7] dark:border-gray-700 group transition-all hover:-translate-y-1"
                 >
                   <div className="aspect-square rounded-xl overflow-hidden mb-6 bg-[#e4e2e2] dark:bg-gray-700">
-                    <img
-                      className="w-full h-full object-cover"
-                      src={item.image}
-                      alt={item.name}
-                    />
+                    {item.image ? (
+                      <img
+                        className="w-full h-full object-cover"
+                        src={item.image}
+                        alt={item.name}
+                      />
+                    ) : (
+                      <div className="flex h-full items-center justify-center px-6 text-center text-sm text-outline">
+                        {t("itemShare.noPhoto")}
+                      </div>
+                    )}
                   </div>
                   <h3 className="text-lg font-semibold mb-1 text-[#1b1c1c] dark:text-gray-100">
                     {item.name}
@@ -420,12 +435,30 @@ export default function ClientPage() {
                       </button>
                     </div>
                   )}
+                  <button
+                    type="button"
+                    onClick={() => setSharingItem(item)}
+                    disabled={isLoading}
+                    className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-primary transition-colors hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-50"
+                  >
+                    <ShareOutlinedIcon fontSize="small" />
+                    {t("itemShare.share")}
+                  </button>
                 </div>
               );
             })}
           </div>
         )}
       </section>
+
+      {sharingItem && (
+        <ItemShareDialog
+          key={sharingItem.id}
+          item={sharingItem}
+          loggedIn={loggedIn}
+          onClose={() => setSharingItem(null)}
+        />
+      )}
 
       <section className="py-20 px-6 bg-white dark:bg-gray-800">
         <div className="max-w-3xl mx-auto">
