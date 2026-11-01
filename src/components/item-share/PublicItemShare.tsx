@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useI18n } from "@/i18n/i18n-provider";
 import ShareCardPreview from "./ShareCardPreview";
 import { downloadShareCard, type ShareCardItem } from "./card-image";
+import LoadingLabel from "@/components/LoadingLabel";
 
 export default function PublicItemShare({
   item,
@@ -13,6 +14,7 @@ export default function PublicItemShare({
 }) {
   const { t, localePath } = useI18n();
   const [image, setImage] = useState<string | null>(null);
+  const [previewError, setPreviewError] = useState(false);
   return (
     <main className="min-h-[80vh] bg-surface px-6 pb-20 pt-32 text-on-surface md:pt-40">
       <div className="mx-auto max-w-5xl">
@@ -29,7 +31,11 @@ export default function PublicItemShare({
         </div>
         {item && (
           <>
-            <ShareCardPreview item={item} onReady={setImage} />
+            <ShareCardPreview
+              item={item}
+              onReady={setImage}
+              onError={setPreviewError}
+            />
             <div className="mx-auto mt-6 max-w-[460px] text-center">
               <button
                 disabled={!image}
@@ -38,7 +44,11 @@ export default function PublicItemShare({
                 }}
                 className="min-h-12 rounded-xl bg-primary px-8 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:opacity-50"
               >
-                {t("itemShare.download")}
+                {image || previewError ? (
+                  t("itemShare.download")
+                ) : (
+                  <LoadingLabel>{t("itemShare.preparingPng")}</LoadingLabel>
+                )}
               </button>
               <p className="mt-3 text-xs leading-5 text-outline">
                 {t("itemShare.downloadHint")}

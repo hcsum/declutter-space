@@ -14,6 +14,9 @@ export async function GET() {
     }));
     return NextResponse.json({ items: serialized });
   } catch {
-    return NextResponse.json({ items: [] });
+    return NextResponse.json(
+      { error: "Could not load items" },
+      { status: 500 },
+    );
   }
 }

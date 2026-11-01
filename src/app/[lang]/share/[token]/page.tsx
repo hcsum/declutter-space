@@ -45,7 +45,7 @@ export default async function SharePage({
               name: share.item.name,
               pieces: share.item.pieces,
               story: share.story,
-              image: share.image || share.item.image,
+              image: share.image,
             }
           : null
       }

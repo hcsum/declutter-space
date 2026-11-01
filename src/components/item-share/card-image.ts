@@ -15,6 +15,21 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+// Descriptions change often; the source photograph should only load once.
+const cardPhotos = new Map<string, Promise<HTMLImageElement>>();
+
+function loadCardPhoto(src: string) {
+  const cached = cardPhotos.get(src);
+  if (cached) return cached;
+  const loading = loadImage(src).catch((error) => {
+    cardPhotos.delete(src);
+    throw error;
+  });
+  if (cardPhotos.size >= 6) cardPhotos.delete(cardPhotos.keys().next().value!);
+  cardPhotos.set(src, loading);
+  return loading;
+}
+
 function wrapText(
   context: CanvasRenderingContext2D,
   text: string,
@@ -52,7 +67,7 @@ export async function renderShareCard(
 ) {
   await document.fonts.ready;
   const font = getComputedStyle(document.body).fontFamily;
-  const photo = item.image ? await loadImage(item.image) : null;
+  const photo = item.image ? await loadCardPhoto(item.image) : null;
   const canvas = document.createElement("canvas");
   canvas.width = 1800;
   const context = canvas.getContext("2d");

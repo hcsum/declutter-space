@@ -412,6 +412,12 @@ const ItemTable = ({
           item={sharingItem}
           loggedIn
           onClose={() => setSharingItem(null)}
+          onPhotoSaved={(id, image) => {
+            setSharingItem((previous) =>
+              previous?.id === id ? { ...previous, image } : previous,
+            );
+            router.refresh();
+          }}
         />
       )}
     </div>

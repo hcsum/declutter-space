@@ -1,23 +1,26 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Dialog, DialogContent, IconButton } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import LinkIcon from "@mui/icons-material/Link";
 import DownloadIcon from "@mui/icons-material/Download";
+import CheckIcon from "@mui/icons-material/Check";
+import LoadingLabel from "@/components/LoadingLabel";
 import { useI18n } from "@/i18n/i18n-provider";
 import { useLoginDialog } from "@/components/LoginDialogProvider";
 import {
   disableItemShare,
   getItemShare,
   saveItemShare,
+  saveItemPhoto,
 } from "@/actions/item-shares";
 import ShareCardPreview from "./ShareCardPreview";
 import { downloadShareCard, prepareSharePhoto } from "./card-image";
 
 type Item = { id: string; name: string; pieces: number; image: string | null };
 const primaryButton =
-  "flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition hover:brightness-110 disabled:cursor-wait disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
+  "flex min-h-12 w-full items-center justify-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-white transition enabled:hover:brightness-110 disabled:cursor-default disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary";
 const secondaryButton =
   "flex min-h-12 w-full items-center justify-center gap-2 rounded-xl border border-outline-variant bg-white px-5 py-3 text-sm font-semibold text-primary transition hover:bg-surface disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary";
 
@@ -25,10 +28,12 @@ export default function ItemShareDialog({
   item,
   loggedIn,
   onClose,
+  onPhotoSaved,
 }: {
   item: Item;
   loggedIn: boolean;
   onClose: () => void;
+  onPhotoSaved?: (id: string, image: string) => void;
 }) {
   const { t, localePath } = useI18n();
   const { setOpen: setLoginOpen } = useLoginDialog();
@@ -36,9 +41,19 @@ export default function ItemShareDialog({
   const [photo, setPhoto] = useState<string | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [cardImage, setCardImage] = useState<string | null>(null);
-  const [busy, setBusy] = useState(loggedIn);
+  const [previewError, setPreviewError] = useState(false);
+  const [operation, setOperation] = useState<
+    "load" | "photo" | "publish" | "disable" | "copy" | null
+  >(loggedIn ? "load" : null);
+  const operationLock = useRef(false);
+  const busy = operation !== null;
   const [loadingFailed, setLoadingFailed] = useState(false);
-  const [dirty, setDirty] = useState(false);
+  const [saved, setSaved] = useState<{
+    story: string;
+    image: string | null;
+  } | null>(null);
+  const dirty =
+    !!token && (story.trim() !== saved?.story || photo !== saved?.image);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
@@ -56,6 +71,7 @@ export default function ItemShareDialog({
           setStory(share.story);
           setPhoto(share.image);
           setToken(share.token);
+          setSaved({ story: share.story, image: share.image });
         }
       })
       .catch(() => {
@@ -65,7 +81,7 @@ export default function ItemShareDialog({
         }
       })
       .finally(() => {
-        if (!cancelled) setBusy(false);
+        if (!cancelled) setOperation(null);
       });
     return () => {
       cancelled = true;
@@ -73,61 +89,92 @@ export default function ItemShareDialog({
   }, [item.id, loggedIn]);
 
   async function publish() {
+    if (busy || operationLock.current || loadingFailed) return;
     if (!loggedIn) {
       setLoginOpen(true);
       return;
     }
-    setBusy(true);
+    operationLock.current = true;
+    setOperation("publish");
     setError(null);
     setStatus(null);
     setCopied(false);
     try {
       const result = await saveItemShare(item.id, { story, image: photo });
       setToken(result.token);
-      setDirty(false);
+      setPhoto(result.image);
+      setStory(story.trim());
+      setSaved({ story: story.trim(), image: result.image });
+      setStatus("itemShare.saveSuccess");
     } catch {
       setError("itemShare.error");
     } finally {
-      setBusy(false);
+      operationLock.current = false;
+      setOperation(null);
     }
   }
 
   async function disable() {
-    setBusy(true);
+    if (busy || operationLock.current) return;
+    operationLock.current = true;
+    setOperation("disable");
     setError(null);
+    setStatus(null);
     try {
       await disableItemShare(item.id);
       setToken(null);
-      setDirty(false);
+      setSaved(null);
       setCopied(false);
       setStatus("itemShare.disabled");
     } catch {
       setError("itemShare.error");
     } finally {
-      setBusy(false);
+      operationLock.current = false;
+      setOperation(null);
     }
   }
 
   async function copyLink() {
+    if (busy || operationLock.current) return;
+    operationLock.current = true;
+    setOperation("copy");
+    setError(null);
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
     } catch {
       setError("itemShare.error");
+    } finally {
+      operationLock.current = false;
+      setOperation(null);
     }
   }
 
   async function upload(file: File) {
-    setBusy(true);
+    if (busy || operationLock.current || loadingFailed) return;
+    operationLock.current = true;
+    setOperation("photo");
     setError(null);
+    setStatus(null);
     try {
-      setPhoto(await prepareSharePhoto(file));
-      setDirty(true);
+      let image: string;
+      try {
+        image = await prepareSharePhoto(file);
+      } catch {
+        setError("itemShare.photoError");
+        return;
+      }
+      if (loggedIn) {
+        await saveItemPhoto(item.id, image);
+        onPhotoSaved?.(item.id, image);
+      }
+      setPhoto(image);
       setCopied(false);
     } catch {
-      setError("itemShare.photoError");
+      setError("itemShare.photoSaveError");
     } finally {
-      setBusy(false);
+      operationLock.current = false;
+      setOperation(null);
     }
   }
 
@@ -167,9 +214,10 @@ export default function ItemShareDialog({
                 name: item.name,
                 pieces: item.pieces,
                 story,
-                image: photo || item.image,
+                image: token ? photo : photo || item.image,
               }}
               onReady={setCardImage}
+              onError={setPreviewError}
             />
             <p className="mt-3 text-center text-xs leading-5 text-outline">
               {t("itemShare.downloadHint")}
@@ -188,6 +236,11 @@ export default function ItemShareDialog({
             <p className="mb-8 mt-3 text-sm leading-6 text-outline">
               {t("itemShare.subtitle")}
             </p>
+            {operation === "load" && (
+              <p className="mb-4 text-sm text-outline">
+                <LoadingLabel>{t("itemShare.loadingShare")}</LoadingLabel>
+              </p>
+            )}
             <label
               className="mb-2 flex items-center justify-between text-sm font-semibold"
               htmlFor="share-story"
@@ -204,7 +257,7 @@ export default function ItemShareDialog({
               disabled={busy || loadingFailed}
               onChange={(event) => {
                 setStory(event.target.value);
-                setDirty(true);
+                setStatus(null);
                 setCopied(false);
               }}
               placeholder={t("itemShare.storyPlaceholder")}
@@ -217,9 +270,13 @@ export default function ItemShareDialog({
             <label
               className={`${secondaryButton} ${busy || loadingFailed ? "pointer-events-none opacity-50" : "cursor-pointer"}`}
             >
-              {photo || item.image
-                ? t("itemShare.changePhoto")
-                : t("itemShare.photo")}
+              {operation === "photo" ? (
+                <LoadingLabel>{t("itemShare.savingPhoto")}</LoadingLabel>
+              ) : photo || item.image ? (
+                t("itemShare.changePhoto")
+              ) : (
+                t("itemShare.photo")
+              )}
               <input
                 type="file"
                 accept="image/jpeg,image/png,image/webp"
@@ -234,6 +291,11 @@ export default function ItemShareDialog({
             </label>
             <p className="mb-6 mt-2 text-xs text-outline">
               {t("itemShare.photoHint")}
+              {loggedIn && (
+                <span className="mt-1 block">
+                  {t("itemShare.photoSyncHint")}
+                </span>
+              )}
             </p>
             <div className="space-y-3">
               <button
@@ -242,14 +304,28 @@ export default function ItemShareDialog({
                 disabled={busy || loadingFailed || (!!token && !dirty)}
                 onClick={publish}
               >
-                <LinkIcon fontSize="small" />
-                {busy
-                  ? t("itemShare.working")
-                  : !loggedIn
-                    ? t("itemShare.login")
-                    : token
-                      ? t("itemShare.update")
-                      : t("itemShare.publish")}
+                {operation === "publish" ? (
+                  <LoadingLabel>
+                    {t(token ? "itemShare.saving" : "itemShare.creating")}
+                  </LoadingLabel>
+                ) : (
+                  <>
+                    {token && !dirty ? (
+                      <CheckIcon fontSize="small" />
+                    ) : (
+                      <LinkIcon fontSize="small" />
+                    )}
+                    {t(
+                      !loggedIn
+                        ? "itemShare.login"
+                        : token
+                          ? dirty
+                            ? "itemShare.update"
+                            : "itemShare.saved"
+                          : "itemShare.publish",
+                    )}
+                  </>
+                )}
               </button>
               <button
                 type="button"
@@ -259,8 +335,14 @@ export default function ItemShareDialog({
                   if (cardImage) downloadShareCard(cardImage, item.name);
                 }}
               >
-                <DownloadIcon fontSize="small" />
-                {t("itemShare.download")}
+                {!cardImage && !previewError ? (
+                  <LoadingLabel>{t("itemShare.preparingPng")}</LoadingLabel>
+                ) : (
+                  <>
+                    <DownloadIcon fontSize="small" />
+                    {t("itemShare.download")}
+                  </>
+                )}
               </button>
             </div>
             {token && (
@@ -277,7 +359,11 @@ export default function ItemShareDialog({
                 />
                 <div className="flex flex-wrap items-center gap-x-5 gap-y-3 text-sm font-semibold text-primary">
                   <button type="button" onClick={copyLink} disabled={busy}>
-                    {t(copied ? "itemShare.copied" : "itemShare.copy")}
+                    {operation === "copy" ? (
+                      <LoadingLabel>{t("itemShare.copying")}</LoadingLabel>
+                    ) : (
+                      t(copied ? "itemShare.copied" : "itemShare.copy")
+                    )}
                   </button>
                   <a href={shareUrl} target="_blank" rel="noopener noreferrer">
                     {t("itemShare.open")}
@@ -288,7 +374,11 @@ export default function ItemShareDialog({
                     disabled={busy}
                     className="text-outline underline underline-offset-4"
                   >
-                    {t("itemShare.disable")}
+                    {operation === "disable" ? (
+                      <LoadingLabel>{t("itemShare.disabling")}</LoadingLabel>
+                    ) : (
+                      t("itemShare.disable")
+                    )}
                   </button>
                 </div>
               </div>

@@ -81,8 +81,13 @@ translated into English, Chinese, Japanese, German, and Spanish.
 
 - Publishing requires the item's owner to be logged in. Recipients can open
   `/{locale}/share/{token}` and download the card without an account.
-- PNG export does not publish anything. Photo and story edits stay in the open
-  dialog until **Create share link** or **Update share link** is clicked.
+- PNG export does not publish anything. Uploaded photos are saved immediately
+  to the owning item and appear in the item list, even if the dialog is closed
+  without publishing. The public card's description and photo update only when
+  **Create share link** or **Save changes** is clicked.
+- Existing shares show **Saved** when there are no changes, using a normal cursor.
+  Editing enables **Save changes**, which updates the existing public page without
+  changing its URL. Reverting edits restores the saved state.
 - The public card exposes the item's name, quantity, photo, and published story.
   It does not expose the owner's account details or the private review deadline.
 - Updating a share keeps its URL. Turning sharing off deletes the `ItemShare`
@@ -93,11 +98,19 @@ translated into English, Chinese, Japanese, German, and Spanish.
 - Photos accept JPG, PNG, and WebP up to 15 MB. Browser-side processing converts
   them to JPEG, at most 1800 pixels on the longest side, and compresses them below
   1.8 million base64 characters to fit the existing 2 MB server-action limit.
-  The published photo is currently stored in PostgreSQL on `ItemShare.image`;
+  Photos are currently stored in PostgreSQL on `Item.image`, with a published
+  snapshot on `ItemShare.image`;
   consider object storage if image volume grows substantially.
-- Preview and PNG use the same canvas renderer. Text wraps and card height grows
-  with the story. Existing remote item images need CORS permission; uploading a
+- Preview and PNG use the same canvas renderer. Description edits retain the
+  previous preview while the next version is prepared; source photos are cached
+  instead of fetched for every keystroke. Text wraps and card height grows with
+  the story. Existing remote item images need CORS permission; uploading a
   replacement photo avoids this dependency.
+- Adding, keeping, and removing items show distinct loading labels, prevent
+  duplicate submissions, and remain busy through the list refresh. Sharing,
+  photo saving, revocation, and copying each show feedback on the relevant control.
+  Failed saves retain editable input; a failed refresh reports that the mutation
+  already succeeded and offers a list-only retry.
 - This version shares one item per link. Collections, claiming/purchasing items,
   PDF export, and dedicated print layouts are not implemented.
 
@@ -114,6 +127,9 @@ npm run build
 
 Migration: `prisma/migrations/20261101000000_add_item_shares/migration.sql`.
 It adds only `ItemShare`, its unique indexes, and a cascading foreign key to `Item`.
+The follow-up `20261101010000_sync_shared_item_photos` backfills legacy share-only
+photos into empty item photos without overwriting existing ones, then snapshots
+existing item photos onto their published cards.
 Run migrations against the intended production connection; never point QA data
 or test-session tooling at production.
 
@@ -126,3 +142,16 @@ the full build reports existing `next/image` recommendations on older pages.
 
 Key files: `src/actions/item-shares.ts`, `src/components/item-share/`, and
 `src/app/[lang]/share/[token]/page.tsx`.
+
+Browser regression checks for loading duration, repeat submits, description
+editing/photo reuse, stable share URLs, photo persistence, and failure recovery:
+
+```bash
+SHARING_QA_DATABASE_URL="$LOCAL_QA_DATABASE_URL" \
+SHARING_QA_SESSION_SECRET="$LOCAL_QA_SESSION_SECRET" \
+node scripts/check-second-look-interactions.mjs
+```
+
+These checks require a running web-access browser proxy and a local app using
+the same QA database and session secret. The script rejects non-local databases
+and database names not ending in `_qa`; it creates only `interaction-qa-*` fixtures.

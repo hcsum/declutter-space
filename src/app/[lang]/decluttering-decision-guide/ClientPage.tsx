@@ -1,14 +1,14 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 
-import { useMutation } from "@tanstack/react-query";
 import { createItem, deleteItem, archiveItem } from "@/actions/items";
 import { useI18n } from "@/i18n/i18n-provider";
 import { useLoginDialog } from "@/components/LoginDialogProvider";
 import { useDialogState } from "@/components/DialogProvider";
 import ItemShareDialog from "@/components/item-share/ItemShareDialog";
 import ShareOutlinedIcon from "@mui/icons-material/ShareOutlined";
+import LoadingLabel from "@/components/LoadingLabel";
 
 type FetchedItem = {
   id: string;
@@ -99,80 +99,154 @@ export default function ClientPage() {
   const { setOpen: setLoginOpen } = useLoginDialog();
   const { setDialogContent } = useDialogState();
   const [loggedIn, setLoggedIn] = useState(false);
+  const [authReady, setAuthReady] = useState(false);
+  const [isLoadingItems, setIsLoadingItems] = useState(true);
+  const [itemsError, setItemsError] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
+  const operationLock = useRef(false);
+  const [feedback, setFeedback] = useState<{
+    key: string;
+    error: boolean;
+  } | null>(null);
   const [realItems, setRealItems] = useState<DisplayItem[]>([]);
   const [itemName, setItemName] = useState("");
   const [trialMonths, setTrialMonths] = useState("2");
-  const [actingOn, setActingOn] = useState<string | null>(null);
+  const [actingOn, setActingOn] = useState<{
+    id: string;
+    action: "keep" | "letGo";
+  } | null>(null);
   const [sharingItem, setSharingItem] = useState<DisplayItem | null>(null);
 
-  const fetchItems = useCallback(() => {
-    fetch("/api/items", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((data) => {
-        if (data?.items) {
-          setRealItems(toDisplayItems(data.items));
-        }
-      })
-      .catch(() => {});
+  const fetchItems = useCallback(async () => {
+    const response = await fetch("/api/items", { cache: "no-store" });
+    if (!response.ok) throw new Error("items-fetch-failed");
+    const data = await response.json();
+    if (!Array.isArray(data?.items)) throw new Error("invalid-items-response");
+    setRealItems(toDisplayItems(data.items));
+    setItemsError(false);
   }, []);
 
   useEffect(() => {
-    fetch("/api/auth/status", { cache: "no-store" })
-      .then((r) => r.json())
-      .then((d) => {
-        const logged = Boolean(d?.loggedIn);
+    let cancelled = false;
+    async function load() {
+      try {
+        const response = await fetch("/api/auth/status", { cache: "no-store" });
+        if (!response.ok) throw new Error("auth-fetch-failed");
+        const data = await response.json();
+        if (cancelled) return;
+        const logged = Boolean(data?.loggedIn);
         setLoggedIn(logged);
-        if (logged) fetchItems();
-      })
-      .catch(() => setLoggedIn(false));
+        setAuthReady(true);
+        if (logged) await fetchItems();
+      } catch {
+        if (!cancelled) setItemsError(true);
+      } finally {
+        if (!cancelled) {
+          setAuthReady(true);
+          setIsLoadingItems(false);
+        }
+      }
+    }
+    void load();
+    return () => {
+      cancelled = true;
+    };
   }, [fetchItems]);
 
-  const { mutate: addItem, isPending: isAdding } = useMutation({
-    mutationFn: createItem,
-    onSuccess(res) {
-      if (res?.success) {
-        setItemName("");
-        fetchItems();
-      }
-    },
-  });
-
-  const handleAdd = useCallback(() => {
+  async function handleAdd() {
     const trimmed = itemName.trim();
-    if (!trimmed) return;
+    if (!trimmed || operationLock.current) return;
+    operationLock.current = true;
+    setIsAdding(true);
+    setFeedback(null);
     const fd = new FormData();
     fd.set("name", trimmed);
     fd.set("pieces", "1");
     fd.set("deadline", trialMonths);
-    addItem(fd);
-  }, [itemName, trialMonths, addItem]);
+    let created = false;
+    try {
+      const result = await createItem(fd);
+      if (!result?.success) {
+        setFeedback({
+          key: result?.errors?.freeTrailLimitReached
+            ? "secondLookState.limitError"
+            : "secondLookState.validationError",
+          error: true,
+        });
+        return;
+      }
+      created = true;
+      setItemName("");
+      await fetchItems();
+      setFeedback({ key: "secondLookState.added", error: false });
+    } catch {
+      setFeedback({
+        key: created
+          ? "secondLookState.refreshError"
+          : "secondLookState.actionError",
+        error: true,
+      });
+      if (created) setItemsError(true);
+    } finally {
+      operationLock.current = false;
+      setIsAdding(false);
+    }
+  }
 
   const handleKeep = useCallback(
     async (id: string) => {
-      if (actingOn) return;
-      setActingOn(id);
+      if (operationLock.current) return;
+      operationLock.current = true;
+      setActingOn({ id, action: "keep" });
+      setFeedback(null);
+      let kept = false;
       try {
         await archiveItem(id);
-        fetchItems();
+        kept = true;
+        await fetchItems();
+        setFeedback({ key: "secondLookState.kept", error: false });
+      } catch {
+        setFeedback({
+          key: kept
+            ? "secondLookState.refreshError"
+            : "secondLookState.actionError",
+          error: true,
+        });
+        if (kept) setItemsError(true);
       } finally {
+        operationLock.current = false;
         setActingOn(null);
       }
     },
-    [actingOn, fetchItems],
+    [fetchItems],
   );
 
   const handleLetGo = useCallback(
     async (id: string) => {
-      if (actingOn) return;
-      setActingOn(id);
+      if (operationLock.current) return;
+      operationLock.current = true;
+      setActingOn({ id, action: "letGo" });
+      setFeedback(null);
+      let removed = false;
       try {
         await deleteItem(id);
-        fetchItems();
+        removed = true;
+        await fetchItems();
+        setFeedback({ key: "secondLookState.letGoDone", error: false });
+      } catch {
+        setFeedback({
+          key: removed
+            ? "secondLookState.refreshError"
+            : "secondLookState.actionError",
+          error: true,
+        });
+        if (removed) setItemsError(true);
       } finally {
+        operationLock.current = false;
         setActingOn(null);
       }
     },
-    [actingOn, fetchItems],
+    [fetchItems],
   );
 
   function confirmKeep(id: string) {
@@ -240,6 +314,29 @@ export default function ClientPage() {
   }
 
   const items = loggedIn ? realItems : DEMO_ITEMS;
+  const isMutating = isAdding || actingOn !== null;
+
+  async function retryItems() {
+    if (operationLock.current) return;
+    setIsLoadingItems(true);
+    try {
+      await fetchItems();
+      setFeedback(null);
+    } catch {
+      setItemsError(true);
+    } finally {
+      setIsLoadingItems(false);
+    }
+  }
+
+  function handlePhotoSaved(id: string, image: string) {
+    setRealItems((previous) =>
+      previous.map((item) => (item.id === id ? { ...item, image } : item)),
+    );
+    setSharingItem((previous) =>
+      previous?.id === id ? { ...previous, image } : previous,
+    );
+  }
 
   return (
     <div className="bg-[#fbf9f8] dark:bg-gray-900 text-gray-800 dark:text-gray-200 font-sans min-h-screen">
@@ -259,18 +356,32 @@ export default function ClientPage() {
           <h2 className="text-2xl font-semibold mb-6 text-[#82533f] dark:text-gray-100">
             {t("declutteringTips.addSectionTitle")}
           </h2>
-          {loggedIn ? (
-            <div className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end">
+          {!authReady ? (
+            <div className="py-6 text-center text-sm text-outline">
+              <LoadingLabel>{t("secondLookState.loading")}</LoadingLabel>
+            </div>
+          ) : loggedIn ? (
+            <form
+              onSubmit={(event) => {
+                event.preventDefault();
+                void handleAdd();
+              }}
+              aria-busy={isAdding}
+              className="grid grid-cols-1 md:grid-cols-12 gap-6 items-end"
+            >
               <div className="md:col-span-6">
                 <label className="text-sm text-[#84746e] dark:text-gray-400 mb-2 block">
                   {t("declutteringTips.itemNameLabel")}
                 </label>
                 <input
                   type="text"
+                  required
+                  minLength={2}
+                  disabled={isMutating}
                   value={itemName}
-                  onChange={(e) => setItemName(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter") handleAdd();
+                  onChange={(e) => {
+                    setItemName(e.target.value);
+                    setFeedback(null);
                   }}
                   className="w-full bg-[#fbf9f8] dark:bg-gray-900 border border-[#d6c2bb] dark:border-gray-600 rounded-lg px-4 py-3 focus:ring-1 focus:ring-[#82533f] focus:border-[#82533f] outline-none transition-all"
                   placeholder={t("declutteringTips.itemNamePlaceholder")}
@@ -282,6 +393,7 @@ export default function ClientPage() {
                 </label>
                 <select
                   value={trialMonths}
+                  disabled={isMutating}
                   onChange={(e) => setTrialMonths(e.target.value)}
                   className="w-full bg-[#fbf9f8] dark:bg-gray-900 border border-[#d6c2bb] dark:border-gray-600 rounded-lg px-4 py-3 focus:ring-1 focus:ring-[#82533f] focus:border-[#82533f] outline-none transition-all appearance-none"
                 >
@@ -292,14 +404,18 @@ export default function ClientPage() {
               </div>
               <div className="md:col-span-2">
                 <button
-                  onClick={handleAdd}
-                  disabled={isAdding}
+                  type="submit"
+                  disabled={isMutating || itemName.trim().length < 2}
                   className="w-full bg-[#82533f] text-white font-medium py-3 px-6 rounded-lg hover:brightness-110 transition-all disabled:opacity-60"
                 >
-                  {t("declutteringTips.addButton")}
+                  {isAdding ? (
+                    <LoadingLabel>{t("secondLookState.adding")}</LoadingLabel>
+                  ) : (
+                    t("declutteringTips.addButton")
+                  )}
                 </button>
               </div>
-            </div>
+            </form>
           ) : (
             <div className="text-center py-6">
               <p className="text-[#84746e] dark:text-gray-400 mb-4">
@@ -313,6 +429,14 @@ export default function ClientPage() {
               </button>
             </div>
           )}
+          {feedback && (
+            <p
+              role={feedback.error ? "alert" : "status"}
+              className={`mt-4 text-sm leading-6 ${feedback.error ? "text-error" : "text-primary dark:text-orange-200"}`}
+            >
+              {t(feedback.key)}
+            </p>
+          )}
         </div>
       </section>
 
@@ -321,24 +445,60 @@ export default function ClientPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-[#1b1c1c] dark:text-gray-100">
             {t("declutteringTips.itemsTitle")}
           </h2>
-          <span className="text-sm bg-[#c9e3f8] dark:bg-blue-900 text-[#4d6677] dark:text-blue-200 px-3 py-1 rounded-full">
-            {t("declutteringTips.itemsActive").replace(
-              "{count}",
-              String(items.length),
-            )}
-          </span>
+          {authReady && !isLoadingItems && (
+            <span className="text-sm bg-[#c9e3f8] dark:bg-blue-900 text-[#4d6677] dark:text-blue-200 px-3 py-1 rounded-full">
+              {t("declutteringTips.itemsActive").replace(
+                "{count}",
+                String(items.length),
+              )}
+            </span>
+          )}
         </div>
 
-        {!loggedIn && (
+        {authReady && !loggedIn && !itemsError && (
           <p className="text-base text-[#84746e] dark:text-gray-500 mb-6">
             {t("declutteringTips.demoDisclaimer")}
           </p>
         )}
 
-        {items.length === 0 && loggedIn ? (
+        {isLoadingItems || !authReady ? (
+          <div role="status" aria-label={t("secondLookState.loading")}>
+            <p className="mb-4 text-sm text-outline">
+              <LoadingLabel>{t("secondLookState.loading")}</LoadingLabel>
+            </p>
+            <div
+              className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+              aria-hidden="true"
+            >
+              {[0, 1, 2].map((key) => (
+                <div
+                  key={key}
+                  className="animate-pulse rounded-2xl border border-outline-variant/50 bg-white p-6 dark:bg-gray-800 motion-reduce:animate-none"
+                >
+                  <div className="mb-6 aspect-square rounded-xl bg-surface-variant dark:bg-gray-700" />
+                  <div className="mb-3 h-5 w-2/3 rounded bg-surface-variant dark:bg-gray-700" />
+                  <div className="h-4 w-1/2 rounded bg-surface-variant dark:bg-gray-700" />
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : itemsError ? (
+          <div className="py-12 text-center">
+            <p role="alert" className="mb-4 text-sm text-error">
+              {t("secondLookState.loadError")}
+            </p>
+            <button
+              type="button"
+              onClick={retryItems}
+              className="rounded-lg border border-outline-variant px-5 py-3 text-sm font-semibold text-primary"
+            >
+              {t("secondLookState.retry")}
+            </button>
+          </div>
+        ) : items.length === 0 && loggedIn ? (
           <div className="text-center py-16">
             <p className="text-[#84746e] dark:text-gray-400 text-lg">
-              No items yet. Add something above to get started.
+              {t("secondLookState.empty")}
             </p>
           </div>
         ) : (
@@ -346,10 +506,11 @@ export default function ClientPage() {
             {items.map((item) => {
               const days = daysUntil(item.deadline);
               const isUrgent = days <= 3;
-              const isLoading = actingOn === item.id;
+              const isLoading = actingOn?.id === item.id;
               return (
                 <div
                   key={item.id}
+                  aria-busy={isLoading}
                   className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-sm border border-[#eae8e7] dark:border-gray-700 group transition-all hover:-translate-y-1"
                 >
                   <div className="aspect-square rounded-xl overflow-hidden mb-6 bg-[#e4e2e2] dark:bg-gray-700">
@@ -406,17 +567,29 @@ export default function ClientPage() {
                     <div className="flex gap-3">
                       <button
                         onClick={() => confirmKeep(item.id)}
-                        disabled={isLoading}
+                        disabled={isMutating}
                         className="flex-1 bg-[#82533f] text-white font-medium py-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-60"
                       >
-                        {isLoading ? "..." : t("declutteringTips.keepIt")}
+                        {isLoading && actingOn?.action === "keep" ? (
+                          <LoadingLabel>
+                            {t("secondLookState.keeping")}
+                          </LoadingLabel>
+                        ) : (
+                          t("declutteringTips.keepIt")
+                        )}
                       </button>
                       <button
                         onClick={() => confirmLetGo(item.id)}
-                        disabled={isLoading}
+                        disabled={isMutating}
                         className="flex-1 border border-[#84746e] dark:border-gray-500 text-[#84746e] dark:text-gray-300 font-medium py-3 rounded-lg hover:bg-[#fbf9f8] dark:hover:bg-gray-700 transition-all disabled:opacity-60"
                       >
-                        {isLoading ? "..." : t("declutteringTips.letItGo")}
+                        {isLoading && actingOn?.action === "letGo" ? (
+                          <LoadingLabel>
+                            {t("secondLookState.lettingGo")}
+                          </LoadingLabel>
+                        ) : (
+                          t("declutteringTips.letItGo")
+                        )}
                       </button>
                     </div>
                   ) : (
@@ -438,7 +611,7 @@ export default function ClientPage() {
                   <button
                     type="button"
                     onClick={() => setSharingItem(item)}
-                    disabled={isLoading}
+                    disabled={isMutating}
                     className="mt-4 flex min-h-11 w-full items-center justify-center gap-2 rounded-lg text-sm font-semibold text-primary transition-colors hover:bg-surface focus-visible:outline focus-visible:outline-2 focus-visible:outline-primary disabled:opacity-50"
                   >
                     <ShareOutlinedIcon fontSize="small" />
@@ -457,6 +630,7 @@ export default function ClientPage() {
           item={sharingItem}
           loggedIn={loggedIn}
           onClose={() => setSharingItem(null)}
+          onPhotoSaved={handlePhotoSaved}
         />
       )}
 
