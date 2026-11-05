@@ -24,11 +24,15 @@
 
 > 这三个的中文缺失属于「未翻译」，不是「夹杂英文」，不在本任务范围。若要补 zh 版是另一件事。
 
-### ⛔ 待做（完全没动）
+### ✅ 本轮已完成复核与清理（zh + ja）
 - `how-to-declutter-your-living-room`
 - `how-to-declutter-your-home-office`
 - `things-to-stop-buying`
-- `adhd-cleaning-checklist`（最多，约 36+ 处）
+- `adhd-cleaning-checklist`
+
+四页均已逐条检查 zh / ja 字符串；家庭办公室文案已无不合理英文，无需修改。清理了其余页面中的英文术语、标题和拼音，保留品牌名、社区名及标准缩写。
+
+验证：`npx tsc --noEmit` 和 `npm run build` 均通过（2026-11-05）；构建仅报告既有的 `<img>` 优化提示。
 
 ## 怎么扫出待改的行
 
@@ -110,7 +114,7 @@ cd ~/Codes/declutter-zen
 npx tsc --noEmit
 # 3. build
 npm run build
-# 4. commit + push（当前所有清理改动尚未提交）
+# 4. commit + push
 git add -A && git commit -m "i18n: 清理 zh/ja 文案中夹杂的英文"
 git push origin main
 ```

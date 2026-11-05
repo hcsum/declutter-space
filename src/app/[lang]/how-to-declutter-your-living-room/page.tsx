@@ -69,7 +69,7 @@ function getCopy(locale: string) {
       ] as Array<[string, string]>,
       blockersTitle: "客厅杂物的情绪卡点" as string | undefined,
       blockersBody:
-        "客厅杂物的核心情绪不是个人的，而是共享的。\"这是 ta 的东西，我不能扔\"、\"孩子可能还要玩\"、\"我不想为这种小事吵架\"——这些都让客厅成为家里决策疲劳最重的房间。客厅里的\"留着以防万一\"，常常其实是\"以防有人来\"——一堆备用杯垫、不会用的盘子、为派对准备的椅子。如果半年都没用上，它服务的不是真实场景，而是想象中的某个时刻。" as string | undefined,
+        "客厅杂物的核心情绪不是个人的，而是共享的。\"这是别人的东西，我不能扔\"、\"孩子可能还要玩\"、\"我不想为这种小事吵架\"——这些都让客厅成为家里决策疲劳最重的房间。客厅里的\"留着以防万一\"，常常其实是\"以防有人来\"——一堆备用杯垫、不会用的盘子、为派对准备的椅子。如果半年都没用上，它服务的不是真实场景，而是想象中的某个时刻。" as string | undefined,
       relatedTitle: "相关阅读" as string | undefined,
       relatedIntro: "想拓展到房间外的话题：" as string | undefined,
       relatedLinks: [
