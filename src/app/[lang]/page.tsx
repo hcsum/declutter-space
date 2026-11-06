@@ -472,6 +472,28 @@ const LandingPage = async ({ params }: Props) => {
           <p className="text-body-lg text-on-surface-variant dark:text-gray-400 max-w-lg">
             {dict.home.heroSubtitle}
           </p>
+          {locale === "en" && (
+            <div className="space-y-5">
+              <p className="text-body-md text-on-surface-variant dark:text-gray-400 max-w-lg">
+                Start with one drawer, shelf or small patch of surface. Choose a
+                task you can finish and put away before you stop.
+              </p>
+              <div className="flex flex-wrap items-center justify-center gap-4 md:justify-start">
+                <Link
+                  href="/en/declutter-checklist"
+                  className="inline-flex min-h-11 items-center rounded-full bg-primary px-6 py-3 text-sm font-semibold text-on-primary transition-colors hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-primary"
+                >
+                  {dict.home.featureChecklistCta}
+                </Link>
+                <a
+                  href="#how-to-declutter"
+                  className="inline-flex min-h-11 items-center text-sm font-semibold text-primary underline underline-offset-4 dark:text-orange-400"
+                >
+                  See the first steps
+                </a>
+              </div>
+            </div>
+          )}
         </div>
         <div className="md:w-1/2 relative">
           <div className="absolute -inset-4 bg-primary-container/20 blur-3xl rounded-full" />
