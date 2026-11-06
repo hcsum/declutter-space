@@ -9,8 +9,15 @@ import {
 import { JsonLd } from "@/components/json-ld";
 import ClientPage from "./ClientPage";
 import { getBuyCopy } from "./copy";
+import SharedResult from "./SharedResult";
+import { readSharedResult, readSharedState } from "./calculator";
+import { calculatePurchase, publicResult } from "./results";
+import { getExchangeRates } from "./exchange-rates";
 
-type Props = { params: Promise<{ lang: string }> };
+type Props = {
+  params: Promise<{ lang: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
 
 const PATH = "/should-i-buy-it";
 
@@ -20,7 +27,7 @@ function withEmphasis(text: string) {
     index % 2 === 1 ? (
       <strong
         key={part}
-        className="font-semibold text-[#002d1c] underline decoration-[#82533f]/50 decoration-2 underline-offset-4 dark:text-white dark:decoration-orange-400/60"
+        className="font-semibold text-[#002d1c] dark:text-white"
       >
         {part}
       </strong>
@@ -30,23 +37,51 @@ function withEmphasis(text: string) {
   );
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+  searchParams,
+}: Props): Promise<Metadata> {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getBuyCopy(locale);
+  const query = await searchParams;
 
   return {
     title: copy.metaTitle,
     description: copy.metaDescription,
     keywords: [...copy.keywords],
     alternates: buildLanguageAlternates(locale, PATH),
+    ...(query.result || query.share
+      ? { robots: { index: false, follow: true } }
+      : {}),
   };
 }
 
-export default async function ShouldIBuyItPage({ params }: Props) {
+export default async function ShouldIBuyItPage({
+  params,
+  searchParams,
+}: Props) {
   const { lang } = await params;
   const locale = isValidLocale(lang) ? lang : defaultLocale;
   const copy = getBuyCopy(locale);
+  const query = await searchParams;
+  if (query.result !== undefined || query.share !== undefined) {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (typeof value === "string") search.set(key, value);
+    }
+    let result = readSharedResult(search.toString());
+    if (!query.result && query.share === "1") {
+      const legacy = readSharedState(search.toString());
+      const calculated = legacy ? calculatePurchase(legacy, copy.tool) : null;
+      if (calculated) result = publicResult(calculated);
+    }
+    return (
+      <main className="mx-auto min-h-[70vh] max-w-5xl px-5 pb-20 pt-28 text-[#1a1c18] dark:text-gray-200 md:px-8 md:pt-36">
+        <SharedResult result={result} copy={copy.tool} locale={locale} />
+      </main>
+    );
+  }
 
   return (
     <>
@@ -74,7 +109,7 @@ export default async function ShouldIBuyItPage({ params }: Props) {
         </div>
 
         <div className="mt-5">
-          <ClientPage copy={copy.tool} locale={locale} />
+          <ClientPage copy={copy.tool} locale={locale} exchangeRates={await getExchangeRates()} />
         </div>
 
         <div className="mx-auto mt-5 flex max-w-5xl flex-col gap-5">

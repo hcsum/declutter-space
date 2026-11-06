@@ -1,3 +1,6 @@
+import { es } from "./copy-es";
+import { de } from "./copy-de";
+
 export type ChoiceOption = {
   value: string;
   label: string;
@@ -19,6 +22,14 @@ export type BuyCopy = {
     itemPlaceholder: string;
     priceLabel: string;
     priceHelp: string;
+    currencyLabel: string;
+    currencyPlaceholder: string;
+    currencyHelp: string;
+    shareLabel: string;
+    shareCopied: string;
+    shareManual: string;
+    shareLinkLabel: string;
+    shareHelp: string;
     usesLabel: string;
     usesHelp: string;
     usesPresets: { label: string; value: number }[];
@@ -26,6 +37,19 @@ export type BuyCopy = {
     wageIntro: string;
     payLabel: string;
     payHelp: string;
+    payPeriodLabel: string;
+    payPeriods: { value: "weekly" | "monthly" | "yearly"; label: string }[];
+    payPeriodHelp: string;
+    weeklyPayNote: string;
+    wageErrors: Record<
+      | "invalidNumber"
+      | "positivePay"
+      | "positiveHours"
+      | "totalHours"
+      | "netPay"
+      | "range",
+      string
+    >;
     hoursLabel: string;
     hoursHelp: string;
     extraHoursLabel: string;
@@ -46,6 +70,12 @@ export type BuyCopy = {
     storageLabel: string;
     storageOptions: ChoiceOption[];
     resultTitle: string;
+    calculateLabel: string;
+    recalculate: string;
+    calculating: string;
+    wageIncomplete: string;
+    startOwnCalculation: string;
+    invalidShare: string;
     unnamedItem: string;
     scoreOutOf: string;
     costPerUseLabel: string;
@@ -88,7 +118,8 @@ export type BuyCopy = {
 };
 
 const en: BuyCopy = {
-  metaTitle: "Should I Buy It? Free Purchase Decision Scorer | DeclutterYourHome",
+  metaTitle:
+    "Should I Buy It? Free Purchase Decision Scorer | DeclutterYourHome",
   metaDescription:
     "Should I buy it? Answer six questions and get a 0-100 score, the cost per use, and how many hours of your life the price really costs. Free, no signup.",
   keywords: [
@@ -105,14 +136,24 @@ const en: BuyCopy = {
   eyebrow: "Buy-it-or-not scorer",
   heroTitle: "Should I buy it?",
   heroSubtitle:
-    "Six questions, one score. This free tool turns a price tag into two numbers you can actually feel: **what each use costs**, and **how many hours of your life the price is worth**. Nothing to install, nothing sent to a server.",
+    "Six questions, one score. This free tool turns a price tag into two numbers you can actually feel: **what each use costs**, and **how many hours of your life the price is worth**. Nothing to install, no signup needed.",
   tool: {
     formTitle: "Score this purchase",
     itemLabel: "What are you thinking about buying?",
     itemPlaceholder: "Air fryer, winter coat, second monitor...",
     priceLabel: "Price",
     priceHelp: "Use whatever currency you spend in — the math works the same.",
-    usesLabel: "How many times will you realistically use it?",
+    currencyLabel: "Currency (optional)",
+    currencyPlaceholder: "USD, EUR, $, ¥…",
+    currencyHelp:
+      "Defaults to your page language; you can change it. Product presets use the latest available exchange rate. Use the same currency for price, pay, and work costs; changing the currency does not convert your inputs.",
+    shareLabel: "Share this calculation",
+    shareCopied: "Link copied",
+    shareManual: "Copy the link below to share your calculation.",
+    shareLinkLabel: "Your share link",
+    shareHelp:
+      "Only your result is shared. Your salary, work costs, work schedule, and answers are not included.",
+    usesLabel: "How many times / days will you realistically use it?",
     usesHelp:
       "Be honest, not hopeful. Count the uses you can picture in the next two years, not the ones you can imagine over a lifetime.",
     usesPresets: [
@@ -124,8 +165,31 @@ const en: BuyCopy = {
     wageTitle: "Your real hourly wage",
     wageIntro:
       "A price is easier to judge in hours than in money. But your real wage is not what your contract says — it is what is left after the time and money that only exist because you have a job.",
-    payLabel: "Take-home pay per week (after tax)",
-    payHelp: "What actually lands in your account, divided into weeks.",
+    payLabel: "Take-home pay (after tax)",
+    payHelp:
+      "What actually lands in your account for the selected period. For variable income, use a representative average.",
+    payPeriodLabel: "Pay period",
+    payPeriods: [
+      { value: "weekly", label: "Weekly" },
+      { value: "monthly", label: "Monthly" },
+      { value: "yearly", label: "Yearly" },
+    ],
+    payPeriodHelp:
+      "Changing the period keeps your entered amount and recalculates. Hours and work costs below are always weekly. Monthly pay × 12 ÷ 52; yearly pay ÷ 52.",
+    weeklyPayNote: "Average weekly take-home pay: {amount}",
+    wageErrors: {
+      invalidNumber: "Enter a valid number of zero or more.",
+      positivePay:
+        "Enter take-home pay greater than zero to calculate your wage.",
+      positiveHours:
+        "Enter paid hours greater than zero to calculate your wage.",
+      totalHours:
+        "Paid and unpaid work hours together cannot exceed 168 per week.",
+      netPay:
+        "Weekly work costs must be less than your average weekly take-home pay to calculate a positive real wage.",
+      range:
+        "This amount is too large or too small to calculate reliably. Check your entry.",
+    },
     hoursLabel: "Paid hours per week",
     hoursHelp: "The hours you are paid for. Usually 35-40.",
     extraHoursLabel: "Unpaid work hours per week",
@@ -142,7 +206,11 @@ const en: BuyCopy = {
     duplicateLabel: "Do you already own something that does this job?",
     duplicateOptions: [
       { value: "no", label: "No, nothing close", points: 15 },
-      { value: "sort-of", label: "Something similar, but it is worse", points: 7 },
+      {
+        value: "sort-of",
+        label: "Something similar, but it is worse",
+        points: 7,
+      },
       { value: "yes", label: "Yes, and it still works", points: 0 },
     ],
     moneyLabel: "Where is the money coming from?",
@@ -164,14 +232,21 @@ const en: BuyCopy = {
       { value: "make-room", label: "I would have to make room", points: 5 },
       { value: "no-idea", label: "No idea", points: 0 },
     ],
-    resultTitle: "Your result",
+    resultTitle: "So, should you buy it?",
+    calculateLabel: "Show my result",
+    recalculate: "Recalculate my result",
+    calculating: "Calculating your result…",
+    wageIncomplete:
+      "Check the income and weekly work fields above, or leave pay blank to skip work-time calculation.",
+    startOwnCalculation: "Try your own calculation",
+    invalidShare: "This result link is incomplete or invalid.",
     unnamedItem: "This purchase",
     scoreOutOf: "out of 100",
     costPerUseLabel: "Cost per use",
     costPerUseSuffix: "per use",
-    lifeHoursLabel: "Hours of your life",
-    lifeHoursSuffix: "hours of work",
-    lifeWeeksNote: "About {weeks} working weeks.",
+    lifeHoursLabel: "Work time needed to pay for this",
+    lifeHoursSuffix: "hours",
+    lifeWeeksNote: "About {weeks} weeks at your weekly work schedule.",
     breakdownTitle: "Where the points came from",
     breakdownCostPerUse: "Cost per use",
     breakdownLifeHours: "Price in life hours",
@@ -187,7 +262,7 @@ const en: BuyCopy = {
       "The score needs a price and a realistic use count. Everything else sharpens the answer, but those two carry most of it.",
     resetLabel: "Clear and start over",
     savedNote:
-      "Your answers stay in this browser only. No account, no server, no email.",
+      "Your inputs are saved in this browser. Results appear only when you calculate.",
     verdicts: [
       {
         min: 75,
@@ -325,7 +400,7 @@ const en: BuyCopy = {
     {
       question: "Do you store my answers?",
       answer:
-        "No. Everything stays in your own browser through local storage. There is no account, no server copy, and no email. Clear your browser data and it is gone.",
+        "Your inputs are saved in your browser through local storage. Click Show my result to calculate; editing inputs does not change an existing result. Sharing creates a result-only link with the product, currency, score, cost per use, and work time needed. It does not include your salary, expenses, work schedule, or answers. Clearing browser data removes your local save, but not results you have already shared.",
     },
   ],
   relatedTitle: "Keep going",
@@ -333,8 +408,14 @@ const en: BuyCopy = {
     "Deciding not to buy is the cheap half. Here is what handles the things already in the house:",
   relatedLinks: [
     { href: "/cost-per-wear-calculator", label: "Cost per wear calculator" },
-    { href: "/things-to-stop-buying", label: "10 things to stop buying for a clutter-free home" },
-    { href: "/decluttering-decision-guide", label: "Decision guide for items you are unsure about" },
+    {
+      href: "/things-to-stop-buying",
+      label: "10 things to stop buying for a clutter-free home",
+    },
+    {
+      href: "/decluttering-decision-guide",
+      label: "Decision guide for items you are unsure about",
+    },
     { href: "/declutter-checklist", label: "Interactive declutter checklist" },
   ],
 };
@@ -356,13 +437,22 @@ const zh: BuyCopy = {
   eyebrow: "买或不买打分器",
   heroTitle: "这东西，该不该买？",
   heroSubtitle:
-    "六个问题，一个分数。这个免费工具把价签换算成两个你真能感觉到的数字：**每用一次花多少钱**，以及**这笔钱值你多少小时的人生**。不用安装，也不会上传到任何服务器。",
+    "六个问题，一个分数。这个免费工具把价签换算成两个你真能感觉到的数字：**每用一次花多少钱**，以及**这笔钱值你多少小时的人生**。不用安装，也无需注册。",
   tool: {
     formTitle: "给这笔消费打分",
     itemLabel: "你在考虑买什么？",
     itemPlaceholder: "空气炸锅、冬季外套、第二块显示器……",
     priceLabel: "价格",
     priceHelp: "用你平时花的货币填就行，算法是一样的。",
+    currencyLabel: "币种（选填）",
+    currencyPlaceholder: "CNY、USD、¥、$…",
+    currencyHelp:
+      "根据页面语言默认选择，可自行修改。预设商品按最新可用汇率换算；价格、收入与工作开销请使用同一币种。修改币种不会换算已填金额。",
+    shareLabel: "分享本次计算",
+    shareCopied: "链接已复制",
+    shareManual: "复制下方链接即可分享本次计算。",
+    shareLinkLabel: "分享链接",
+    shareHelp: "只分享计算结果，不包含工资、工作开销、工作时间或问卷答案。",
     usesLabel: "你现实中会用它多少次？",
     usesHelp:
       "按实际会发生的次数填，不要按理想状态填。只算未来两年里你能具体想象出来的使用场景。",
@@ -375,8 +465,26 @@ const zh: BuyCopy = {
     wageTitle: "你的真实时薪",
     wageIntro:
       "价格换成小时比换成钱更容易判断。但真实时薪不是合同上写的那个数，而是扣掉「只因为你要上班才存在」的时间和开销之后，真正剩下的部分。",
-    payLabel: "每周到手收入（税后）",
-    payHelp: "真正进账的钱，折算成每周。",
+    payLabel: "到手收入（税后）",
+    payHelp:
+      "填写所选周期内实际到账的金额。收入不固定时，可使用有代表性的平均值。",
+    payPeriodLabel: "收入周期",
+    payPeriods: [
+      { value: "weekly", label: "周薪" },
+      { value: "monthly", label: "月薪" },
+      { value: "yearly", label: "年薪" },
+    ],
+    payPeriodHelp:
+      "切换周期会保留输入金额并重新计算。下方工时与工作开销始终按每周填写。月薪 × 12 ÷ 52；年薪 ÷ 52。",
+    weeklyPayNote: "平均每周到手收入：{amount}",
+    wageErrors: {
+      invalidNumber: "请输入大于或等于零的有效数字。",
+      positivePay: "到手收入需大于零才能计算时薪。",
+      positiveHours: "带薪工时需大于零才能计算时薪。",
+      totalHours: "每周带薪和无薪工作时间合计不能超过 168 小时。",
+      netPay: "每周工作开销需低于平均每周到手收入，才能计算正的真实时薪。",
+      range: "金额过大或过小，无法可靠计算，请检查输入。",
+    },
     hoursLabel: "每周计薪工时",
     hoursHelp: "公司按这个时长付你钱，通常是 35–40 小时。",
     extraHoursLabel: "每周不计薪但为工作花掉的时间",
@@ -415,14 +523,21 @@ const zh: BuyCopy = {
       { value: "make-room", label: "得先腾个地方", points: 5 },
       { value: "no-idea", label: "还没想过", points: 0 },
     ],
-    resultTitle: "你的结果",
+    resultTitle: "所以，这件商品值得买吗？",
+    calculateLabel: "查看我的结果",
+    recalculate: "重新计算结果",
+    calculating: "正在计算结果…",
+    wageIncomplete:
+      "请检查上方收入和每周工作信息，或清空收入以跳过工作时间计算。",
+    startOwnCalculation: "开始自己的计算",
+    invalidShare: "此结果链接不完整或无效。",
     unnamedItem: "这笔消费",
     scoreOutOf: "满分 100",
     costPerUseLabel: "每次使用成本",
     costPerUseSuffix: "每次",
-    lifeHoursLabel: "折合人生小时",
-    lifeHoursSuffix: "小时的工作",
-    lifeWeeksNote: "大约 {weeks} 个工作周。",
+    lifeHoursLabel: "买下这件商品需要工作多久",
+    lifeHoursSuffix: "小时",
+    lifeWeeksNote: "按你每周投入的工作时间，约需 {weeks} 周。",
     breakdownTitle: "分数是怎么来的",
     breakdownCostPerUse: "每次使用成本",
     breakdownLifeHours: "价格折合工时",
@@ -437,7 +552,7 @@ const zh: BuyCopy = {
     incompleteBody:
       "打分至少需要价格和一个现实的使用次数。其余问题让结论更准，但这两个决定了大部分分数。",
     resetLabel: "清空重来",
-    savedNote: "你的答案只留在这台浏览器里。不用账号，不上传，不要邮箱。",
+    savedNote: "输入会保存在当前浏览器中，点击计算后才会显示结果。",
     verdicts: [
       {
         min: 75,
@@ -575,7 +690,7 @@ const zh: BuyCopy = {
     {
       question: "我的答案会被保存吗？",
       answer:
-        "不会。所有内容只通过 local storage 存在你自己的浏览器里。没有账号、没有服务器副本、也不要邮箱。清掉浏览器数据就没了。",
+        "输入会通过 local storage 保存在当前浏览器中。点击查看结果后才会计算，修改输入不会改变已有结果。分享链接只包含商品、币种、分数、单次成本和购买所需工作时间，不包含工资、开销、工作时间安排或问卷答案。清除浏览器数据会删除本地保存，但不会删除已经分享的结果。",
     },
   ],
   relatedTitle: "接着看",
@@ -604,13 +719,23 @@ const ja: BuyCopy = {
   eyebrow: "買う / 買わない スコア",
   heroTitle: "これ、買うべき？",
   heroSubtitle:
-    "6つの質問で1つのスコア。値札を、実感できる2つの数字に変えます。**1回使うたびにいくらかかるのか**、そして**その値段は人生の何時間分か**。インストール不要、サーバーには何も送りません。",
+    "6つの質問で1つのスコア。値札を、実感できる2つの数字に変えます。**1回使うたびにいくらかかるのか**、そして**その値段は人生の何時間分か**。インストールも登録も不要です。",
   tool: {
     formTitle: "この買い物を採点する",
     itemLabel: "何を買おうとしていますか？",
     itemPlaceholder: "エアフライヤー、冬のコート、2枚目のモニター…",
     priceLabel: "価格",
     priceHelp: "普段使っている通貨のままで大丈夫です。計算は同じです。",
+    currencyLabel: "通貨（任意）",
+    currencyPlaceholder: "JPY、USD、¥、$…",
+    currencyHelp:
+      "ページの言語に合わせて設定され、変更もできます。商品例は最新の利用可能な為替レートで換算します。価格・収入・仕事の支出は同じ通貨で入力してください。通貨を変更しても入力済みの金額は換算されません。",
+    shareLabel: "この計算を共有",
+    shareCopied: "リンクをコピーしました",
+    shareManual: "下のリンクをコピーして計算を共有できます。",
+    shareLinkLabel: "共有リンク",
+    shareHelp:
+      "共有するのは結果だけです。収入、仕事の支出、労働時間、各回答は含まれません。",
     usesLabel: "現実的に何回使いますか？",
     usesHelp:
       "理想ではなく実際の回数で。これから2年のあいだに具体的に想像できる使用回数だけを数えてください。",
@@ -623,8 +748,30 @@ const ja: BuyCopy = {
     wageTitle: "あなたの本当の時給",
     wageIntro:
       "値段は金額より時間で見るほうが判断しやすくなります。ただし本当の時給は契約書の数字ではなく、仕事があるからこそ発生する時間とお金を引いたあとに残る額です。",
-    payLabel: "週あたりの手取り",
-    payHelp: "実際に口座に入る金額を週で割ったもの。",
+    payLabel: "手取り収入（税引き後）",
+    payHelp:
+      "選んだ期間に実際に受け取る金額を入力します。収入が変動する場合は、実態に合った平均額を使えます。",
+    payPeriodLabel: "収入の期間",
+    payPeriods: [
+      { value: "weekly", label: "週給" },
+      { value: "monthly", label: "月給" },
+      { value: "yearly", label: "年収" },
+    ],
+    payPeriodHelp:
+      "期間を変えても入力額は変わらず、計算結果が更新されます。下の時間と仕事の支出は常に週単位です。月給 × 12 ÷ 52、年収 ÷ 52で換算します。",
+    weeklyPayNote: "週あたりの平均手取り：{amount}",
+    wageErrors: {
+      invalidNumber: "0以上の有効な数値を入力してください。",
+      positivePay:
+        "時給を計算するには、0より大きい手取り額を入力してください。",
+      positiveHours:
+        "時給を計算するには、0より大きい有給労働時間を入力してください。",
+      totalHours: "有給と無給の労働時間の合計は、週168時間を超えられません。",
+      netPay:
+        "正の実質時給を計算するには、週の仕事の支出を週あたりの平均手取りより少なくしてください。",
+      range:
+        "金額が大きすぎるか小さすぎるため計算できません。入力を確認してください。",
+    },
     hoursLabel: "週あたりの有給労働時間",
     hoursHelp: "給料が支払われる時間。通常は35〜40時間です。",
     extraHoursLabel: "週あたりの無給の仕事時間",
@@ -663,14 +810,21 @@ const ja: BuyCopy = {
       { value: "make-room", label: "場所を空ける必要がある", points: 5 },
       { value: "no-idea", label: "考えていない", points: 0 },
     ],
-    resultTitle: "結果",
+    resultTitle: "結局、買うべき？",
+    calculateLabel: "結果を見る",
+    recalculate: "結果を再計算",
+    calculating: "結果を計算しています…",
+    wageIncomplete:
+      "収入と週の労働情報を確認するか、収入を空欄にして労働時間の計算を省略してください。",
+    startOwnCalculation: "自分の購入を計算する",
+    invalidShare: "この結果リンクは不完全か、無効です。",
     unnamedItem: "この買い物",
     scoreOutOf: "100点満点",
     costPerUseLabel: "1回あたりのコスト",
     costPerUseSuffix: "／回",
-    lifeHoursLabel: "人生の時間に換算",
-    lifeHoursSuffix: "時間の労働",
-    lifeWeeksNote: "およそ {weeks} 週間分の労働です。",
+    lifeHoursLabel: "購入に必要な労働時間",
+    lifeHoursSuffix: "時間",
+    lifeWeeksNote: "入力した週の労働時間では、約 {weeks} 週間分です。",
     breakdownTitle: "点数の内訳",
     breakdownCostPerUse: "1回あたりのコスト",
     breakdownLifeHours: "労働時間に換算した値段",
@@ -686,7 +840,7 @@ const ja: BuyCopy = {
       "採点には価格と現実的な使用回数が必要です。他の質問は精度を上げますが、この2つが大半を決めます。",
     resetLabel: "入力をクリアする",
     savedNote:
-      "回答はこのブラウザーの中だけに残ります。アカウントもサーバー保存もメールも不要です。",
+      "入力はこのブラウザーに保存されます。計算ボタンを押すと結果が表示されます。",
     verdicts: [
       {
         min: 75,
@@ -824,20 +978,24 @@ const ja: BuyCopy = {
     {
       question: "入力内容は保存されますか？",
       answer:
-        "サーバーには保存しません。すべてブラウザーの local storage の中だけに残ります。アカウントもサーバー上の控えもメールも不要で、ブラウザーのデータを消せば消えます。",
+        "入力はブラウザーの local storage に保存されます。結果を見るボタンを押すと計算し、入力の編集だけでは結果は変わりません。共有リンクには商品、通貨、スコア、1回のコスト、購入に必要な労働時間だけが含まれます。収入、支出、労働スケジュール、各回答は含まれません。ブラウザーのデータを消しても、共有済みの結果は消えません。",
     },
   ],
   relatedTitle: "次に読む",
-  relatedIntro: "買わないのは簡単なほうの半分です。すでに家にある物はこちらで：",
+  relatedIntro:
+    "買わないのは簡単なほうの半分です。すでに家にある物はこちらで：",
   relatedLinks: [
     { href: "/cost-per-wear-calculator", label: "cost per wear 計算機" },
     { href: "/things-to-stop-buying", label: "買うのをやめたい10のもの" },
     { href: "/decluttering-decision-guide", label: "迷う物のための判断ガイド" },
-    { href: "/declutter-checklist", label: "インタラクティブ片付けチェックリスト" },
+    {
+      href: "/declutter-checklist",
+      label: "インタラクティブ片付けチェックリスト",
+    },
   ],
 };
 
-const copies: Record<string, BuyCopy> = { en, zh, ja };
+const copies: Record<string, BuyCopy> = { en, zh, ja, es, de };
 
 export function getBuyCopy(locale: string): BuyCopy {
   return copies[locale] ?? en;

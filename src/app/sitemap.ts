@@ -37,7 +37,7 @@ const checklistAreaPaths = getChecklistCategorySlugs().map(
 );
 
 /** Paths that exist in every locale, Spanish included. */
-const allLocalePaths = ["", "/declutter-checklist", ...checklistAreaPaths];
+const allLocalePaths = ["", "/should-i-buy-it", "/declutter-checklist", ...checklistAreaPaths];
 
 function localizedUrl(locale: string, path: string) {
   return `${siteUrl}/${locale}${path}`;
@@ -59,7 +59,9 @@ function entriesFor(path: string): MetadataRoute.Sitemap {
 
   return pathLocales.map((locale) => ({
     url: localizedUrl(locale, path),
-    ...(locale === "de"
+    ...(path === "/should-i-buy-it"
+      ? { lastModified: "2026-11-06" }
+      : locale === "de"
       ? { lastModified: "2026-10-27" }
       : path === "/declutter-checklist" ||
           printableAreas.some(

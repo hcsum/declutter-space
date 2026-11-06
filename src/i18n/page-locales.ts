@@ -15,7 +15,6 @@ export const JA_ONLY_PATHS = [
 
 export const NON_SPANISH_PATHS = [
   "/decluttering-decision-guide",
-  "/should-i-buy-it",
   "/cost-per-wear-calculator",
   "/things-to-declutter",
   "/things-to-stop-buying",
@@ -49,6 +48,7 @@ export function localesForPath(path: string): readonly Locale[] {
   if ((DE_ONLY_PATHS as readonly string[]).includes(path)) return ["de"];
   const germanAvailable =
     path === "" ||
+    path === "/should-i-buy-it" ||
     path === "/declutter-checklist" ||
     /^\/declutter-checklist\/(?:entrance-hall|bedroom|kitchen|living-room|balcony|smartphone|life-philosophy|bathroom-laundry|home-office|closets|kids-items|progress|upload)$/.test(
       path,
