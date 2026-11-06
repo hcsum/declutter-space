@@ -1,6 +1,5 @@
 import React from "react";
 import GermanGuide from "@/components/GermanGuide";
-import EnglishHome from "@/components/EnglishHome";
 import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
@@ -36,7 +35,6 @@ const LandingPage = async ({ params }: Props) => {
   const locale = isValidLocale(lang) ? lang : defaultLocale;
 
   if (locale === "de") return <GermanGuide />;
-  if (locale === "en") return <EnglishHome />;
 
   if (locale === "es") {
     return (

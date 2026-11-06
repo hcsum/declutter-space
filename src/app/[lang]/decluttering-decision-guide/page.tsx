@@ -31,11 +31,6 @@ const seoContent = {
     faqTitle: "Decision guide FAQ",
     faqs: [
       {
-        question: "Why haven’t I received a reminder email for an item due for review?",
-        answer:
-          "Check your spam or junk folder in case your email provider filtered the reminder. If you still cannot find it, contact hi@declutteryourhome.net for help.",
-      },
-      {
         question: "What kinds of items belong here?",
         answer:
           "Good candidates are sentimental objects, expensive mistakes, backup gadgets, hobby supplies, and clothes you feel unsure about. If the item is clearly trash or clearly useful, do not send it here.",
